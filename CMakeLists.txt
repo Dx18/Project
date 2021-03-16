@@ -6,8 +6,28 @@ set(CMAKE_CXX_STANDARD 17)
 # Include directories
 include_directories(${CMAKE_SOURCE_DIR})
 
+# Common sources
+set(SOURCES
+        unit/Unit.cpp unit/IWeapon.cpp unit/IArmor.cpp
+
+        unit/soldier/Soldier.cpp
+        unit/soldier/armor/SoldierStandardArmor.cpp
+        unit/soldier/armor/SoldierCompositeArmor.cpp
+        unit/soldier/weapon/ISoldierMachineGun.cpp
+        unit/soldier/weapon/ISoldierPistol.cpp
+        unit/soldier/weapon/ISoldierShotgun.cpp
+        unit/soldier/weapon/ISoldierSniperRifle.cpp
+        unit/soldier/weapon/ISoldierWeaponFactory.cpp
+        unit/soldier/SoldierBuilder.cpp
+
+        unit/drone/Drone.cpp
+        unit/drone/armor/DroneStandardArmor.cpp
+        unit/drone/weapon/IDroneMachineGun.cpp
+        unit/drone/weapon/IDroneWeaponFactory.cpp
+        unit/drone/DroneBuilder.cpp)
+
 # Sources for main executable
-set(MAIN_SOURCES main.cpp)
+set(MAIN_SOURCES main.cpp ${SOURCES})
 
 # Main executable
 add_executable(Project ${MAIN_SOURCES})
