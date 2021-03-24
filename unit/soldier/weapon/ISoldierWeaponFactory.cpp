@@ -34,5 +34,4 @@ std::unique_ptr<ISoldierMachineGun> SoldierLaserWeaponFactory::CreateMachineGun(
   return std::make_unique<SoldierLaserMachineGun>();
 }
 
-
 }

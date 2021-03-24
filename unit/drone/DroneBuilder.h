@@ -24,5 +24,3 @@ class DroneBuilder : UnitBuilder<DroneBuilder> {
 };
 
 }
-
-
