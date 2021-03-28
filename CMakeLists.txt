@@ -8,22 +8,32 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 # Common sources
 set(SOURCES
-        unit/Unit.cpp unit/IWeapon.cpp unit/IArmor.cpp
+        unit/Unit.cpp
+        unit/BasicArmor.cpp
+        unit/BasicFirearmWeapon.cpp
+        unit/BasicLaserWeapon.cpp
 
         unit/soldier/Soldier.cpp
         unit/soldier/armor/SoldierStandardArmor.cpp
         unit/soldier/armor/SoldierCompositeArmor.cpp
-        unit/soldier/weapon/ISoldierMachineGun.cpp
-        unit/soldier/weapon/ISoldierPistol.cpp
-        unit/soldier/weapon/ISoldierShotgun.cpp
-        unit/soldier/weapon/ISoldierSniperRifle.cpp
-        unit/soldier/weapon/ISoldierWeaponFactory.cpp
+        unit/soldier/weapon/firearm/SoldierFirearmMachineGun.cpp
+        unit/soldier/weapon/firearm/SoldierFirearmWeaponFactory.cpp
+        unit/soldier/weapon/firearm/SoldierFirearmPistol.cpp
+        unit/soldier/weapon/firearm/SoldierFirearmShotgun.cpp
+        unit/soldier/weapon/firearm/SoldierFirearmSniperRifle.cpp
+        unit/soldier/weapon/laser/SoldierLaserMachineGun.cpp
+        unit/soldier/weapon/laser/SoldierLaserWeaponFactory.cpp
+        unit/soldier/weapon/laser/SoldierLaserPistol.cpp
+        unit/soldier/weapon/laser/SoldierLaserShotgun.cpp
+        unit/soldier/weapon/laser/SoldierLaserSniperRifle.cpp
         unit/soldier/SoldierBuilder.cpp
 
         unit/drone/Drone.cpp
         unit/drone/armor/DroneStandardArmor.cpp
-        unit/drone/weapon/IDroneMachineGun.cpp
-        unit/drone/weapon/IDroneWeaponFactory.cpp
+        unit/drone/weapon/firearm/DroneFirearmMachineGun.cpp
+        unit/drone/weapon/firearm/DroneFirearmWeaponFactory.cpp
+        unit/drone/weapon/laser/DroneLaserMachineGun.cpp
+        unit/drone/weapon/laser/DroneLaserWeaponFactory.cpp
         unit/drone/DroneBuilder.cpp)
 
 # Sources for main executable

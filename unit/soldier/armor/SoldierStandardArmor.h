@@ -1,6 +1,6 @@
 #pragma once
 
-#include "unit/IArmor.h"
+#include "unit/BasicArmor.h"
 
 #include "ISoldierArmor.h"
 

@@ -14,18 +14,4 @@ class IDroneWeaponFactory {
 
 };
 
-/** Factory which creates drone firearm weapons. */
-class DroneFirearmWeaponFactory : public IDroneWeaponFactory {
- public:
-  [[nodiscard]] std::unique_ptr<IDroneMachineGun> CreateMachineGun() const override;
-
-};
-
-/** Factory which creates drone laser weapons. */
-class DroneLaserWeaponFactory : public IDroneWeaponFactory {
- public:
-  [[nodiscard]] std::unique_ptr<IDroneMachineGun> CreateMachineGun() const override;
-
-};
-
 }

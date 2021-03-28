@@ -1,4 +1,4 @@
-#include "IWeapon.h"
+#include "BasicFirearmWeapon.h"
 
 namespace unit {
 
@@ -25,31 +25,6 @@ bool BasicFirearmWeapon::CanBeReloaded() const {
 
 void BasicFirearmWeapon::Reload() {
   ammo_ = max_ammo_;
-}
-
-BasicLaserWeapon::BasicLaserWeapon(int mass)
-    : mass_(mass) {
-
-}
-
-std::optional<int> BasicLaserWeapon::ShotsLeft() const {
-  return {};
-}
-
-std::optional<int> BasicLaserWeapon::MaxShots() const {
-  return {};
-}
-
-int BasicLaserWeapon::Mass() const {
-  return mass_;
-}
-
-bool BasicLaserWeapon::CanBeReloaded() const {
-  return false;
-}
-
-void BasicLaserWeapon::Reload() {
-
 }
 
 }
