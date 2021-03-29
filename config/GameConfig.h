@@ -30,12 +30,24 @@ struct GameConfig {
   int soldier_laser_sniper_rifle_mass;
   /** Default mass for soldier laser machine gun. */
   int soldier_laser_machine_gun_mass;
+  /** Default defence for soldier standard armor. */
+  int soldier_standard_armor_defence;
+  /** Default mass for soldier standard armor. */
+  int soldier_standard_armor_mass;
+  /** Default defence for soldier standard armor. */
+  int soldier_composite_armor_defence;
+  /** Default mass for soldier standard armor. */
+  int soldier_composite_armor_mass;
   /** Default max ammo for drone firearm machine gun. */
   int drone_firearm_machine_gun_max_ammo;
   /** Default mass for drone firearm machine gun. */
   int drone_firearm_machine_gun_mass;
   /** Default mass for drone laser machine gun. */
   int drone_laser_machine_gun_mass;
+  /** Default defence for drone standard armor. */
+  int drone_standard_armor_defence;
+  /** Default mass for drone standard armor. */
+  int drone_standard_armor_mass;
 
   explicit GameConfig(const ConfigSectionStructure &section);
 
