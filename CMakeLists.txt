@@ -34,7 +34,11 @@ set(SOURCES
         unit/drone/weapon/firearm/DroneFirearmWeaponFactory.cpp
         unit/drone/weapon/laser/DroneLaserMachineGun.cpp
         unit/drone/weapon/laser/DroneLaserWeaponFactory.cpp
-        unit/drone/DroneBuilder.cpp)
+        unit/drone/DroneBuilder.cpp
+
+        config/Config.cpp
+        config/GameConfig.cpp
+        config/INIConfigStructureReader.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
