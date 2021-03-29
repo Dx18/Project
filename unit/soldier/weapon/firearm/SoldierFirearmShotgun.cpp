@@ -2,8 +2,9 @@
 
 namespace unit::soldier::weapon::firearm {
 
-SoldierFirearmShotgun::SoldierFirearmShotgun()
-    : BasicFirearmWeapon(0, kMaxAmmo, kMass) {
+SoldierFirearmShotgun::SoldierFirearmShotgun(const config::GameConfig &game_config)
+    : BasicFirearmWeapon(0, game_config.soldier_firearm_shotgun_max_ammo,
+                         game_config.soldier_firearm_shotgun_mass) {
 
 }
 

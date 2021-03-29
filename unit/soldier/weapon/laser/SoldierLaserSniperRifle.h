@@ -1,6 +1,7 @@
 #pragma once
 
 #include "unit/BasicLaserWeapon.h"
+#include "config/GameConfig.h"
 
 #include "../ISoldierWeapon.h"
 #include "../ISoldierSniperRifle.h"
@@ -10,10 +11,11 @@ namespace unit::soldier::weapon::laser {
 /** Soldier laser sniper rifle. */
 class SoldierLaserSniperRifle : public BasicLaserWeapon, public ISoldierSniperRifle {
  public:
-  /** Default mass for soldier laser sniper rifle. */
-  static const int kMass = 3;
-
-  SoldierLaserSniperRifle();
+  /**
+   * Creates soldier laser sniper rifle.
+   * @param game_config Game process config.
+   */
+  explicit SoldierLaserSniperRifle(const config::GameConfig &game_config);
 
 };
 

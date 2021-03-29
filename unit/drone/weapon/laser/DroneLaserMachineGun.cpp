@@ -2,8 +2,8 @@
 
 namespace unit::drone::weapon::laser {
 
-DroneLaserMachineGun::DroneLaserMachineGun()
-    : BasicLaserWeapon(kMass) {
+DroneLaserMachineGun::DroneLaserMachineGun(const config::GameConfig &game_config)
+    : BasicLaserWeapon(game_config.drone_laser_machine_gun_mass) {
 
 }
 

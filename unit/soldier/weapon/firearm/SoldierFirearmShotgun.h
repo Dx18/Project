@@ -1,6 +1,7 @@
 #pragma once
 
 #include "unit/BasicFirearmWeapon.h"
+#include "config/GameConfig.h"
 
 #include "../ISoldierWeapon.h"
 #include "../ISoldierShotgun.h"
@@ -10,12 +11,11 @@ namespace unit::soldier::weapon::firearm {
 /** Soldier firearm shotgun. */
 class SoldierFirearmShotgun : public BasicFirearmWeapon, public ISoldierShotgun {
  public:
-  /** Default max ammo for soldier firearm shotgun. */
-  static const int kMaxAmmo = 3;
-  /** Default mass for soldier firearm shotgun. */
-  static const int kMass = 4;
-
-  SoldierFirearmShotgun();
+  /**
+   * Creates soldier firearm shotgun.
+   * @param game_config Game process config.
+   */
+  explicit SoldierFirearmShotgun(const config::GameConfig &game_config);
 
 };
 
