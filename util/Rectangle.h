@@ -27,7 +27,8 @@ struct Rectangle {
    */
   bool ContainsRectangle(const Rectangle<T> &rectangle) const;
   /**
-   * Returns true if current rectangle contains given point.
+   * Returns true if current rectangle contains given point. Note that rectangle contains only points with coordinates
+   * (x', y'), such as `x` <= `x'` < `x` + `width` and `y` <= `y'` < `y` + `height`.
    * @param point Point to check.
    */
   bool ContainsPoint(const Vector2<T> &point) const;
