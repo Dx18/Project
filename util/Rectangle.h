@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 #include "Vector.h"
 
 namespace util {
@@ -42,6 +44,18 @@ template<typename T>
 bool Rectangle<T>::ContainsPoint(const Vector2<T> &point) const {
   return point.x >= x && point.x < x + width
       && point.y >= y && point.y < y + height;
+}
+
+/**
+ * Prints rectangle to output stream. Format of output: "{x: `x`, y: `y`, width: `width`, height: `height`}".
+ * @tparam T Type of coordinates and dimensions in rectangle.
+ * @param out Output stream.
+ * @param rectangle Rectangle to print.
+ */
+template<typename T>
+std::ostream &operator<<(std::ostream &out, const Rectangle<T> &rectangle) {
+  return out << "{x: " << rectangle.x << ", y: " << rectangle.y
+             << ", width: " << rectangle.width << ", height: " << rectangle.height << "}";
 }
 
 }
