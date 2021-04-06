@@ -38,7 +38,11 @@ set(SOURCES
 
         config/Config.cpp
         config/GameConfig.cpp
-        config/INIConfigStructureReader.cpp)
+        config/INIConfigStructureReader.cpp
+
+        frontend/IFrontend.cpp
+        frontend/IEvent.cpp
+        frontend/Input.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
