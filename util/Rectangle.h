@@ -33,13 +33,13 @@ struct Rectangle {
 };
 
 template<typename T>
-bool Rectangle<T>::ContainsRectangle(const Rectangle<T> &rectangle) {
+bool Rectangle<T>::ContainsRectangle(const Rectangle<T> &rectangle) const {
   return x >= rectangle.x && x + width <= rectangle.x + rectangle.width
       && y >= rectangle.y && y + height <= rectangle.y + rectangle.height;
 }
 
 template<typename T>
-bool Rectangle<T>::ContainsPoint(const Vector2<T> &point) {
+bool Rectangle<T>::ContainsPoint(const Vector2<T> &point) const {
   return point.x >= x && point.x < x + width
       && point.y >= y && point.y < y + height;
 }
