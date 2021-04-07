@@ -40,7 +40,7 @@ set(SOURCES
         config/GameConfig.cpp
         config/INIConfigStructureReader.cpp
 
-        frontend/IFrontend.cpp
+        frontend/IFrontendEvents.cpp
         frontend/IEvent.cpp
         frontend/Input.cpp)
 
