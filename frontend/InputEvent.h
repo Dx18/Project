@@ -6,7 +6,7 @@
 namespace frontend {
 
 /** User input event. */
-struct CharInputEvent : IEvent {
+struct InputEvent : IEvent {
   Input input;
 };
 
