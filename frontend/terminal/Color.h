@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 namespace frontend::terminal {
 
 /** Color of character. */
@@ -20,6 +22,18 @@ enum Color {
   kCyan = 6,
   /** White. */
   kWhite = 7
+};
+
+/** Array of colors for iteration. */
+static const std::array<Color, 8> kColors = {
+    Color::kBlack,
+    Color::kRed,
+    Color::kGreen,
+    Color::kYellow,
+    Color::kBlue,
+    Color::kMagenta,
+    Color::kCyan,
+    Color::kWhite,
 };
 
 }
