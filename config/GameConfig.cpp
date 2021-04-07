@@ -23,7 +23,8 @@ GameConfig::GameConfig(const ConfigSectionStructure &section)
       drone_firearm_machine_gun_mass(std::stoi(section.values.at("drone_firearm_machine_gun_mass"))),
       drone_laser_machine_gun_mass(std::stoi(section.values.at("drone_laser_machine_gun_mass"))),
       drone_standard_armor_defence(std::stoi(section.values.at("drone_standard_armor_defence"))),
-      drone_standard_armor_mass(std::stoi(section.values.at("drone_standard_armor_mass"))) {
+      drone_standard_armor_mass(std::stoi(section.values.at("drone_standard_armor_mass"))),
+      advanced_tech_level_effect(std::stod(section.values.at("advanced_tech_level_effect"))) {
 
 }
 

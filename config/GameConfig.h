@@ -48,6 +48,8 @@ struct GameConfig {
   int drone_standard_armor_defence;
   /** Default mass for drone standard armor. */
   int drone_standard_armor_mass;
+  /** Effect of advanced tech level. Base value is multiplied by the effect to get final value. */
+  double advanced_tech_level_effect;
 
   explicit GameConfig(const ConfigSectionStructure &section);
 

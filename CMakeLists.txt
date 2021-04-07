@@ -54,7 +54,10 @@ set(SOURCES
         frontend/terminal/RenderSurfaceRegionConst.cpp
         frontend/terminal/ITerminalRenderer.cpp
         frontend/terminal/ITerminalInput.cpp
-        frontend/terminal/TerminalEvents.cpp)
+        frontend/terminal/TerminalEvents.cpp
+
+        tech/TechLevel.cpp
+        tech/Tech.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
