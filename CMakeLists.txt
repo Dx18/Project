@@ -3,6 +3,8 @@ project(Project VERSION 0.1.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(Curses REQUIRED)
+
 # Include directories
 include_directories(${CMAKE_SOURCE_DIR})
 
@@ -55,6 +57,7 @@ set(SOURCES
         frontend/terminal/ITerminalRenderer.cpp
         frontend/terminal/ITerminalInput.cpp
         frontend/terminal/TerminalEvents.cpp
+        frontend/terminal/CursesTerminalFrontend.cpp
 
         tech/TechLevel.cpp
         tech/Tech.cpp)
@@ -64,6 +67,9 @@ set(MAIN_SOURCES main.cpp ${SOURCES})
 
 # Main executable
 add_executable(Project ${MAIN_SOURCES})
+
+# Linking main executable with `ncurses`
+target_link_libraries(Project ${CURSES_LIBRARIES})
 
 # Documentation target
 set(DOC_COMMAND SOURCE_DIR=${CMAKE_SOURCE_DIR} doxygen ${CMAKE_SOURCE_DIR}/Doxyfile)
