@@ -1,3 +1,4 @@
+#include <iostream>
 #include "CursesTerminalFrontend.h"
 
 namespace frontend::terminal {
@@ -94,7 +95,7 @@ std::optional<Input> CursesTerminalFrontend::PollInput() {
     return Input(key_iter->second);
   }
 
-  if (ch < 0b100) {
+  if (ch < 0x100) {
     return Input(static_cast<char>(ch));
   }
 
