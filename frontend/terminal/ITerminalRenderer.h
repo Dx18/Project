@@ -31,7 +31,7 @@ class ITerminalRenderer {
    * @param surface Surface to render.
    * @param position Position of top-left corner of surface to draw.
    */
-  virtual void Render(const IRenderSurfaceRead &surface, const util::Vector2<size_t> &position) = 0;
+  virtual void Render(const IRenderSurfaceRead &surface, const util::Vector2<ssize_t> &position) = 0;
   /** Ends rendering. */
   virtual void EndRender() = 0;
 
