@@ -43,7 +43,18 @@ set(SOURCES
         frontend/IFrontendEvents.cpp
         frontend/IEvent.cpp
         frontend/Input.cpp
-        frontend/InputEvent.cpp)
+        frontend/InputEvent.cpp
+
+        frontend/terminal/ColorPair.cpp
+        frontend/terminal/CharData.cpp
+        frontend/terminal/IRenderSurfaceRead.cpp
+        frontend/terminal/IRenderSurfaceWrite.cpp
+        frontend/terminal/RenderSurfaceBase.cpp
+        frontend/terminal/RenderSurfaceRegion.cpp
+        frontend/terminal/RenderSurfaceRegionConst.cpp
+        frontend/terminal/ITerminalRenderer.cpp
+        frontend/terminal/ITerminalInput.cpp
+        frontend/terminal/TerminalEvents.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
