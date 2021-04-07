@@ -42,7 +42,8 @@ set(SOURCES
 
         frontend/IFrontendEvents.cpp
         frontend/IEvent.cpp
-        frontend/Input.cpp)
+        frontend/Input.cpp
+        frontend/InputEvent.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
