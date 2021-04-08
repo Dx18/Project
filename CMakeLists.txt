@@ -62,6 +62,9 @@ set(SOURCES
         tech/TechLevel.cpp
         tech/Tech.cpp
 
+        game/IScreen.cpp
+        game/Game.cpp
+
         game_view/IViewFactory.cpp)
 
 # Sources for main executable
