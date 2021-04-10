@@ -37,8 +37,8 @@ struct Rectangle {
 
 template<typename T>
 bool Rectangle<T>::ContainsRectangle(const Rectangle<T> &rectangle) const {
-  return x >= rectangle.x && x + width <= rectangle.x + rectangle.width
-      && y >= rectangle.y && y + height <= rectangle.y + rectangle.height;
+  return rectangle.x >= x && rectangle.x + rectangle.width <= x + width
+      && rectangle.y >= y && rectangle.y + rectangle.height <= y + height;
 }
 
 template<typename T>
