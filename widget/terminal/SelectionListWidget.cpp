@@ -9,11 +9,11 @@ using namespace frontend::terminal;
 
 template<>
 util::Vector2<size_t> SelectionListWidget<IRenderSurfaceWrite>::MinSize() const {
-  static const size_t MARKER_SIZE = 1;
-  static const size_t GAP_SIZE = 1;
-  static const size_t MIN_TEXT_LENGTH = 1;
-  static const size_t MIN_ITEMS = 1;
-  return {MARKER_SIZE + GAP_SIZE + MIN_TEXT_LENGTH, MIN_ITEMS};
+  static const size_t kMarkerSize = 1;
+  static const size_t kGapSize = 1;
+  static const size_t kMinTextLength = 1;
+  static const size_t kMinItems = 1;
+  return {kMarkerSize + kGapSize + kMinTextLength, kMinItems};
 }
 
 template<>
