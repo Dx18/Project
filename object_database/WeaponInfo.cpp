@@ -48,4 +48,18 @@ const WeaponInfo WeaponInfo::kDroneLaserMachineGun
      "drone_laser_machine_gun",
      false);
 
+/** Array of all available weapon info. `WeaponType` can be used as index of this array. */
+const std::array<WeaponInfo, 10> kWeaponInfo = {
+    WeaponInfo::kSoldierFirearmPistol,
+    WeaponInfo::kSoldierFirearmShotgun,
+    WeaponInfo::kSoldierFirearmSniperRifle,
+    WeaponInfo::kSoldierFirearmMachineGun,
+    WeaponInfo::kSoldierLaserPistol,
+    WeaponInfo::kSoldierLaserShotgun,
+    WeaponInfo::kSoldierLaserSniperRifle,
+    WeaponInfo::kSoldierLaserMachineGun,
+    WeaponInfo::kDroneFirearmMachineGun,
+    WeaponInfo::kDroneLaserMachineGun
+};
+
 }

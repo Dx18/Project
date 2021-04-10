@@ -38,7 +38,10 @@ set(SOURCES
 
         config/Config.cpp
         config/GameConfig.cpp
-        config/INIConfigStructureReader.cpp)
+        config/INIConfigStructureReader.cpp
+
+        object_database/WeaponInfo.cpp
+        object_database/ArmorInfo.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
