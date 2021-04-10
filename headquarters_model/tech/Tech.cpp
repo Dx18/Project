@@ -51,69 +51,54 @@ void Tech::SetCompositeArmorTechLevel(TechLevel new_tech_level) {
   composite_armor_tech_level_ = new_tech_level;
 }
 
-int Tech::FirearmWeaponMaxAmmo(int base_max_ammo) const {
-  double effect = TechLevelEffect(composite_armor_tech_level_);
-  if (effect == 0.0) {
-    return 0;
-  }
-  return static_cast<int>(std::ceil(base_max_ammo * effect));
+int Tech::CalculateFirearmWeaponMaxAmmo(int base_max_ammo) const {
+  return CalculateIncreasing(firearm_weapon_tech_level_, base_max_ammo);
 }
 
-int Tech::FirearmWeaponMass(int base_mass) const {
-  double effect = TechLevelEffect(composite_armor_tech_level_);
-  if (effect == 0.0) {
-    return 0;
-  }
-  return std::max(1, static_cast<int>(std::floor(base_mass / effect)));
+int Tech::CalculateFirearmWeaponMass(int base_mass) const {
+  return CalculateDecreasing(firearm_weapon_tech_level_, base_mass);
 }
 
-int Tech::LaserWeaponMass(int base_mass) const {
-  double effect = TechLevelEffect(composite_armor_tech_level_);
-  if (effect == 0.0) {
-    return 0;
-  }
-  return std::max(1, static_cast<int>(std::floor(base_mass / effect)));
+int Tech::CalculateLaserWeaponMass(int base_mass) const {
+  return CalculateDecreasing(laser_weapon_tech_level_, base_mass);
 }
 
-int Tech::StandardArmorDefence(int base_defence) const {
-  double effect = TechLevelEffect(composite_armor_tech_level_);
-  if (effect == 0.0) {
-    return 0;
-  }
-  return static_cast<int>(std::ceil(base_defence * effect));
+int Tech::CalculateStandardArmorDefence(int base_defence) const {
+  return CalculateIncreasing(standard_armor_tech_level_, base_defence);
 }
 
-int Tech::StandardArmorMass(int base_mass) const {
-  double effect = TechLevelEffect(composite_armor_tech_level_);
-  if (effect == 0.0) {
-    return 0;
-  }
-  return std::max(1, static_cast<int>(std::floor(base_mass / effect)));
+int Tech::CalculateStandardArmorMass(int base_mass) const {
+  return CalculateDecreasing(standard_armor_tech_level_, base_mass);
 }
 
-int Tech::CompositeArmorDefence(int base_defence) const {
-  double effect = TechLevelEffect(composite_armor_tech_level_);
-  if (effect == 0.0) {
-    return 0;
-  }
-  return static_cast<int>(std::ceil(base_defence * effect));
+int Tech::CalculateCompositeArmorDefence(int base_defence) const {
+  return CalculateIncreasing(composite_armor_tech_level_, base_defence);
 }
 
-int Tech::CompositeArmorMass(int base_mass) const {
-  double effect = TechLevelEffect(composite_armor_tech_level_);
-  if (effect == 0.0) {
-    return 0;
-  }
-  return std::max(1, static_cast<int>(std::floor(base_mass / effect)));
+int Tech::CalculateCompositeArmorMass(int base_mass) const {
+  return CalculateDecreasing(composite_armor_tech_level_, base_mass);
 }
 
 double Tech::TechLevelEffect(TechLevel tech_level) const {
-  if (firearm_weapon_tech_level_ == TechLevel::kBasic) {
+  if (tech_level == TechLevel::kBasic) {
     return 1.0;
-  } else if (firearm_weapon_tech_level_ == TechLevel::kAdvanced) {
+  } else if (tech_level == TechLevel::kAdvanced) {
     return game_config_.advanced_tech_level_effect;
   }
   return 0.0;
+}
+
+int Tech::CalculateIncreasing(TechLevel tech_level, int base_value) const {
+  double effect = TechLevelEffect(tech_level);
+  return static_cast<int>(std::ceil(base_value * effect));
+}
+
+int Tech::CalculateDecreasing(TechLevel tech_level, int base_value) const {
+  double effect = TechLevelEffect(tech_level);
+  if (effect == 0.0) {
+    return 0;
+  }
+  return static_cast<int>(std::ceil(base_value / effect));
 }
 
 }

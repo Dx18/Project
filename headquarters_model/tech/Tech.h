@@ -67,43 +67,43 @@ class Tech {
    * not researched.
    * @param base_max_ammo Max ammo of particular weapon obtained from game config.
    */
-  [[nodiscard]] int FirearmWeaponMaxAmmo(int base_max_ammo) const;
+  [[nodiscard]] int CalculateFirearmWeaponMaxAmmo(int base_max_ammo) const;
   /**
    * Returns mass of firearm weapon using current tech level of firearm weapons. Returns 0 if firearm weapons are not
    * researched.
    * @param base_mass Mass of particular weapon obtained from game config.
    */
-  [[nodiscard]] int FirearmWeaponMass(int base_mass) const;
+  [[nodiscard]] int CalculateFirearmWeaponMass(int base_mass) const;
   /**
    * Returns mass of laser weapon using current tech level of laser weapons. Returns 0 if laser weapons are not
    * researched.
    * @param base_mass Mass of particular weapon obtained from game config.
    */
-  [[nodiscard]] int LaserWeaponMass(int base_mass) const;
+  [[nodiscard]] int CalculateLaserWeaponMass(int base_mass) const;
   /**
    * Returns defence of standard armor using current tech level of standard armor. Returns 0 if standard armor is not
    * researched.
    * @param base_defence Defence of particular kind of standard armor obtained from game config.
    */
-  [[nodiscard]] int StandardArmorDefence(int base_defence) const;
+  [[nodiscard]] int CalculateStandardArmorDefence(int base_defence) const;
   /**
    * Returns mass of standard armor using current tech level of standard armor. Returns 0 if standard armor is not
    * researched.
    * @param base_mass Mass of particular kind of standard armor obtained from game config.
    */
-  [[nodiscard]] int StandardArmorMass(int base_mass) const;
+  [[nodiscard]] int CalculateStandardArmorMass(int base_mass) const;
   /**
    * Returns defence of composite armor using current tech level of composite armor. Returns 0 if composite armor is
    * not researched.
    * @param base_defence Defence of particular kind of composite armor obtained from game config.
    */
-  [[nodiscard]] int CompositeArmorDefence(int base_defence) const;
+  [[nodiscard]] int CalculateCompositeArmorDefence(int base_defence) const;
   /**
    * Returns mass of composite armor using current tech level of composite armor. Returns 0 if composite armor is not
    * researched.
    * @param base_mass Mass of particular kind of composite armor obtained from game config.
    */
-  [[nodiscard]] int CompositeArmorMass(int base_mass) const;
+  [[nodiscard]] int CalculateCompositeArmorMass(int base_mass) const;
 
  private:
   /** Const reference to game config. */
@@ -126,6 +126,21 @@ class Tech {
    * @param tech_level Tech level.
    */
   [[nodiscard]] double TechLevelEffect(TechLevel tech_level) const;
+
+  /**
+   * Calculates generic characteristic with value proportional to tech level using its base value and tech level.
+   * Returns 0 if given tech level is `TechLevel::kNotResearched`.
+   * @param tech_level Tech level.
+   * @param base_value Base value of characteristic.
+   */
+  [[nodiscard]] int CalculateIncreasing(TechLevel tech_level, int base_value) const;
+  /**
+   * Calculates generic characteristic with value not proportional to tech level using its base value and tech level.
+   * Returns 0 if given tech level is `TechLevel::kNotResearched`.
+   * @param tech_level Tech level.
+   * @param base_value Base value of characteristic.
+   */
+  [[nodiscard]] int CalculateDecreasing(TechLevel tech_level, int base_value) const;
 
 };
 
