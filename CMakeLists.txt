@@ -60,7 +60,12 @@ set(SOURCES
         frontend/terminal/CursesTerminalFrontend.cpp
 
         tech/TechLevel.cpp
-        tech/Tech.cpp)
+        tech/Tech.cpp
+
+        widget/terminal/TerminalContext.cpp
+        widget/terminal/TextWidget.cpp
+        widget/terminal/SelectionListWidget.cpp
+        widget/terminal/GridContainerWidget.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
