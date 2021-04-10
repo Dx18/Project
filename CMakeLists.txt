@@ -65,7 +65,10 @@ set(SOURCES
         widget/terminal/TerminalContext.cpp
         widget/terminal/TextWidget.cpp
         widget/terminal/SelectionListWidget.cpp
-        widget/terminal/GridContainerWidget.cpp)
+        widget/terminal/GridContainerWidget.cpp
+
+        object_database/WeaponInfo.cpp
+        object_database/ArmorInfo.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
