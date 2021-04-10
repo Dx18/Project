@@ -2,8 +2,10 @@
 
 namespace unit::soldier::weapon::laser {
 
+using namespace object_database;
+
 SoldierLaserPistol::SoldierLaserPistol(const config::GameConfig &game_config)
-    : BasicLaserWeapon(game_config.soldier_laser_pistol_mass) {
+    : BasicLaserWeapon(game_config.WeaponMass(WeaponType::kSoldierLaserPistol)) {
 
 }
 

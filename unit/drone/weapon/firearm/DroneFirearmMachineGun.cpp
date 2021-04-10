@@ -2,9 +2,11 @@
 
 namespace unit::drone::weapon::firearm {
 
+using namespace object_database;
+
 DroneFirearmMachineGun::DroneFirearmMachineGun(const config::GameConfig &game_config)
-    : BasicFirearmWeapon(0, game_config.drone_firearm_machine_gun_max_ammo,
-                         game_config.drone_firearm_machine_gun_mass) {
+    : BasicFirearmWeapon(0, game_config.WeaponMaxAmmo(kDroneFirearmMachineGun).value(),
+                         game_config.WeaponMass(kDroneFirearmMachineGun)) {
 
 }
 
