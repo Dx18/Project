@@ -38,6 +38,9 @@ set(SOURCES
         unit/drone/weapon/laser/DroneLaserWeaponFactory.cpp
         unit/drone/DroneBuilder.cpp
 
+        headquarters_model/tech/TechLevel.cpp
+        headquarters_model/tech/Tech.cpp
+
         config/Config.cpp
         config/GameConfig.cpp
         config/INIConfigStructureReader.cpp
@@ -58,9 +61,6 @@ set(SOURCES
         frontend/terminal/ITerminalInput.cpp
         frontend/terminal/TerminalEvents.cpp
         frontend/terminal/CursesTerminalFrontend.cpp
-
-        tech/TechLevel.cpp
-        tech/Tech.cpp
 
         widget/terminal/TerminalContext.cpp
         widget/terminal/TextWidget.cpp

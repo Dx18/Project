@@ -1,6 +1,6 @@
 #pragma once
 
-namespace tech {
+namespace headquarters_model::tech {
 
 /** Level of technology available. */
 enum TechLevel {

@@ -6,7 +6,7 @@
 
 #include "TechLevel.h"
 
-namespace tech {
+namespace headquarters_model::tech {
 
 /** Technologies currently researched. */
 class Tech {

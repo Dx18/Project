@@ -1,6 +1,6 @@
 #include "Tech.h"
 
-namespace tech {
+namespace headquarters_model::tech {
 
 TechLevel tech_level_from_int(int value) {
   if (value == TechLevel::kNotResearched) {

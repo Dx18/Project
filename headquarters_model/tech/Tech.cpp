@@ -1,6 +1,6 @@
 #include "Tech.h"
 
-namespace tech {
+namespace headquarters_model::tech {
 
 Tech::Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info)
     : game_config_(game_config),
@@ -15,7 +15,7 @@ Tech::Tech(const config::GameConfig &game_config, const config::ConfigSectionStr
 
 }
 
-const config::GameConfig & Tech::GameConfig() const {
+const config::GameConfig &Tech::GameConfig() const {
   return game_config_;
 }
 
