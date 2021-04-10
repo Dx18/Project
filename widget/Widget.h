@@ -68,6 +68,10 @@ class Widget {
 
 };
 
+/** Alias for shared pointer to abstract widget. */
+template<typename RenderContext>
+using WidgetPtr = std::shared_ptr<Widget<RenderContext>>;
+
 template<typename RenderContext>
 Widget<RenderContext>::Widget()
     : expand_({false, false}), focused_(false), parent_() {

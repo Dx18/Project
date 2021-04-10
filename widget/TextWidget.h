@@ -34,6 +34,10 @@ class TextWidget : public Widget<RenderContext> {
 
 };
 
+/** Alias for shared pointer to text widget. */
+template<typename RenderContext>
+using TextWidgetPtr = std::shared_ptr<TextWidget<RenderContext>>;
+
 template<typename RenderContext>
 TextWidget<RenderContext>::TextWidget(const std::string &text)
     : text_(text) {

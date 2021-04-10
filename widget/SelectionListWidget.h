@@ -80,6 +80,10 @@ class SelectionListWidget : public Widget<RenderContext> {
 
 };
 
+/** Alias for shared pointer to selection list widget. */
+template<typename RenderContext>
+using SelectionListWidgetPtr = std::shared_ptr<SelectionListWidget<RenderContext>>;
+
 template<typename RenderContext>
 SelectionListWidget<RenderContext>::SelectionListWidget(std::vector<std::string> items)
     : items_(std::move(items)), selected_item_(0), viewed_item_(0), selection_changed_() {

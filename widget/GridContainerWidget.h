@@ -100,6 +100,10 @@ class GridContainerWidget : public Widget<RenderContext> {
 
 };
 
+/** Alias for shared pointer to grid container widget. */
+template<typename RenderContext>
+using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget<RenderContext>>;
+
 template<typename RenderContext>
 GridContainerWidget<RenderContext>::GridContainerWidget(const util::Vector2<size_t> &dimensions)
     : dimensions_(dimensions), widgets_(dimensions_.x * dimensions_.y) {
