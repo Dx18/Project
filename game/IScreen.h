@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "frontend/InputEvent.h"
-#include "game_view/IViewFactory.h"
 #include "widget/Widget.h"
 
 namespace game {

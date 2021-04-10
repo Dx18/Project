@@ -60,9 +60,7 @@ set(SOURCES
         frontend/terminal/CursesTerminalFrontend.cpp
 
         tech/TechLevel.cpp
-        tech/Tech.cpp
-
-        game_view/IViewFactory.cpp)
+        tech/Tech.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})

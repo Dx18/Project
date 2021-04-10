@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include "game_view/IViewFactory.h"
 #include "frontend/IFrontendEvents.h"
 
 #include "IScreen.h"
