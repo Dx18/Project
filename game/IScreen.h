@@ -6,6 +6,7 @@
 
 #include "frontend/InputEvent.h"
 #include "game_view/IViewFactory.h"
+#include "widget/Widget.h"
 
 namespace game {
 
@@ -13,9 +14,8 @@ namespace game {
  * Game screen with defined lifecycle.
  *
  * Lifecycle:
- * - Initialize: post-constructor initialization; called once when screen is just created;
  * - OnResume: called after:
- *   - post-constructor initialization;
+ *   - constructing;
  *   - popping other screen from screen stack;
  * - Update: called when screen needs to be updated;
  * - Render: called when screen needs to be rendered;
@@ -25,19 +25,22 @@ namespace game {
  *
  * Other events:
  * - OnInput: character or key input is received.
+ *
+ * @tparam RenderContext Context used to render widgets.
  */
+template<typename RenderContext>
 class IScreen {
  public:
   /** Request to push given screen to screen stack. */
   struct PushScreenAction {
     /** New screen. */
-    std::unique_ptr<game::IScreen> new_screen;
+    std::unique_ptr<game::IScreen<RenderContext>> new_screen;
 
     /**
      * Creates push screen action.
      * @param new_screen New screen.
      */
-    explicit PushScreenAction(std::unique_ptr<game::IScreen> new_screen);
+    explicit PushScreenAction(std::unique_ptr<game::IScreen<RenderContext>> new_screen);
 
   };
 
@@ -52,8 +55,6 @@ class IScreen {
 
   virtual ~IScreen() = 0;
 
-  /** Post-constructor initialization. */
-  virtual void Initialize(game_view::IViewFactory &view_factory) = 0;
   /**
    * Called when screen needs to be updated. May return game action.
    * @param delta Time passed from previous frame in seconds.
@@ -63,7 +64,7 @@ class IScreen {
    * Called when screen needs to be rendered. May return game action.
    * @param delta Time passed from previous frame in seconds.
    */
-  virtual std::optional<Action> Render(std::chrono::microseconds delta) = 0;
+  virtual widget::Widget<RenderContext> &Render(std::chrono::microseconds delta) = 0;
   /**
    * Called after:
    * - post-constructor initialization;
@@ -83,5 +84,29 @@ class IScreen {
   virtual std::optional<Action> OnInput(const frontend::InputEvent &event);
 
 };
+
+template<typename RenderContext>
+IScreen<RenderContext>::PushScreenAction::PushScreenAction(std::unique_ptr<game::IScreen<RenderContext>> _new_screen)
+    : new_screen(std::move(_new_screen)) {
+
+}
+
+template<typename RenderContext>
+IScreen<RenderContext>::~IScreen() = default;
+
+template<typename RenderContext>
+std::optional<typename IScreen<RenderContext>::Action> IScreen<RenderContext>::OnResume() {
+  return {};
+}
+
+template<typename RenderContext>
+std::optional<typename IScreen<RenderContext>::Action> IScreen<RenderContext>::OnPause() {
+  return {};
+}
+
+template<typename RenderContext>
+std::optional<typename IScreen<RenderContext>::Action> IScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
+  return {};
+}
 
 }
