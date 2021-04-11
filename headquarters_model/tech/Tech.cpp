@@ -83,7 +83,7 @@ double Tech::TechLevelEffect(TechLevel tech_level) const {
   if (tech_level == TechLevel::kBasic) {
     return 1.0;
   } else if (tech_level == TechLevel::kAdvanced) {
-    return game_config_.advanced_tech_level_effect;
+    return game_config_.AdvancedTechLevelEffect();
   }
   return 0.0;
 }

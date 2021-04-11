@@ -1,57 +1,58 @@
 #pragma once
 
+#include "object_database/WeaponInfo.h"
+#include "object_database/ArmorInfo.h"
+
 #include "ConfigSectionStructure.h"
 
 namespace config {
 
-/** Game process config. */
-struct GameConfig {
-  /** Default max ammo for soldier firearm pistol. */
-  int soldier_firearm_pistol_max_ammo;
-  /** Default mass for soldier firearm pistol. */
-  int soldier_firearm_pistol_mass;
-  /** Default max ammo for soldier firearm shotgun. */
-  int soldier_firearm_shotgun_max_ammo;
-  /** Default mass for soldier firearm shotgun. */
-  int soldier_firearm_shotgun_mass;
-  /** Default max ammo for soldier firearm sniper rifle. */
-  int soldier_firearm_sniper_rifle_max_ammo;
-  /** Default mass for soldier firearm sniper rifle. */
-  int soldier_firearm_sniper_rifle_mass;
-  /** Default max ammo for soldier firearm machine gun. */
-  int soldier_firearm_machine_gun_max_ammo;
-  /** Default mass for soldier firearm machine gun. */
-  int soldier_firearm_machine_gun_mass;
-  /** Default mass for soldier laser pistol. */
-  int soldier_laser_pistol_mass;
-  /** Default mass for soldier laser shotgun. */
-  int soldier_laser_shotgun_mass;
-  /** Default mass for soldier laser sniper rifle. */
-  int soldier_laser_sniper_rifle_mass;
-  /** Default mass for soldier laser machine gun. */
-  int soldier_laser_machine_gun_mass;
-  /** Default defence for soldier standard armor. */
-  int soldier_standard_armor_defence;
-  /** Default mass for soldier standard armor. */
-  int soldier_standard_armor_mass;
-  /** Default defence for soldier standard armor. */
-  int soldier_composite_armor_defence;
-  /** Default mass for soldier standard armor. */
-  int soldier_composite_armor_mass;
-  /** Default max ammo for drone firearm machine gun. */
-  int drone_firearm_machine_gun_max_ammo;
-  /** Default mass for drone firearm machine gun. */
-  int drone_firearm_machine_gun_mass;
-  /** Default mass for drone laser machine gun. */
-  int drone_laser_machine_gun_mass;
-  /** Default defence for drone standard armor. */
-  int drone_standard_armor_defence;
-  /** Default mass for drone standard armor. */
-  int drone_standard_armor_mass;
-  /** Effect of advanced tech level. Base value is multiplied by the effect to get final value. */
-  double advanced_tech_level_effect;
+using namespace object_database;
 
+/** Game process config. */
+class GameConfig {
+ public:
+  /**
+   * Creates game config from given structure.
+   * @param section Structure of game config.
+   */
   explicit GameConfig(const ConfigSectionStructure &section);
+
+  /**
+   * Returns max ammo of weapon of given type. If it does not exist returns empty value.
+   * @param type Type of weapon.
+   */
+  [[nodiscard]] std::optional<int> WeaponMaxAmmo(WeaponType type) const;
+  /**
+   * Returns mass of weapon of given type.
+   * @param type Type of weapon
+   */
+  [[nodiscard]] int WeaponMass(WeaponType type) const;
+  /**
+   * Returns defence of armor of given type.
+   * @param type Type of armor.
+   */
+  [[nodiscard]] int ArmorDefence(ArmorType type) const;
+  /**
+   * Returns mass of armor of given type.
+   * @param type Type of armor.
+   */
+  [[nodiscard]] int ArmorMass(ArmorType type) const;
+
+  /** Returns effect of advanced tech level. Base value is multiplied or divided by the effect to get final value. */
+  [[nodiscard]] double AdvancedTechLevelEffect() const;
+
+ private:
+  /** Array with weapon max ammo. */
+  std::array<std::optional<int>, kWeaponInfo.size()> weapon_max_ammo_;
+  /** Array with weapon mass. */
+  std::array<int, kWeaponInfo.size()> weapon_mass_;
+  /** Array with armor defence. */
+  std::array<int, kArmorInfo.size()> armor_defence_;
+  /** Array with armor mass. */
+  std::array<int, kArmorInfo.size()> armor_mass_;
+  /** Effect of advanced tech level. Base value is multiplied or divided by the effect to get final value. */
+  double advanced_tech_level_effect_;
 
 };
 
