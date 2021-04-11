@@ -16,4 +16,14 @@ TechLevel tech_level_from_int(int value) {
   throw std::runtime_error(message.str());
 }
 
+TechLevel next_tech_level(TechLevel tech_level) {
+  if (tech_level == TechLevel::kNotResearched) {
+    return TechLevel::kBasic;
+  } else if (tech_level == TechLevel::kBasic) {
+    return TechLevel::kAdvanced;
+  }
+
+  throw std::runtime_error("cannot get next tech level because it does not exist");
+}
+
 }

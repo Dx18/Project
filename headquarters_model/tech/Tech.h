@@ -3,10 +3,17 @@
 #include <cmath>
 
 #include "config/GameConfig.h"
+#include "headquarters_model/Resources.h"
+#include "object_database/WeaponTechInfo.h"
+#include "object_database/ArmorTechInfo.h"
 
 #include "TechLevel.h"
+#include "ResearchResult.h"
 
 namespace headquarters_model::tech {
+
+using namespace headquarters_model;
+using namespace object_database;
 
 /** Technologies currently researched. */
 class Tech {
@@ -27,95 +34,64 @@ class Tech {
    */
   Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info);
 
-  /** Returns const reference to game config. */
-  [[nodiscard]] const config::GameConfig &GameConfig() const;
-
-  /** Returns tech level of firearm weapons. */
-  [[nodiscard]] TechLevel FirearmWeaponTechLevel() const;
   /**
-   * Sets tech level of firearm weapons.
-   * @param new_tech_level Tech level to set.
+   * Returns max ammo of weapons of given weapon type if exists. Uses current tech level. Returns 0 if technology is
+   * not researched
+   * @param type Type of weapon.
    */
-  void SetFirearmWeaponTechLevel(TechLevel new_tech_level);
-
-  /** Returns tech level of laser weapons. */
-  [[nodiscard]] TechLevel LaserWeaponTechLevel() const;
+  [[nodiscard]] std::optional<int> WeaponMaxAmmo(WeaponType type) const;
   /**
-   * Sets tech level of laser weapons.
-   * @param new_tech_level Tech level to set.
+   * Returns mass of weapons of given weapon type. Uses current tech level. Returns 0 if technology is not researched
+   * @param type Type of weapon.
    */
-  void SetLaserWeaponTechLevel(TechLevel new_tech_level);
-
-  /** Returns tech level of standard armor. */
-  [[nodiscard]] TechLevel StandardArmorTechLevel() const;
+  [[nodiscard]] int WeaponMass(WeaponType type) const;
   /**
-   * Sets tech level of standard armor.
-   * @param new_tech_level Tech level to set.
+   * Returns defence of armor of given armor type. Uses current tech level. Returns 0 if technology is not researched
+   * @param type Type of armor.
    */
-  void SetStandardArmorTechLevel(TechLevel new_tech_level);
-
-  /** Returns tech level of composite armor. */
-  [[nodiscard]] TechLevel CompositeArmorTechLevel() const;
+  [[nodiscard]] int ArmorDefence(ArmorType type) const;
   /**
-   * Sets tech level of composite armor.
-   * @param new_tech_level Tech level to set.
+   * Returns mass of armor of given armor type. Uses current tech level. Returns 0 if technology is not researched
+   * @param type Type of armor.
    */
-  void SetCompositeArmorTechLevel(TechLevel new_tech_level);
+  [[nodiscard]] int ArmorMass(ArmorType type) const;
 
   /**
-   * Returns max ammo of firearm weapon using current tech level of firearm weapons. Returns 0 if firearm weapons are
-   * not researched.
-   * @param base_max_ammo Max ammo of particular weapon obtained from game config.
+   * Returns current tech level of given weapon tech type.
+   * @param tech_type Tech type of weapon.
    */
-  [[nodiscard]] int CalculateFirearmWeaponMaxAmmo(int base_max_ammo) const;
+  [[nodiscard]] TechLevel WeaponTechLevel(WeaponTechType tech_type) const;
   /**
-   * Returns mass of firearm weapon using current tech level of firearm weapons. Returns 0 if firearm weapons are not
-   * researched.
-   * @param base_mass Mass of particular weapon obtained from game config.
+   * Returns current tech level of given armor tech type.
+   * @param tech_type Tech type of armor.
    */
-  [[nodiscard]] int CalculateFirearmWeaponMass(int base_mass) const;
+  [[nodiscard]] TechLevel ArmorTechLevel(ArmorTechType tech_type) const;
   /**
-   * Returns mass of laser weapon using current tech level of laser weapons. Returns 0 if laser weapons are not
-   * researched.
-   * @param base_mass Mass of particular weapon obtained from game config.
+   * Tries to increase weapon tech level. Returned result:
+   * - `ResearchResult::kResearched` if research is successfully performed.
+   * - `ResearchResult::kAlreadyMaxLevel` if current tech level is already max possible.
+   * - `ResearchResult::kNotEnoughResources` if there is not enough resources for research.
+   * @param tech_type Tech type of weapon.
+   * @param resources Reference to headquarters resources.
    */
-  [[nodiscard]] int CalculateLaserWeaponMass(int base_mass) const;
+  ResearchResult ResearchWeapon(WeaponTechType tech_type, Resources &resources);
   /**
-   * Returns defence of standard armor using current tech level of standard armor. Returns 0 if standard armor is not
-   * researched.
-   * @param base_defence Defence of particular kind of standard armor obtained from game config.
+   * Tries to increase armor tech level. Returned result:
+   * - `ResearchResult::kResearched` if research is successfully performed.
+   * - `ResearchResult::kAlreadyMaxLevel` if current tech level is already max possible.
+   * - `ResearchResult::kNotEnoughResources` if there is not enough resources for research.
+   * @param tech_type Tech type of armor.
+   * @param resources Reference to headquarters resources.
    */
-  [[nodiscard]] int CalculateStandardArmorDefence(int base_defence) const;
-  /**
-   * Returns mass of standard armor using current tech level of standard armor. Returns 0 if standard armor is not
-   * researched.
-   * @param base_mass Mass of particular kind of standard armor obtained from game config.
-   */
-  [[nodiscard]] int CalculateStandardArmorMass(int base_mass) const;
-  /**
-   * Returns defence of composite armor using current tech level of composite armor. Returns 0 if composite armor is
-   * not researched.
-   * @param base_defence Defence of particular kind of composite armor obtained from game config.
-   */
-  [[nodiscard]] int CalculateCompositeArmorDefence(int base_defence) const;
-  /**
-   * Returns mass of composite armor using current tech level of composite armor. Returns 0 if composite armor is not
-   * researched.
-   * @param base_mass Mass of particular kind of composite armor obtained from game config.
-   */
-  [[nodiscard]] int CalculateCompositeArmorMass(int base_mass) const;
+  ResearchResult ResearchArmor(ArmorTechType tech_type, Resources &resources);
 
  private:
   /** Const reference to game config. */
   const config::GameConfig &game_config_;
-  /** Tech level of firearm weapons. */
-  TechLevel firearm_weapon_tech_level_;
-  /** Tech level of laser weapons. */
-  TechLevel laser_weapon_tech_level_;
-  /** Tech level of standard armor. */
-  TechLevel standard_armor_tech_level_;
-  /** Tech level of composite armor. */
-  TechLevel composite_armor_tech_level_;
+  /** Tech levels of weapons. */
+  std::array<TechLevel, kWeaponTechInfo.size()> weapon_tech_level_;
+  /** Tech levels of armor. */
+  std::array<TechLevel, kArmorTechInfo.size()> armor_tech_level_;
 
   /**
    * Uses tech level to get the effect of given tech level:

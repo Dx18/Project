@@ -20,4 +20,10 @@ enum TechLevel {
  */
 TechLevel tech_level_from_int(int value);
 
+/**
+ * Returns next tech level or throws `std::runtime_error` if there is no such.
+ * @param tech_level Tech level.
+ */
+TechLevel next_tech_level(TechLevel tech_level);
+
 }

@@ -4,9 +4,9 @@ namespace unit::soldier::weapon::firearm {
 
 using namespace object_database;
 
-SoldierFirearmSniperRifle::SoldierFirearmSniperRifle(const config::GameConfig &game_config)
-    : BasicFirearmWeapon(0, game_config.WeaponMaxAmmo(WeaponType::kSoldierFirearmSniperRifle).value(),
-                         game_config.WeaponMass(WeaponType::kSoldierFirearmSniperRifle)) {
+SoldierFirearmSniperRifle::SoldierFirearmSniperRifle(const Tech &tech)
+    : BasicFirearmWeapon(0, tech.WeaponMaxAmmo(WeaponType::kSoldierFirearmSniperRifle).value(),
+                         tech.WeaponMass(WeaponType::kSoldierFirearmSniperRifle)) {
 
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/GameConfig.h"
+#include "headquarters_model/tech/Tech.h"
 
 #include "../ISoldierWeaponFactory.h"
 #include "SoldierFirearmMachineGun.h"
@@ -10,18 +10,20 @@
 
 namespace unit::soldier::weapon::firearm {
 
+using namespace headquarters_model::tech;
+
 /** Factory which creates soldier firearm weapons. */
 class SoldierFirearmWeaponFactory : public ISoldierWeaponFactory {
  private:
-  /** Const reference to game config. */
-  const config::GameConfig &game_config_;
+  /** Const reference to headquarters tech. */
+  const Tech &tech_;
 
  public:
   /**
    * Creates soldier firearm weapon factory.
-   * @param game_config Game process config.
+   * @param tech Current tech state.
    */
-  explicit SoldierFirearmWeaponFactory(const config::GameConfig &game_config);
+  explicit SoldierFirearmWeaponFactory(const Tech &tech);
 
   [[nodiscard]] std::unique_ptr<ISoldierPistol> CreatePistol() const override;
   [[nodiscard]] std::unique_ptr<ISoldierShotgun> CreateShotgun() const override;

@@ -3,80 +3,72 @@
 namespace headquarters_model::tech {
 
 Tech::Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info)
-    : game_config_(game_config),
-      firearm_weapon_tech_level_(tech_level_from_int(
-          std::stoi(tech_info.values.at("firearm_weapon_tech_level")))),
-      laser_weapon_tech_level_(tech_level_from_int(
-          std::stoi(tech_info.values.at("laser_weapon_tech_level")))),
-      standard_armor_tech_level_(tech_level_from_int(
-          std::stoi(tech_info.values.at("standard_armor_tech_level")))),
-      composite_armor_tech_level_(tech_level_from_int(
-          std::stoi(tech_info.values.at("composite_armor_tech_level")))) {
-
+    : game_config_(game_config), weapon_tech_level_(), armor_tech_level_() {
+  for (const WeaponTechInfo &weapon_tech_info : kWeaponTechInfo) {
+    weapon_tech_level_[weapon_tech_info.tech_type] =
+        tech_level_from_int(std::stoi(tech_info.values.at(weapon_tech_info.name + "_tech_level")));
+  }
+  for (const ArmorTechInfo &armor_tech_info : kArmorTechInfo) {
+    armor_tech_level_[armor_tech_info.tech_type] =
+        tech_level_from_int(std::stoi(tech_info.values.at(armor_tech_info.name + "_tech_level")));
+  }
 }
 
-const config::GameConfig &Tech::GameConfig() const {
-  return game_config_;
+std::optional<int> Tech::WeaponMaxAmmo(WeaponType type) const {
+  std::optional<int> base_value = game_config_.WeaponMaxAmmo(type);
+  if (!base_value.has_value()) {
+    return {};
+  }
+
+  WeaponTechType tech_type = kWeaponInfo[type].tech_type;
+  return CalculateIncreasing(weapon_tech_level_[tech_type], base_value.value());
 }
 
-TechLevel Tech::FirearmWeaponTechLevel() const {
-  return firearm_weapon_tech_level_;
+int Tech::WeaponMass(WeaponType type) const {
+  int base_value = game_config_.WeaponMass(type);
+
+  WeaponTechType tech_type = kWeaponInfo[type].tech_type;
+  return CalculateDecreasing(weapon_tech_level_[tech_type], base_value);
 }
 
-void Tech::SetFirearmWeaponTechLevel(TechLevel new_tech_level) {
-  firearm_weapon_tech_level_ = new_tech_level;
+int Tech::ArmorDefence(ArmorType type) const {
+  int base_value = game_config_.ArmorDefence(type);
+
+  ArmorTechType tech_type = kArmorInfo[type].tech_type;
+  return CalculateIncreasing(armor_tech_level_[tech_type], base_value);
 }
 
-TechLevel Tech::LaserWeaponTechLevel() const {
-  return laser_weapon_tech_level_;
+int Tech::ArmorMass(ArmorType type) const {
+  int base_value = game_config_.ArmorMass(type);
+
+  ArmorTechType tech_type = kArmorInfo[type].tech_type;
+  return CalculateDecreasing(armor_tech_level_[tech_type], base_value);
 }
 
-void Tech::SetLaserWeaponTechLevel(TechLevel new_tech_level) {
-  laser_weapon_tech_level_ = new_tech_level;
+TechLevel Tech::WeaponTechLevel(WeaponTechType tech_type) const {
+  return weapon_tech_level_[tech_type];
 }
 
-TechLevel Tech::StandardArmorTechLevel() const {
-  return standard_armor_tech_level_;
+TechLevel Tech::ArmorTechLevel(ArmorTechType tech_type) const {
+  return armor_tech_level_[tech_type];
 }
 
-void Tech::SetStandardArmorTechLevel(TechLevel new_tech_level) {
-  standard_armor_tech_level_ = new_tech_level;
+ResearchResult Tech::ResearchWeapon(WeaponTechType tech_type, Resources &resources) {
+  TechLevel &level = weapon_tech_level_[tech_type];
+  if (level == TechLevel::kAdvanced) {
+    return ResearchResult::kAlreadyMaxLevel;
+  }
+  level = next_tech_level(level);
+  return ResearchResult::kResearched;
 }
 
-TechLevel Tech::CompositeArmorTechLevel() const {
-  return composite_armor_tech_level_;
-}
-
-void Tech::SetCompositeArmorTechLevel(TechLevel new_tech_level) {
-  composite_armor_tech_level_ = new_tech_level;
-}
-
-int Tech::CalculateFirearmWeaponMaxAmmo(int base_max_ammo) const {
-  return CalculateIncreasing(firearm_weapon_tech_level_, base_max_ammo);
-}
-
-int Tech::CalculateFirearmWeaponMass(int base_mass) const {
-  return CalculateDecreasing(firearm_weapon_tech_level_, base_mass);
-}
-
-int Tech::CalculateLaserWeaponMass(int base_mass) const {
-  return CalculateDecreasing(laser_weapon_tech_level_, base_mass);
-}
-
-int Tech::CalculateStandardArmorDefence(int base_defence) const {
-  return CalculateIncreasing(standard_armor_tech_level_, base_defence);
-}
-
-int Tech::CalculateStandardArmorMass(int base_mass) const {
-  return CalculateDecreasing(standard_armor_tech_level_, base_mass);
-}
-
-int Tech::CalculateCompositeArmorDefence(int base_defence) const {
-  return CalculateIncreasing(composite_armor_tech_level_, base_defence);
-}
-
-int Tech::CalculateCompositeArmorMass(int base_mass) const {
-  return CalculateDecreasing(composite_armor_tech_level_, base_mass);
+ResearchResult Tech::ResearchArmor(ArmorTechType tech_type, Resources &resources) {
+  TechLevel &level = armor_tech_level_[tech_type];
+  if (level == TechLevel::kAdvanced) {
+    return ResearchResult::kAlreadyMaxLevel;
+  }
+  level = next_tech_level(level);
+  return ResearchResult::kResearched;
 }
 
 double Tech::TechLevelEffect(TechLevel tech_level) const {
