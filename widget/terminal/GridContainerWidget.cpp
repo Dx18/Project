@@ -51,7 +51,10 @@ void GridContainerWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &conte
       };
 
       RenderSurfaceRegion region(context, rectangle);
-      widgets_[GetSlotIndex({j, i})]->Render(region);
+      WidgetPtr widget = widgets_[GetSlotIndex({j, i})];
+      if (widget) {
+        widget->Render(region);
+      }
     }
   }
 }
