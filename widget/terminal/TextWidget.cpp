@@ -32,10 +32,21 @@ template<>
 void widget::TextWidget<frontend::terminal::IRenderSurfaceWrite>::Render(frontend::terminal::IRenderSurfaceWrite &context) {
   using namespace frontend::terminal;
 
-  size_t chars_to_render = std::min(text_.size(), context.Size().x);
+  util::Vector2<size_t> size = context.Size();
+
+  size_t row = 0;
+  size_t column = 0;
   ColorPair color(Color::kWhite, Color::kBlack);
-  for (size_t i = 0; i < chars_to_render; ++i) {
-    context.Get({i, 0}) = CharData(text_[i], color);
+  for (char ch : text_) {
+    if (ch == '\n') {
+      column = 0;
+      ++row;
+    } else {
+      if (column < size.x && row < size.y) {
+        context.Get({column, row}) = CharData(ch, color);
+      }
+      ++column;
+    }
   }
 }
 
