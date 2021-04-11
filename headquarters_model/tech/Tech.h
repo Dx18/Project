@@ -31,8 +31,9 @@ class Tech {
    *                    - laser_weapon_tech_level
    *                    - standard_armor_tech_level
    *                    - composite_armor_tech_level
+   * @param resources Reference to resources.
    */
-  Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info);
+  Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info, Resources &resources);
 
   /**
    * Returns max ammo of weapons of given weapon type if exists. Uses current tech level. Returns 0 if technology is
@@ -72,18 +73,16 @@ class Tech {
    * - `ResearchResult::kAlreadyMaxLevel` if current tech level is already max possible.
    * - `ResearchResult::kNotEnoughResources` if there is not enough resources for research.
    * @param tech_type Tech type of weapon.
-   * @param resources Reference to headquarters resources.
    */
-  ResearchResult ResearchWeapon(WeaponTechType tech_type, Resources &resources);
+  ResearchResult ResearchWeapon(WeaponTechType tech_type);
   /**
    * Tries to increase armor tech level. Returned result:
    * - `ResearchResult::kResearched` if research is successfully performed.
    * - `ResearchResult::kAlreadyMaxLevel` if current tech level is already max possible.
    * - `ResearchResult::kNotEnoughResources` if there is not enough resources for research.
    * @param tech_type Tech type of armor.
-   * @param resources Reference to headquarters resources.
    */
-  ResearchResult ResearchArmor(ArmorTechType tech_type, Resources &resources);
+  ResearchResult ResearchArmor(ArmorTechType tech_type);
 
  private:
   /** Const reference to game config. */
@@ -92,6 +91,8 @@ class Tech {
   std::array<TechLevel, kWeaponTechInfo.size()> weapon_tech_level_;
   /** Tech levels of armor. */
   std::array<TechLevel, kArmorTechInfo.size()> armor_tech_level_;
+  /** Reference to resources. */
+  Resources &resources_;
 
   /**
    * Uses tech level to get the effect of given tech level:

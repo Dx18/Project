@@ -19,8 +19,9 @@ class Armory {
   /**
    * Creates armory from given data.
    * @param armory_info Information about armory.
+   * @param resources Reference to resources.
    */
-  explicit Armory(const config::ConfigSectionStructure &armory_info);
+  explicit Armory(const config::ConfigSectionStructure &armory_info, Resources &resources);
 
   /**
    * Returns number of weapons of certain type.
@@ -32,9 +33,8 @@ class Armory {
    * - `BuildResult::kBuild` if building was successful.
    * - `BuildResult::kNotEnoughResources` if there is not enough resources for building.
    * @param type Type of weapon to build.
-   * @param resources Reference to resources.
    */
-  BuildResult BuildWeapon(WeaponType type, Resources &resources);
+  BuildResult BuildWeapon(WeaponType type);
   /**
    * Returns number of armor of certain type.
    * @param type Type of armor.
@@ -45,15 +45,16 @@ class Armory {
    * - `BuildResult::kBuild` if building was successful.
    * - `BuildResult::kNotEnoughResources` if there is not enough resources for building.
    * @param type Type of armor to build.
-   * @param resources Reference to resources.
    */
-  BuildResult BuildArmor(ArmorType type, Resources &resources);
+  BuildResult BuildArmor(ArmorType type);
 
  private:
   /** Current number of each type of weapon. */
   std::array<size_t, kWeaponInfo.size()> weapon_count_;
   /** Current number of each type of armor. */
   std::array<size_t, kArmorInfo.size()> armor_count_;
+  /** Reference to resources. */
+  Resources &resources_;
 
 };
 

@@ -2,8 +2,8 @@
 
 namespace headquarters_model::armory {
 
-Armory::Armory(const config::ConfigSectionStructure &armory_info)
-    : weapon_count_(), armor_count_() {
+Armory::Armory(const config::ConfigSectionStructure &armory_info, Resources &resources)
+    : weapon_count_(), armor_count_(), resources_(resources) {
   for (const WeaponInfo &weapon_info : kWeaponInfo) {
     weapon_count_[weapon_info.type] = std::stoi(armory_info.values.at(weapon_info.name + "_count"));
   }
@@ -17,7 +17,7 @@ size_t Armory::WeaponCount(WeaponType type) const {
   return weapon_count_[type];
 }
 
-BuildResult Armory::BuildWeapon(WeaponType type, Resources &resources) {
+BuildResult Armory::BuildWeapon(WeaponType type) {
   ++weapon_count_[type];
   return BuildResult::kBuilt;
 }
@@ -26,7 +26,7 @@ size_t Armory::ArmorCount(ArmorType type) const {
   return armor_count_[type];
 }
 
-BuildResult Armory::BuildArmor(ArmorType type, Resources &resources) {
+BuildResult Armory::BuildArmor(ArmorType type) {
   ++armor_count_[type];
   return BuildResult::kBuilt;
 }

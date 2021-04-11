@@ -2,8 +2,8 @@
 
 namespace headquarters_model::tech {
 
-Tech::Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info)
-    : game_config_(game_config), weapon_tech_level_(), armor_tech_level_() {
+Tech::Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info, Resources &resources)
+    : game_config_(game_config), weapon_tech_level_(), armor_tech_level_(), resources_(resources) {
   for (const WeaponTechInfo &weapon_tech_info : kWeaponTechInfo) {
     weapon_tech_level_[weapon_tech_info.tech_type] =
         tech_level_from_int(std::stoi(tech_info.values.at(weapon_tech_info.name + "_tech_level")));
@@ -53,7 +53,7 @@ TechLevel Tech::ArmorTechLevel(ArmorTechType tech_type) const {
   return armor_tech_level_[tech_type];
 }
 
-ResearchResult Tech::ResearchWeapon(WeaponTechType tech_type, Resources &resources) {
+ResearchResult Tech::ResearchWeapon(WeaponTechType tech_type) {
   TechLevel &level = weapon_tech_level_[tech_type];
   if (level == TechLevel::kAdvanced) {
     return ResearchResult::kAlreadyMaxLevel;
@@ -62,7 +62,7 @@ ResearchResult Tech::ResearchWeapon(WeaponTechType tech_type, Resources &resourc
   return ResearchResult::kResearched;
 }
 
-ResearchResult Tech::ResearchArmor(ArmorTechType tech_type, Resources &resources) {
+ResearchResult Tech::ResearchArmor(ArmorTechType tech_type) {
   TechLevel &level = armor_tech_level_[tech_type];
   if (level == TechLevel::kAdvanced) {
     return ResearchResult::kAlreadyMaxLevel;
