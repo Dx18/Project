@@ -27,10 +27,17 @@ template<>
 void GridContainerWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &context) {
   util::Vector2<size_t> size = context.Size();
 
+  if (render_separators_ && (dimensions_.y > size.y + 1 || dimensions_.x > size.x + 1)) {
+    return;
+  }
+
+  size_t available_height = size.y - (render_separators_ ? 1 : 0) * (dimensions_.y - 1);
+  size_t available_width = size.x - (render_separators_ ? 1 : 0) * (dimensions_.x - 1);
+
   std::vector<size_t> actual_row_sizes;
-  ResolveLinearCells(CreateRowCells(), size.y, actual_row_sizes);
+  ResolveLinearCells(CreateRowCells(), available_height, actual_row_sizes);
   std::vector<size_t> actual_column_sizes;
-  ResolveLinearCells(CreateColumnCells(), size.x, actual_column_sizes);
+  ResolveLinearCells(CreateColumnCells(), available_width, actual_column_sizes);
 
   std::vector<size_t> prefix_row_sizes(actual_row_sizes.size() + 1);
   for (size_t i = 0; i < actual_row_sizes.size(); ++i) {
@@ -41,11 +48,35 @@ void GridContainerWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &conte
     prefix_column_sizes[j + 1] = prefix_column_sizes[j] + actual_column_sizes[j];
   }
 
+  if (actual_row_sizes.empty() || actual_column_sizes.empty()) {
+    return;
+  }
+
+  if (render_separators_) {
+    ColorPair color(Color::kWhite, Color::kBlack);
+
+    for (size_t i = 0; i < actual_row_sizes.size() - 1; ++i) {
+      for (size_t j = 0; j < size.x; ++j) {
+        context.Get({j, prefix_row_sizes[i + 1] + i}) = CharData('-', color);
+      }
+    }
+    for (size_t j = 0; j < actual_column_sizes.size() - 1; ++j) {
+      for (size_t i = 0; i < size.y; ++i) {
+        context.Get({prefix_column_sizes[j + 1] + j, i}) = CharData('|', color);
+      }
+    }
+    for (size_t i = 0; i < actual_row_sizes.size() - 1; ++i) {
+      for (size_t j = 0; j < actual_column_sizes.size() - 1; ++j) {
+        context.Get({prefix_column_sizes[j + 1] + j, prefix_row_sizes[i + 1] + i}) = CharData('+', color);
+      }
+    }
+  }
+
   for (size_t i = 0; i < actual_row_sizes.size(); ++i) {
     for (size_t j = 0; j < actual_column_sizes.size(); ++j) {
       util::Rectangle<size_t> rectangle = {
-          prefix_column_sizes[j],
-          prefix_row_sizes[i],
+          prefix_column_sizes[j] + (render_separators_ ? j : 0),
+          prefix_row_sizes[i] + (render_separators_ ? i : 0),
           prefix_column_sizes[j + 1] - prefix_column_sizes[j],
           prefix_row_sizes[i + 1] - prefix_row_sizes[i]
       };

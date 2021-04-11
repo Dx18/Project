@@ -45,6 +45,11 @@ class GridContainerWidget : public Widget<RenderContext> {
    */
   void Set(const util::Vector2<size_t> &position, const WidgetPtr &widget);
 
+  /** Returns true if separators between cells should be rendered. */
+  [[nodiscard]] bool RenderSeparators() const;
+  /** Sets separator rendering. */
+  void SetRenderSeparators(bool render_separators);
+
   /**
    * Returns min size of grid container based on min sizes of contained widgets. If row (column) does not contain any
    * widgets its height (width) is considered as 0.
@@ -57,6 +62,8 @@ class GridContainerWidget : public Widget<RenderContext> {
   util::Vector2<size_t> dimensions_;
   /** Widgets. */
   std::vector<WidgetPtr> widgets_;
+  /** True if separators between grid cells should be rendered. */
+  bool render_separators_;
 
   /**
    * Checks if current grid contains slot with given position. Throws `std::runtime_error` if given position is not in
@@ -106,7 +113,7 @@ using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget<RenderContext
 
 template<typename RenderContext>
 GridContainerWidget<RenderContext>::GridContainerWidget(const util::Vector2<size_t> &dimensions)
-    : dimensions_(dimensions), widgets_(dimensions_.x * dimensions_.y) {
+    : dimensions_(dimensions), widgets_(dimensions_.x * dimensions_.y), render_separators_(false) {
 
 }
 
@@ -126,6 +133,16 @@ template<typename RenderContext>
 void GridContainerWidget<RenderContext>::Set(const util::Vector2<size_t> &position, const WidgetPtr &widget) {
   CheckIfContainsSlot(position);
   widgets_[GetSlotIndex(position)] = widget;
+}
+
+template<typename RenderContext>
+bool GridContainerWidget<RenderContext>::RenderSeparators() const {
+  return render_separators_;
+}
+
+template<typename RenderContext>
+void GridContainerWidget<RenderContext>::SetRenderSeparators(bool render_separators) {
+  render_separators_ = render_separators;
 }
 
 template<typename RenderContext>
