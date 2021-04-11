@@ -88,9 +88,12 @@ void Game<Context>::Run() {
 
   auto previous_time = high_resolution_clock::now();
   auto frame_duration = std::chrono::milliseconds(20);
+  std::vector<std::optional<Action>> actions;
   while (!ShouldQuit()) {
     auto current_time = high_resolution_clock::now();
     auto target_time = previous_time + frame_duration;
+
+    actions.clear();
 
     if (current_time < target_time) {
       std::this_thread::sleep_for(target_time - current_time);
@@ -104,27 +107,23 @@ void Game<Context>::Run() {
 
     while (std::unique_ptr<frontend::IEvent> event = frontend_events.PollEvent()) {
       if (auto input_event = dynamic_cast<const frontend::InputEvent *>(event.get())) {
-        HandleAction(screen.OnInput(*input_event));
+        actions.push_back(screen.OnInput(*input_event));
       }
-
-      if (ShouldQuit()) {
-        break;
-      }
-    }
-
-    if (ShouldQuit()) {
-      break;
     }
 
     microseconds delta = duration_cast<microseconds>(current_time - previous_time);
 
-    HandleAction(screen.Update(delta));
-    if (ShouldQuit()) {
-      break;
-    }
+    actions.push_back(screen.Update(delta));
 
     widget::Widget<typename Context::RenderContext> &widget = screen.Render(delta);
     context_.Render(widget);
+
+    for (std::optional<Action> &action : actions) {
+      HandleAction(std::move(action));
+      if (ShouldQuit()) {
+        break;
+      }
+    }
 
     previous_time = current_time;
   }
