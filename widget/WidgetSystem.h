@@ -34,6 +34,8 @@ class WidgetSystem {
    * @param focused New focused widget.
    */
   void SetFocused(const WidgetWeakPtr &focused);
+  /** Resets focus. */
+  void ResetFocus();
   /**
    * Handles keyboard input. Returns true if input is successfully handled.
    * @param input Keyboard input.
@@ -72,6 +74,11 @@ void WidgetSystem<RenderContext>::SetRoot(const WidgetSystem::WidgetPtr &root) {
 template<typename RenderContext>
 void WidgetSystem<RenderContext>::SetFocused(const WidgetSystem::WidgetWeakPtr &focused) {
   focused_ = focused;
+}
+
+template<typename RenderContext>
+void WidgetSystem<RenderContext>::ResetFocus() {
+  focused_.reset();
 }
 
 template<typename RenderContext>
