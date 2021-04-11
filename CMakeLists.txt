@@ -38,6 +38,7 @@ set(SOURCES
         unit/drone/weapon/laser/DroneLaserWeaponFactory.cpp
         unit/drone/DroneBuilder.cpp
 
+        headquarters_model/HeadquartersModel.cpp
         headquarters_model/Resources.cpp
         headquarters_model/armory/Armory.cpp
         headquarters_model/tech/TechLevel.cpp
