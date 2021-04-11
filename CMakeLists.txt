@@ -67,6 +67,8 @@ set(SOURCES
         widget/terminal/SelectionListWidget.cpp
         widget/terminal/GridContainerWidget.cpp
 
+        object_database/WeaponTechType.cpp
+        object_database/ArmorTechType.cpp
         object_database/WeaponInfo.cpp
         object_database/ArmorInfo.cpp)
 

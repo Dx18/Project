@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 namespace object_database {
 
 /** Tech type of armor. */
@@ -9,5 +11,8 @@ enum ArmorTechType {
   /** Composite armor. */
   kComposite = 1
 };
+
+/** Array of available armor tech types. */
+extern const std::array<ArmorTechType, 2> kArmorTechTypes;
 
 }
