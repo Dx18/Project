@@ -33,10 +33,6 @@ class ArmorInfo {
 };
 
 /** Array of all available armor info. `ArmorType` can be used as index of this array. */
-static const std::array<ArmorInfo, 3> kArmorInfo = {
-    ArmorInfo::kSoldierStandardArmor,
-    ArmorInfo::kSoldierCompositeArmor,
-    ArmorInfo::kDroneStandardArmor
-};
+extern const std::array<ArmorInfo, 3> kArmorInfo;
 
 }

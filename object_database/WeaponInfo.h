@@ -50,17 +50,6 @@ class WeaponInfo {
 };
 
 /** Array of all available weapon info. `WeaponType` can be used as index of this array. */
-static const std::array<WeaponInfo, 10> kWeaponInfo = {
-    WeaponInfo::kSoldierFirearmPistol,
-    WeaponInfo::kSoldierFirearmShotgun,
-    WeaponInfo::kSoldierFirearmSniperRifle,
-    WeaponInfo::kSoldierFirearmMachineGun,
-    WeaponInfo::kSoldierLaserPistol,
-    WeaponInfo::kSoldierLaserShotgun,
-    WeaponInfo::kSoldierLaserSniperRifle,
-    WeaponInfo::kSoldierLaserMachineGun,
-    WeaponInfo::kDroneFirearmMachineGun,
-    WeaponInfo::kDroneLaserMachineGun
-};
+extern const std::array<WeaponInfo, 10> kWeaponInfo;
 
 }

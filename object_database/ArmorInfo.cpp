@@ -17,4 +17,10 @@ const ArmorInfo ArmorInfo::kDroneStandardArmor
     (ArmorType::kDroneStandardArmor,
      "drone_standard_armor");
 
+const std::array<ArmorInfo, 3> kArmorInfo = {
+    ArmorInfo::kSoldierStandardArmor,
+    ArmorInfo::kSoldierCompositeArmor,
+    ArmorInfo::kDroneStandardArmor
+};
+
 }
