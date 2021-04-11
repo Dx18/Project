@@ -187,8 +187,8 @@ GridContainerWidget<RenderContext>::CreateColumnCells() const {
       util::Vector2<size_t> min_size = widget ? widget->MinSize() : util::Vector2<size_t>{0, 0};
       util::Vector2<bool> expand = widget ? widget->PreferExpand() : util::Vector2<bool>{false, false};
 
-      result[j].min_size = std::max(result[i].min_size, min_size.x);
-      result[j].expand = result[i].expand || expand.x;
+      result[j].min_size = std::max(result[j].min_size, min_size.x);
+      result[j].expand = result[j].expand || expand.x;
     }
   }
   return result;
