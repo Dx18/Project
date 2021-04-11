@@ -12,7 +12,4 @@ enum WeaponTechType {
   kLaser = 1
 };
 
-/** Array of available weapon tech types. */
-extern const std::array<WeaponTechType, 2> kWeaponTechTypes;
-
 }

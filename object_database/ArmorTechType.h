@@ -12,7 +12,4 @@ enum ArmorTechType {
   kComposite = 1
 };
 
-/** Array of available armor tech types. */
-extern const std::array<ArmorTechType, 2> kArmorTechTypes;
-
 }
