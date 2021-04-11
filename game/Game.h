@@ -31,8 +31,7 @@ class Game {
  public:
   /**
    * Creates game.
-   * @param view_factory View factory creating game views.
-   * @param frontend_events Frontend event loop.
+   * @param context Game context.
    * @param initial_screen Initial screen added to screen stack if it is not equal to `nullptr`. Otherwise screen
    *                       stack remains empty.
    */

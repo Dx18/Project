@@ -865,7 +865,8 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = $(SOURCE_DIR)/main.cpp $(SOURCE_DIR)/unit $(SOURCE_DIR)/util $(SOURCE_DIR)/config  \
-                         $(SOURCE_DIR)/frontend $(SOURCE_DIR)/tech
+                         $(SOURCE_DIR)/frontend $(SOURCE_DIR)/headquarters_model $(SOURCE_DIR)/game  \
+                         $(SOURCE_DIR)/object_database $(SOURCE_DIR)/widget
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
