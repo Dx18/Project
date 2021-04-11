@@ -27,8 +27,12 @@ class HeadquartersModel {
 
   /** Returns reference to headquarters tech state. */
   tech::Tech &GetTech();
+  /** Returns const reference to headquarters tech state. */
+  [[nodiscard]] const tech::Tech &GetTech() const;
   /** Returns reference to headquarters armory. */
   armory::Armory &GetArmory();
+  /** Returns const reference to headquarters armory. */
+  [[nodiscard]] const armory::Armory &GetArmory() const;
   /** Returns const reference to headquarters resources. */
   const Resources &GetResources();
 

@@ -18,7 +18,15 @@ tech::Tech &HeadquartersModel::GetTech() {
   return tech_;
 }
 
+const tech::Tech &HeadquartersModel::GetTech() const {
+  return tech_;
+}
+
 armory::Armory &HeadquartersModel::GetArmory() {
+  return armory_;
+}
+
+const armory::Armory &HeadquartersModel::GetArmory() const {
   return armory_;
 }
 
