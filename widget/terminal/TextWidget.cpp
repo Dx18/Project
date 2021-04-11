@@ -8,7 +8,24 @@ using namespace frontend::terminal;
 
 template<>
 util::Vector2<size_t> TextWidget<IRenderSurfaceWrite>::MinSize() const {
-  return {text_.size(), 1};
+  if (text_.empty()) {
+    return {1, 1};
+  }
+  size_t line_count = 1;
+  size_t line_length = 0;
+  size_t max_line_length = 0;
+  for (char ch : text_) {
+    if (ch == '\n') {
+      max_line_length = std::max(max_line_length, line_length);
+      line_length = 0;
+      ++line_count;
+    } else {
+      ++line_length;
+    }
+  }
+  max_line_length = std::max(max_line_length, line_length);
+
+  return {max_line_length, line_count};
 }
 
 template<>
