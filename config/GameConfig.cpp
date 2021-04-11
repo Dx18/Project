@@ -39,4 +39,8 @@ double GameConfig::AdvancedTechLevelEffect() const {
   return advanced_tech_level_effect_;
 }
 
+int GameConfig::SquadSize() const {
+  return squad_size_;
+}
+
 }
