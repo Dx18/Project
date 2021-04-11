@@ -39,6 +39,7 @@ set(SOURCES
         unit/drone/DroneBuilder.cpp
 
         headquarters_model/Resources.cpp
+        headquarters_model/armory/Armory.cpp
         headquarters_model/tech/TechLevel.cpp
         headquarters_model/tech/Tech.cpp
 
