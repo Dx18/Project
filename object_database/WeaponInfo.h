@@ -4,6 +4,7 @@
 #include <array>
 
 #include "WeaponType.h"
+#include "WeaponTechType.h"
 
 namespace object_database {
 
@@ -33,6 +34,8 @@ class WeaponInfo {
 
   /** Type of weapon. */
   const WeaponType type;
+  /** Tech type of weapon. */
+  const WeaponTechType tech_type;
   /** Name of weapon type. */
   const std::string name;
   /** True if weapon has max amount of ammo. */
@@ -42,10 +45,11 @@ class WeaponInfo {
   /**
    * Creates weapon info.
    * @param _type Type of weapon.
+   * @param _tech_type Tech type of weapon.
    * @param _name Name of weapon type.
    * @param _has_max_ammo True if weapon has max amount of ammo.
    */
-  WeaponInfo(WeaponType _type, std::string _name, bool _has_max_ammo);
+  WeaponInfo(WeaponType _type, WeaponTechType _tech_type, std::string _name, bool _has_max_ammo);
 
 };
 

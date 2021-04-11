@@ -4,6 +4,7 @@
 #include <array>
 
 #include "ArmorType.h"
+#include "ArmorTechType.h"
 
 namespace object_database {
 
@@ -19,6 +20,8 @@ class ArmorInfo {
 
   /** Type of armor. */
   const ArmorType type;
+  /** Tech type of armor. */
+  const ArmorTechType tech_type;
   /** Name of armor type. */
   const std::string name;
 
@@ -26,9 +29,10 @@ class ArmorInfo {
   /**
    * Creates armor info.
    * @param _type Type of armor.
+   * @param _tech_type Tech type of armor.
    * @param _name Name of armor type.
    */
-  ArmorInfo(ArmorType _type, std::string _name);
+  ArmorInfo(ArmorType _type, ArmorTechType _tech_type, std::string _name);
 
 };
 

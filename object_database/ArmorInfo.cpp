@@ -2,19 +2,22 @@
 
 namespace object_database {
 
-ArmorInfo::ArmorInfo(ArmorType _type, std::string _name)
-    : type(_type), name(std::move(_name)) {
+ArmorInfo::ArmorInfo(ArmorType _type, ArmorTechType _tech_type, std::string _name)
+    : type(_type), tech_type(_tech_type), name(std::move(_name)) {
 
 }
 
 const ArmorInfo ArmorInfo::kSoldierStandardArmor
     (ArmorType::kSoldierStandardArmor,
+     ArmorTechType::kStandard,
      "soldier_standard_armor");
 const ArmorInfo ArmorInfo::kSoldierCompositeArmor
     (ArmorType::kSoldierCompositeArmor,
+     ArmorTechType::kComposite,
      "soldier_composite_armor");
 const ArmorInfo ArmorInfo::kDroneStandardArmor
     (ArmorType::kDroneStandardArmor,
+     ArmorTechType::kStandard,
      "drone_standard_armor");
 
 const std::array<ArmorInfo, 3> kArmorInfo = {
