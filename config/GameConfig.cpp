@@ -16,6 +16,7 @@ GameConfig::GameConfig(const ConfigSectionStructure &section)
   }
 
   advanced_tech_level_effect_ = std::stod(section.values.at("advanced_tech_level_effect"));
+  squad_size_ = std::stoi(section.values.at("squad_size"));
 }
 
 std::optional<int> GameConfig::WeaponMaxAmmo(WeaponType type) const {
