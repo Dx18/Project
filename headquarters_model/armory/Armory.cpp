@@ -2,6 +2,12 @@
 
 namespace headquarters_model::armory {
 
+Armory::Armory(Resources &resources)
+    : weapon_count_(), armor_count_(), resources_(resources) {
+  std::fill(weapon_count_.begin(), weapon_count_.end(), 0);
+  std::fill(armor_count_.begin(), armor_count_.end(), 0);
+}
+
 Armory::Armory(const config::ConfigSectionStructure &armory_info, Resources &resources)
     : weapon_count_(), armor_count_(), resources_(resources) {
   for (const WeaponInfo &weapon_info : kWeaponInfo) {

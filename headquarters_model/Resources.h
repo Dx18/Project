@@ -9,6 +9,9 @@ struct Resources {
   /** Available amount of matter. */
   int matter;
 
+  /** Creates default headquarters resources. */
+  Resources();
+
   /**
    * Creates resources using given info about resources.
    * @param resources_info Info about resources.

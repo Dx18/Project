@@ -13,6 +13,12 @@ namespace headquarters_model {
 class HeadquartersModel {
  public:
   /**
+   * Creates empty headquarters model.
+   * @param game_config Game config.
+   */
+  explicit HeadquartersModel(const config::GameConfig &game_config);
+
+  /**
    * Creates headquarters model from config.
    * @param game_config Game config.
    * @param info Info about headquarters model.

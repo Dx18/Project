@@ -2,6 +2,12 @@
 
 namespace headquarters_model::tech {
 
+Tech::Tech(const config::GameConfig &game_config, Resources &resources)
+    : game_config_(game_config), weapon_tech_level_(), armor_tech_level_(), resources_(resources) {
+  std::fill(weapon_tech_level_.begin(), weapon_tech_level_.end(), TechLevel::kNotResearched);
+  std::fill(armor_tech_level_.begin(), armor_tech_level_.end(), TechLevel::kNotResearched);
+}
+
 Tech::Tech(const config::GameConfig &game_config, const config::ConfigSectionStructure &tech_info, Resources &resources)
     : game_config_(game_config), weapon_tech_level_(), armor_tech_level_(), resources_(resources) {
   for (const WeaponTechInfo &weapon_tech_info : kWeaponTechInfo) {

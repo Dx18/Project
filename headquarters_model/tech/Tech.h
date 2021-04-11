@@ -19,6 +19,13 @@ using namespace object_database;
 class Tech {
  public:
   /**
+   * Creates default tech.
+   * @param game_config Const reference to game config.
+   * @param resources Reference to resources.
+   */
+  Tech(const config::GameConfig &game_config, Resources &resources);
+
+  /**
    * Creates information about technologies currently researched.
    *
    * Tech level is represented as integer:

@@ -17,6 +17,12 @@ using namespace object_database;
 class Armory {
  public:
   /**
+   * Creates default armory.
+   * @param resources Reference to resources.
+   */
+  explicit Armory(Resources &resources);
+
+  /**
    * Creates armory from given data.
    * @param armory_info Information about armory.
    * @param resources Reference to resources.
