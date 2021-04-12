@@ -533,6 +533,9 @@ void PreBattleScreen<RenderContext>::SwitchToUnitSelectionMode() {
   action_ = [this]() {
     OnUnitSelection(current_selection_list_->SelectedItem());
   };
+  for (size_t i = 0; i < slots_builders_.size(); ++i) {
+    UpdateSlotUI(i);
+  }
   current_mode_ = Mode::kUnitSelection;
 }
 
