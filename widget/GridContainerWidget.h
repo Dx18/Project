@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <sstream>
+#include <algorithm>
+#include <cassert>
 
 #include "util/Rectangle.h"
 
@@ -96,9 +98,15 @@ class GridContainerWidget : public Widget<RenderContext> {
    * Method used to calculate optimal sizes of "cells" (rows or columns). The result is stored in `result`. Each cell
    * has min size and expanding preference. If current sum size of cells is greater than `max_size`, method fills
    * `result` until it's sum is less or equal to `max_size` and returns false. Otherwise, method distributes free space
-   * equally between expandable cells (if there are any). If size of free space is not divisible by the number of
-   * expandable cells, first cells get more space than the last. After that method fills result with calculated cell
-   * sizes and returns true.
+   * between expandable cells using following algorithm.
+   *
+   * Let `s_1 <= s_2 <= ... <= s_n` - sizes of expandable cells, `S_k = s_1 + ... + s_k`, `f` - amount of free space.
+   * Let `k` is max number `k' = 1, ... n`, such as `S_k + f >= k * s_k`. Let `s'_1 = s'_2 = ... s'_k = s_k`,
+   * `s'_i = s_i` for `i = k + 1, ... n`. Let `f' = S_k + f - k * s_k`. Let `x = f' div k`, `y = f' mod k`, where `div`
+   * is integer division. Let `r_i = s'_i + x` for `i = 1, ... k - y`, `r_i = s'_i + x + 1` for `i = k - y + 1, ... k`,
+   * `r_i = s'_i` for `i = k + 1, ... n`. `r_1, r_2, ... r_n` - fixed sizes of cells.
+   *
+   * After that method fills result with calculated cell sizes and returns true.
    * @param cells Cells.
    * @param max_size Max size.
    * @param result Result of calculation.
@@ -218,19 +226,59 @@ bool GridContainerWidget<RenderContext>::ResolveLinearCells(const std::vector<Li
     return sum_size <= max_size;
   }
 
-  size_t free_space = max_size - sum_size;
-  size_t min_space = free_space / expandable_count;
-  size_t increased_count = free_space % expandable_count;
-
-  size_t current_expandable = 0;
-  for (const LinearCell &cell : cells) {
-    if (cell.expand) {
-      size_t additional_size = current_expandable < increased_count ? min_space + 1 : min_space;
-      result.push_back(cell.min_size + additional_size);
-      ++current_expandable;
-    } else {
-      result.push_back(cell.min_size);
+  std::vector<size_t> expandable_indices;
+  for (size_t i = 0; i < cells.size(); ++i) {
+    if (cells[i].expand) {
+      expandable_indices.push_back(i);
     }
+  }
+
+  std::sort(expandable_indices.begin(), expandable_indices.end(),
+            [&cells](const size_t &index1, const size_t &index2) {
+              const LinearCell &cell1 = cells[index1];
+              const LinearCell &cell2 = cells[index2];
+
+              return cell1.min_size < cell2.min_size
+                  || (cell1.min_size == cell2.min_size && index1 < index2);
+            });
+
+  assert(expandable_indices.size() == expandable_count);
+
+  size_t free_space = max_size - sum_size;
+  size_t curr_sum = 0;
+  size_t overflow_point = 0;
+  for (; overflow_point < expandable_count; ++overflow_point) {
+    curr_sum += cells[expandable_indices[overflow_point]].min_size;
+
+    if (curr_sum + free_space < (overflow_point + 1) * cells[expandable_indices[overflow_point]].min_size) {
+      curr_sum -= cells[expandable_indices[overflow_point]].min_size;
+      break;
+    }
+  }
+
+  std::vector<size_t> new_expandable_sizes(expandable_count);
+  for (size_t i = 0; i < overflow_point; ++i) {
+    new_expandable_sizes[i] = cells[expandable_indices[overflow_point - 1]].min_size;
+  }
+  for (size_t i = overflow_point; i < expandable_count; ++i) {
+    new_expandable_sizes[i] = cells[expandable_indices[i]].min_size;
+  }
+
+  size_t new_free_space = curr_sum + free_space
+      - overflow_point * cells[expandable_indices[overflow_point - 1]].min_size;
+
+  for (size_t i = 0; i < overflow_point - new_free_space % overflow_point; ++i) {
+    new_expandable_sizes[i] += new_free_space / overflow_point;
+  }
+  for (size_t i = overflow_point - new_free_space % overflow_point; i < overflow_point; ++i) {
+    new_expandable_sizes[i] += new_free_space / overflow_point + 1;
+  }
+
+  for (const LinearCell &cell : cells) {
+    result.push_back(cell.min_size);
+  }
+  for (size_t i = 0; i < expandable_count; ++i) {
+    result[expandable_indices[i]] = new_expandable_sizes[i];
   }
 
   return true;
