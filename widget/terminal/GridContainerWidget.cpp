@@ -15,9 +15,16 @@ util::Vector2<size_t> GridContainerWidget<IRenderSurfaceWrite>::MinSize() const 
   for (const LinearCell &cell : CreateRowCells()) {
     min_size_y += cell.min_size;
   }
+  if (render_separators_ && dimensions_.y > 0) {
+    min_size_y += dimensions_.y - 1;
+  }
+
   size_t min_size_x = 0;
   for (const LinearCell &cell : CreateColumnCells()) {
     min_size_x += cell.min_size;
+  }
+  if (render_separators_ && dimensions_.x > 0) {
+    min_size_x += dimensions_.x - 1;
   }
 
   return {min_size_x, min_size_y};
