@@ -28,6 +28,12 @@ void SelectionBoxWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &contex
   ColorPair marker_enabled_color(Color::kYellow, Color::kBlack);
   ColorPair text_color(Color::kWhite, Color::kBlack);
 
+  if (focused_) {
+    marker_disabled_color = marker_disabled_color.Inverted();
+    marker_enabled_color = marker_enabled_color.Inverted();
+    text_color = text_color.Inverted();
+  }
+
   context.Get(util::Vector2<size_t>{0, 0})
       = CharData('<', selected_item_ == 0 ? marker_disabled_color : marker_enabled_color);
   context.Get(util::Vector2<size_t>{std::min(size.x - 1, 1 + max_item_size_), 0})

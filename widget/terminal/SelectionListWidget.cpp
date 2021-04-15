@@ -37,6 +37,10 @@ void SelectionListWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &conte
   ColorPair normal_color(Color::kWhite, Color::kBlack);
   ColorPair selected_color(Color::kYellow, Color::kBlack);
 
+  if (focused_) {
+    selected_color = selected_color.Inverted();
+  }
+
   for (size_t item = item_begin; item < item_end; ++item) {
     ColorPair color = item == selected_item_ ? selected_color : normal_color;
 
@@ -44,7 +48,9 @@ void SelectionListWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &conte
       continue;
     }
 
-    context.Get({0, item - item_begin}) = CharData('>', color);
+    if (item == selected_item_) {
+      context.Get({0, item - item_begin}) = CharData('>', color);
+    }
 
     if (size.x <= 2) {
       continue;
