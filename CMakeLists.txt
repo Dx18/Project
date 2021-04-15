@@ -35,6 +35,8 @@ set(SOURCES
         unit/drone/Drone.cpp
         unit/drone/armor/standard/DroneStandardArmor.cpp
         unit/drone/armor/standard/DroneStandardArmorFactory.cpp
+        unit/drone/armor/composite/DroneCompositeArmor.cpp
+        unit/drone/armor/composite/DroneCompositeArmorFactory.cpp
         unit/drone/weapon/firearm/DroneFirearmMachineGun.cpp
         unit/drone/weapon/firearm/DroneFirearmWeaponFactory.cpp
         unit/drone/weapon/laser/DroneLaserMachineGun.cpp

@@ -17,6 +17,8 @@ class ArmorInfo {
   static const ArmorInfo kSoldierCompositeArmor;
   /** Drone standard armor. */
   static const ArmorInfo kDroneStandardArmor;
+  /** Drone composite armor. */
+  static const ArmorInfo kDroneCompositeArmor;
 
   /** Type of armor. */
   const ArmorType type;
@@ -37,6 +39,6 @@ class ArmorInfo {
 };
 
 /** Array of all available armor info. `ArmorType` can be used as index of this array. */
-extern const std::array<ArmorInfo, 3> kArmorInfo;
+extern const std::array<ArmorInfo, 4> kArmorInfo;
 
 }
