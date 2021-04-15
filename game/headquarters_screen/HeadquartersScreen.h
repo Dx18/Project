@@ -378,6 +378,8 @@ void HeadquartersScreen<RenderContext>::OnBuild() {
 
   if (result == BuildResult::kBuilt) {
     armory_message_->SetText("Built!");
+  } else if (result == BuildResult::kNotResearched) {
+    armory_message_->SetText("Cannot build: not researched yet!");
   } else if (result == BuildResult::kNotEnoughResources) {
     armory_message_->SetText("Cannot build: not enough resources!");
   } else {

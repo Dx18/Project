@@ -6,6 +6,7 @@
 #include "object_database/WeaponInfo.h"
 #include "object_database/ArmorInfo.h"
 #include "headquarters_model/Resources.h"
+#include "headquarters_model/tech/Tech.h"
 
 #include "BuildResult.h"
 
@@ -19,15 +20,16 @@ class Armory {
   /**
    * Creates default armory.
    * @param resources Reference to resources.
+   * @param tech Current state of tech.
    */
-  explicit Armory(Resources &resources);
+  Armory(Resources &resources, const tech::Tech &tech);
 
   /**
    * Creates armory from given data.
    * @param armory_info Information about armory.
    * @param resources Reference to resources.
    */
-  explicit Armory(const config::ConfigSectionStructure &armory_info, Resources &resources);
+  Armory(const config::ConfigSectionStructure &armory_info, Resources &resources, const tech::Tech &tech);
 
   /**
    * Returns number of weapons of certain type.
@@ -61,6 +63,8 @@ class Armory {
   std::array<size_t, kArmorInfo.size()> armor_count_;
   /** Reference to resources. */
   Resources &resources_;
+  /** Const reference to current state of tech. */
+  const tech::Tech &tech_;
 
 };
 

@@ -6,6 +6,8 @@ namespace headquarters_model::armory {
 enum BuildResult {
   /** Weapon/armor was successfully built. */
   kBuilt,
+  /** Weapon/armor tech type was not researched yet. */
+  kNotResearched,
   /** Not enough resources for building. */
   kNotEnoughResources
 };
