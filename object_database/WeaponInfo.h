@@ -5,6 +5,7 @@
 
 #include "WeaponType.h"
 #include "WeaponTechType.h"
+#include "UnitType.h"
 
 namespace object_database {
 
@@ -36,6 +37,8 @@ class WeaponInfo {
   const WeaponType type;
   /** Tech type of weapon. */
   const WeaponTechType tech_type;
+  /** Type of unit able to use weapons of current type. */
+  const UnitType unit_type;
   /** Name of weapon type. */
   const std::string name;
   /** True if weapon has max amount of ammo. */
@@ -46,10 +49,11 @@ class WeaponInfo {
    * Creates weapon info.
    * @param _type Type of weapon.
    * @param _tech_type Tech type of weapon.
+   * @param _unit_type Type of unit able to use weapons of current type.
    * @param _name Name of weapon type.
    * @param _has_max_ammo True if weapon has max amount of ammo.
    */
-  WeaponInfo(WeaponType _type, WeaponTechType _tech_type, std::string _name, bool _has_max_ammo);
+  WeaponInfo(WeaponType _type, WeaponTechType _tech_type, UnitType _unit_type, std::string _name, bool _has_max_ammo);
 
 };
 

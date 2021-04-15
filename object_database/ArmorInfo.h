@@ -5,6 +5,7 @@
 
 #include "ArmorType.h"
 #include "ArmorTechType.h"
+#include "UnitType.h"
 
 namespace object_database {
 
@@ -24,6 +25,8 @@ class ArmorInfo {
   const ArmorType type;
   /** Tech type of armor. */
   const ArmorTechType tech_type;
+  /** Type of unit able to use armor of current type. */
+  const UnitType unit_type;
   /** Name of armor type. */
   const std::string name;
 
@@ -32,9 +35,10 @@ class ArmorInfo {
    * Creates armor info.
    * @param _type Type of armor.
    * @param _tech_type Tech type of armor.
+   * @param _unit_type Type of unit able to use armor of current type.
    * @param _name Name of armor type.
    */
-  ArmorInfo(ArmorType _type, ArmorTechType _tech_type, std::string _name);
+  ArmorInfo(ArmorType _type, ArmorTechType _tech_type, UnitType _unit_type, std::string _name);
 
 };
 
