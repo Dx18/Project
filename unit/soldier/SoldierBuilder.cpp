@@ -12,6 +12,11 @@ SoldierBuilder &SoldierBuilder::WithSecondaryWeapon(std::unique_ptr<ISoldierWeap
   return *this;
 }
 
+SoldierBuilder &SoldierBuilder::WithArmor(std::unique_ptr<ISoldierArmor> armor) {
+  current_.SetArmor(std::move(armor));
+  return *this;
+}
+
 Soldier SoldierBuilder::Build() {
   Soldier result;
   std::swap(result, current_);
