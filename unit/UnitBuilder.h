@@ -34,6 +34,15 @@ class UnitBuilder {
    */
   Builder &WithPosition(util::Vector3<double> position);
 
+  /** Returns current name of unit. */
+  [[nodiscard]] const std::string &Name() const;
+  /** Returns current health of unit. */
+  [[nodiscard]] int Health() const;
+  /** Returns current base health of unit. */
+  [[nodiscard]] int BaseHealth() const;
+  /** Returns current position of unit. */
+  [[nodiscard]] util::Vector3<double> Position() const;
+
  protected:
   /** Returns reference to current constructed unit. */
   virtual Unit &CurrentUnit() = 0;
@@ -65,6 +74,26 @@ template<typename Builder>
 Builder &UnitBuilder<Builder>::WithPosition(util::Vector3<double> position) {
   CurrentUnit().SetPosition(position);
   return *this;
+}
+
+template<typename Builder>
+const std::string &UnitBuilder<Builder>::Name() const {
+  return CurrentUnit().Name();
+}
+
+template<typename Builder>
+int UnitBuilder<Builder>::Health() const {
+  return CurrentUnit().Health();
+}
+
+template<typename Builder>
+int UnitBuilder<Builder>::BaseHealth() const {
+  return CurrentUnit().BaseHealth();
+}
+
+template<typename Builder>
+util::Vector3<double> UnitBuilder<Builder>::Position() const {
+  return CurrentUnit().Position();
 }
 
 }

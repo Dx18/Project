@@ -14,6 +14,12 @@ class DroneBuilder : UnitBuilder<DroneBuilder> {
   /** Sets drone armor and returns current builder. */
   DroneBuilder &WithArmor(std::unique_ptr<IDroneArmor> armor);
   /** Returns created drone. Internally current drone is reset to initial state. */
+
+  /** Returns current weapon of drone. */
+  [[nodiscard]] const IDroneWeapon *Weapon() const;
+  /** Returns current armor of drone. */
+  [[nodiscard]] const IDroneArmor *Armor() const;
+
   [[nodiscard]] Drone Build();
 
  protected:

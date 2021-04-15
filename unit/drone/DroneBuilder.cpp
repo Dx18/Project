@@ -12,6 +12,14 @@ DroneBuilder &DroneBuilder::WithArmor(std::unique_ptr<IDroneArmor> armor) {
   return *this;
 }
 
+const IDroneWeapon *DroneBuilder::Weapon() const {
+  return current_.Weapon();
+}
+
+const IDroneArmor *DroneBuilder::Armor() const {
+  return current_.Armor();
+}
+
 Drone DroneBuilder::Build() {
   Drone result;
   std::swap(result, current_);

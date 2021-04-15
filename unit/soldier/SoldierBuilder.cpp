@@ -17,6 +17,18 @@ SoldierBuilder &SoldierBuilder::WithArmor(std::unique_ptr<ISoldierArmor> armor) 
   return *this;
 }
 
+const ISoldierWeapon *SoldierBuilder::PrimaryWeapon() const {
+  return current_.PrimaryWeapon();
+}
+
+const ISoldierWeapon *SoldierBuilder::SecondaryWeapon() const {
+  return current_.SecondaryWeapon();
+}
+
+const ISoldierArmor *SoldierBuilder::Armor() const {
+  return current_.Armor();
+}
+
 Soldier SoldierBuilder::Build() {
   Soldier result;
   std::swap(result, current_);
