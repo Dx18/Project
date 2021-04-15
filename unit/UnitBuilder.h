@@ -57,25 +57,25 @@ UnitBuilder<Builder>::~UnitBuilder() = default;
 template<typename Builder>
 Builder &UnitBuilder<Builder>::WithName(const std::string &name) {
   CurrentUnit().SetName(name);
-  return *this;
+  return static_cast<Builder &>(*this);
 }
 
 template<typename Builder>
 Builder &UnitBuilder<Builder>::WithHealth(int health) {
   CurrentUnit().SetHealth(health);
-  return *this;
+  return static_cast<Builder &>(*this);
 }
 
 template<typename Builder>
 Builder &UnitBuilder<Builder>::WithBaseHealth(int base_health) {
   CurrentUnit().SetBaseHealth(base_health);
-  return *this;
+  return static_cast<Builder &>(*this);
 }
 
 template<typename Builder>
 Builder &UnitBuilder<Builder>::WithPosition(util::Vector3<double> position) {
   CurrentUnit().SetPosition(position);
-  return *this;
+  return static_cast<Builder &>(*this);
 }
 
 template<typename Builder>
