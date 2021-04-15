@@ -24,6 +24,7 @@ class DroneBuilder : public UnitBuilder<DroneBuilder> {
 
  protected:
   Unit &CurrentUnit() override;
+  [[nodiscard]] const Unit &CurrentUnit() const override;
 
  private:
   /** Current drone. */

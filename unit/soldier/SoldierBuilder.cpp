@@ -39,4 +39,8 @@ Unit &SoldierBuilder::CurrentUnit() {
   return current_;
 }
 
+const Unit &SoldierBuilder::CurrentUnit() const {
+  return current_;
+}
+
 }

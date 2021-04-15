@@ -30,4 +30,8 @@ Unit &DroneBuilder::CurrentUnit() {
   return current_;
 }
 
+const Unit &DroneBuilder::CurrentUnit() const {
+  return current_;
+}
+
 }

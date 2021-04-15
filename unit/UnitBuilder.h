@@ -46,6 +46,8 @@ class UnitBuilder {
  protected:
   /** Returns reference to current constructed unit. */
   virtual Unit &CurrentUnit() = 0;
+  /** Returns const reference to current constructed unit. */
+  [[nodiscard]] virtual const Unit &CurrentUnit() const = 0;
 
 };
 

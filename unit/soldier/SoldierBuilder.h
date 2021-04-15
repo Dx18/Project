@@ -28,6 +28,7 @@ class SoldierBuilder : public UnitBuilder<SoldierBuilder> {
 
  protected:
   Unit &CurrentUnit() override;
+  [[nodiscard]] const Unit &CurrentUnit() const override;
 
  private:
   /** Current soldier. */
