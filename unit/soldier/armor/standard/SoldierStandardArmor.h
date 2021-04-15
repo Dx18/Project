@@ -1,12 +1,11 @@
 #pragma once
 
+#include "unit/BasicArmor.h"
 #include "headquarters_model/tech/Tech.h"
 
-#include "unit/BasicArmor.h"
+#include "../ISoldierArmor.h"
 
-#include "ISoldierArmor.h"
-
-namespace unit::soldier::armor {
+namespace unit::soldier::armor::standard {
 
 using namespace headquarters_model::tech;
 

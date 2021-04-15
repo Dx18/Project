@@ -1,6 +1,6 @@
 #include "SoldierCompositeArmor.h"
 
-namespace unit::soldier::armor {
+namespace unit::soldier::armor::composite {
 
 using namespace object_database;
 

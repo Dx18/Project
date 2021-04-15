@@ -16,8 +16,10 @@ set(SOURCES
         unit/BasicLaserWeapon.cpp
 
         unit/soldier/Soldier.cpp
-        unit/soldier/armor/SoldierStandardArmor.cpp
-        unit/soldier/armor/SoldierCompositeArmor.cpp
+        unit/soldier/armor/standard/SoldierStandardArmor.cpp
+        unit/soldier/armor/standard/SoldierStandardArmorFactory.cpp
+        unit/soldier/armor/composite/SoldierCompositeArmor.cpp
+        unit/soldier/armor/composite/SoldierCompositeArmorFactory.cpp
         unit/soldier/weapon/firearm/SoldierFirearmMachineGun.cpp
         unit/soldier/weapon/firearm/SoldierFirearmWeaponFactory.cpp
         unit/soldier/weapon/firearm/SoldierFirearmPistol.cpp

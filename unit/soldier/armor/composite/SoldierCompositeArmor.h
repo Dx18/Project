@@ -3,9 +3,9 @@
 #include "unit/BasicArmor.h"
 #include "headquarters_model/tech/Tech.h"
 
-#include "ISoldierArmor.h"
+#include "../ISoldierArmor.h"
 
-namespace unit::soldier::armor {
+namespace unit::soldier::armor::composite {
 
 using namespace headquarters_model::tech;
 
