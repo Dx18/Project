@@ -3,14 +3,14 @@
 namespace headquarters_model {
 
 HeadquartersModel::HeadquartersModel(const config::GameConfig &game_config)
-    : resources_(), tech_(game_config, resources_), armory_(resources_) {
+    : resources_(), tech_(game_config, resources_), armory_(resources_, tech_) {
 
 }
 
 HeadquartersModel::HeadquartersModel(const config::GameConfig &game_config, const config::ConfigStructure &info)
     : resources_(info.sections.at("Resources")),
       tech_(game_config, info.sections.at("Tech"), resources_),
-      armory_(info.sections.at("Armory"), resources_) {
+      armory_(info.sections.at("Armory"), resources_, tech_) {
 
 }
 
