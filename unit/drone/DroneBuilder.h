@@ -7,7 +7,7 @@
 namespace unit::drone {
 
 /** Drone builder. */
-class DroneBuilder : UnitBuilder<DroneBuilder> {
+class DroneBuilder : public UnitBuilder<DroneBuilder> {
  public:
   /** Sets drone weapon and returns current builder. */
   DroneBuilder &WithWeapon(std::unique_ptr<IDroneWeapon> weapon);
