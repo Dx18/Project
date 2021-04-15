@@ -3,9 +3,9 @@
 #include "unit/BasicArmor.h"
 #include "headquarters_model/tech/Tech.h"
 
-#include "IDroneArmor.h"
+#include "unit/drone/armor/IDroneArmor.h"
 
-namespace unit::drone::armor {
+namespace unit::drone::armor::standard {
 
 using namespace headquarters_model::tech;
 

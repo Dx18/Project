@@ -33,7 +33,8 @@ set(SOURCES
         unit/soldier/SoldierBuilder.cpp
 
         unit/drone/Drone.cpp
-        unit/drone/armor/DroneStandardArmor.cpp
+        unit/drone/armor/standard/DroneStandardArmor.cpp
+        unit/drone/armor/standard/DroneStandardArmorFactory.cpp
         unit/drone/weapon/firearm/DroneFirearmMachineGun.cpp
         unit/drone/weapon/firearm/DroneFirearmWeaponFactory.cpp
         unit/drone/weapon/laser/DroneLaserMachineGun.cpp

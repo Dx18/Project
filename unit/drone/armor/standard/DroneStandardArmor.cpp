@@ -1,6 +1,6 @@
 #include "DroneStandardArmor.h"
 
-namespace unit::drone::armor {
+namespace unit::drone::armor::standard {
 
 using namespace object_database;
 
