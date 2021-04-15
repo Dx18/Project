@@ -18,6 +18,9 @@ struct ColorPair {
    */
   ColorPair(Color _foreground, Color _background);
 
+  /** Returns color pair with swapped foreground and background colors. */
+  [[nodiscard]] ColorPair Inverted() const;
+
 };
 
 }

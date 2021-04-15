@@ -73,12 +73,18 @@ void WidgetSystem<RenderContext>::SetRoot(const WidgetSystem::WidgetPtr &root) {
 
 template<typename RenderContext>
 void WidgetSystem<RenderContext>::SetFocused(const WidgetSystem::WidgetWeakPtr &focused) {
+  if (!focused_.expired()) {
+    focused_.lock()->SetFocused(false);
+  }
   focused_ = focused;
+  if (!focused_.expired()) {
+    focused_.lock()->SetFocused(true);
+  }
 }
 
 template<typename RenderContext>
 void WidgetSystem<RenderContext>::ResetFocus() {
-  focused_.reset();
+  SetFocused(nullptr);
 }
 
 template<typename RenderContext>
