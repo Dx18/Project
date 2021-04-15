@@ -26,6 +26,7 @@ class HeadquartersScreen : public game::IScreen<RenderContext> {
   using Widget = widget::Widget<RenderContext>;
   using GridContainerWidget = widget::GridContainerWidget<RenderContext>;
   using TextWidget = widget::TextWidget<RenderContext>;
+  using SelectionWidget = widget::SelectionWidget<RenderContext>;
   using SelectionListWidget = widget::SelectionListWidget<RenderContext>;
 
   using WidgetPtr = std::shared_ptr<Widget>;
@@ -211,7 +212,7 @@ void HeadquartersScreen<RenderContext>::InitTechUI() {
   }
   tech_list_ = std::make_shared<SelectionListWidget>(tech_names);
   tech_list_->SetPreferExpand(util::Vector2<bool>{true, true});
-  tech_list_->AddSelectionChangedListener([this](SelectionListWidget &list) {
+  tech_list_->AddSelectionChangedListener([this](SelectionWidget &list) {
     tech_message_->SetText("");
     OnTechSelectionChanged();
   });
@@ -250,7 +251,7 @@ void HeadquartersScreen<RenderContext>::InitArmoryUI() {
   }
   armory_list_ = std::make_shared<SelectionListWidget>(armory_names);
   armory_list_->SetPreferExpand(util::Vector2<bool>{true, true});
-  armory_list_->AddSelectionChangedListener([this](SelectionListWidget &list) {
+  armory_list_->AddSelectionChangedListener([this](SelectionWidget &list) {
     armory_message_->SetText("");
     OnArmorySelectionChanged();
   });

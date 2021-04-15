@@ -68,6 +68,7 @@ set(SOURCES
         widget/terminal/TerminalContext.cpp
         widget/terminal/TextWidget.cpp
         widget/terminal/SelectionListWidget.cpp
+        widget/terminal/SelectionBoxWidget.cpp
         widget/terminal/GridContainerWidget.cpp
 
         object_database/WeaponTechInfo.cpp
