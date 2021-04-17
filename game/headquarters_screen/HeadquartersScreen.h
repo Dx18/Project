@@ -8,7 +8,7 @@
 #include "widget/SelectionListWidget.h"
 #include "widget/GridContainerWidget.h"
 
-#include "game/pre_battle_screen/PreBattleScreen.h"
+#include "game/squad_formation_screen/SquadFormationScreen.h"
 
 namespace game::headquarters_screen {
 
@@ -168,7 +168,8 @@ HeadquartersScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
       SwitchMode(Mode::kArmory);
     } else if (event.input.GetChar() == '3') {
       return PushScreenAction{
-          std::make_unique<pre_battle_screen::PreBattleScreen<RenderContext>>(game_config_, model_)};
+          std::make_unique<squad_formation_screen::SquadFormationScreen<RenderContext>>(game_config_, model_)
+      };
     }
   }
 
