@@ -75,6 +75,8 @@ set(SOURCES
         widget/terminal/SelectionListWidget.cpp
         widget/terminal/SelectionBoxWidget.cpp
         widget/terminal/GridContainerWidget.cpp
+        widget/terminal/game/SoldierEquipmentWidget.cpp
+        widget/terminal/game/DroneEquipmentWidget.cpp
 
         object_database/UnitInfo.cpp
         object_database/WeaponClassInfo.cpp
