@@ -10,6 +10,14 @@ namespace world::map {
 
 /** World tile. */
 struct Tile {
+  /** Up-oriented wall. */
+  static const size_t kWallUp = 0;
+  /** Right-oriented wall. */
+  static const size_t kWallRight = 1;
+  /** Down-oriented wall. */
+  static const size_t kWallDown = 2;
+  /** Left-oriented wall. */
+  static const size_t kWallLeft = 3;
   /** Number of walls. */
   static const size_t kWallCount = 4;
 
