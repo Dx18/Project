@@ -1,14 +1,16 @@
 #include "widget/SelectionListWidget.h"
 
-#include "frontend/terminal/IRenderSurfaceWrite.h"
 #include "util/Math.h"
+
+#include "TerminalContext.h"
 
 namespace widget {
 
 using namespace frontend::terminal;
 
 template<>
-util::Vector2<size_t> SelectionListWidget<IRenderSurfaceWrite>::MinSize() const {
+util::Vector2<size_t>
+SelectionListWidget<widget::terminal::TerminalContext>::MinSize(TerminalResources &resources) const {
   static const size_t kMarkerSize = 1;
   static const size_t kGapSize = 1;
   static const size_t kMinTextLength = 1;
@@ -17,7 +19,8 @@ util::Vector2<size_t> SelectionListWidget<IRenderSurfaceWrite>::MinSize() const 
 }
 
 template<>
-void SelectionListWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &context) {
+void SelectionListWidget<widget::terminal::TerminalContext>::Render(IRenderSurfaceWrite &context,
+                                                                    TerminalResources &resources) {
   util::Vector2<size_t> size = context.Size();
 
   if (size.y == 0) {

@@ -9,12 +9,13 @@ namespace widget {
 
 /**
  * Abstract widget representing item selection. Set of items is fixed, not empty and cannot be changed.
- * @tparam RenderContext Context used to render widget.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
-class SelectionWidget : public Widget<RenderContext> {
+template<typename Context>
+class SelectionWidget : public Widget<Context> {
  private:
-  using SelectionChangedListener = std::function<void(SelectionWidget<RenderContext> &)>;
+  using SelectionChangedListener = std::function<void(SelectionWidget<Context> &)>;
 
  public:
   /**
@@ -82,13 +83,9 @@ class SelectionWidget : public Widget<RenderContext> {
 
 };
 
-/** Alias for shared pointer to selection widget. */
-template<typename RenderContext>
-using SelectionBoxWidgetPtr = std::shared_ptr<SelectionWidget<RenderContext>>;
-
-template<typename RenderContext>
-SelectionWidget<RenderContext>::SelectionWidget(std::vector<std::string> items, frontend::Key forward_key,
-                                                frontend::Key backward_key)
+template<typename Context>
+SelectionWidget<Context>::SelectionWidget(std::vector<std::string> items, frontend::Key forward_key,
+                                          frontend::Key backward_key)
     : items_(std::move(items)), selected_item_(0), selection_changed_(),
       forward_key_(forward_key), backward_key_(backward_key) {
   if (items_.empty()) {
@@ -96,46 +93,46 @@ SelectionWidget<RenderContext>::SelectionWidget(std::vector<std::string> items, 
   }
 }
 
-template<typename RenderContext>
-const std::vector<std::string> &SelectionWidget<RenderContext>::Items() {
+template<typename Context>
+const std::vector<std::string> &SelectionWidget<Context>::Items() {
   return items_;
 }
 
-template<typename RenderContext>
-size_t SelectionWidget<RenderContext>::SelectedItem() const {
+template<typename Context>
+size_t SelectionWidget<Context>::SelectedItem() const {
   return selected_item_;
 }
 
-template<typename RenderContext>
-void SelectionWidget<RenderContext>::SetSelectedItem(size_t item) {
+template<typename Context>
+void SelectionWidget<Context>::SetSelectedItem(size_t item) {
   CheckItemIndex(item);
   selected_item_ = item;
   TriggerSelectionChanged();
 }
 
-template<typename RenderContext>
-void SelectionWidget<RenderContext>::MoveSelectionForward() {
+template<typename Context>
+void SelectionWidget<Context>::MoveSelectionForward() {
   if (selected_item_ + 1 < items_.size()) {
     ++selected_item_;
     TriggerSelectionChanged();
   }
 }
 
-template<typename RenderContext>
-void SelectionWidget<RenderContext>::MoveSelectionBackward() {
+template<typename Context>
+void SelectionWidget<Context>::MoveSelectionBackward() {
   if (selected_item_ > 0) {
     --selected_item_;
     TriggerSelectionChanged();
   }
 }
 
-template<typename RenderContext>
-void SelectionWidget<RenderContext>::AddSelectionChangedListener(SelectionWidget::SelectionChangedListener listener) {
+template<typename Context>
+void SelectionWidget<Context>::AddSelectionChangedListener(SelectionWidget::SelectionChangedListener listener) {
   selection_changed_.push_back(listener);
 }
 
-template<typename RenderContext>
-bool SelectionWidget<RenderContext>::HandleInput(const frontend::Input &input) {
+template<typename Context>
+bool SelectionWidget<Context>::HandleInput(const frontend::Input &input) {
   if (input.IsKey()) {
     frontend::Key key = input.GetKey();
     if (key == forward_key_) {
@@ -150,8 +147,8 @@ bool SelectionWidget<RenderContext>::HandleInput(const frontend::Input &input) {
   return false;
 }
 
-template<typename RenderContext>
-void SelectionWidget<RenderContext>::CheckItemIndex(size_t index) {
+template<typename Context>
+void SelectionWidget<Context>::CheckItemIndex(size_t index) {
   if (index >= items_.size()) {
     std::stringstream message;
     message << "given index (" << index << ") is not in range [0; " << items_.size() << ")";
@@ -159,8 +156,8 @@ void SelectionWidget<RenderContext>::CheckItemIndex(size_t index) {
   }
 }
 
-template<typename RenderContext>
-void SelectionWidget<RenderContext>::TriggerSelectionChanged() {
+template<typename Context>
+void SelectionWidget<Context>::TriggerSelectionChanged() {
   for (auto &listener : selection_changed_) {
     listener(*this);
   }

@@ -2,15 +2,17 @@
 
 #include <vector>
 
-#include "frontend/terminal/IRenderSurfaceWrite.h"
 #include "frontend/terminal/RenderSurfaceRegion.h"
+
+#include "../TerminalContext.h"
 
 namespace widget::game {
 
 using namespace frontend::terminal;
 
 template<>
-util::Vector2<size_t> SoldierEquipmentWidget<IRenderSurfaceWrite>::MinSize() const {
+util::Vector2<size_t>
+SoldierEquipmentWidget<widget::terminal::TerminalContext>::MinSize(TerminalResources &resources) const {
   const size_t kCellHeight = 12;
   const size_t kCellWidth = 10;
   const size_t kGap = 1;
@@ -22,14 +24,15 @@ util::Vector2<size_t> SoldierEquipmentWidget<IRenderSurfaceWrite>::MinSize() con
 }
 
 template<>
-void SoldierEquipmentWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &context) {
+void SoldierEquipmentWidget<widget::terminal::TerminalContext>::Render(IRenderSurfaceWrite &context,
+                                                                       TerminalResources &resources) {
   const size_t kCellHeight = 12;
   const size_t kCellWidth = 10;
   const size_t kGap = 1;
   const size_t kTopTextHeight = 2;
 
   util::Vector2<size_t> size = context.Size();
-  util::Vector2<size_t> min_size = MinSize();
+  util::Vector2<size_t> min_size = MinSize(resources);
 
   if (size.x < min_size.x || size.y < min_size.y) {
     return;
@@ -95,38 +98,29 @@ void SoldierEquipmentWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &co
 
     std::string text;
     if (cell == kPrimaryWeaponParameterIndex) {
-      if (!primary_weapon_.has_value()) {
-        text = "none";
-      } else {
-        text = kWeaponClassInfo[primary_weapon_.value()].name;
+      if (primary_weapon_.has_value()) {
+        std::stringstream texture_name;
+        texture_name << "soldier_" << kWeaponClassInfo[primary_weapon_.value()].name;
+        cell_region.Draw(
+            resources.GetTexture(texture_name.str()),
+            util::Vector2<size_t>{1, kTopTextHeight + 1}
+        );
       }
     } else if (cell == kSecondaryWeaponParameterIndex) {
-      if (!secondary_weapon_.has_value()) {
-        text = "none";
-      } else {
-        text = kWeaponClassInfo[secondary_weapon_.value()].name;
+      if (secondary_weapon_.has_value()) {
+        std::stringstream texture_name;
+        texture_name << "soldier_" << kWeaponClassInfo[secondary_weapon_.value()].name;
+        cell_region.Draw(
+            resources.GetTexture(texture_name.str()),
+            util::Vector2<size_t>{1, kTopTextHeight + 1}
+        );
       }
     } else if (cell == kArmorParameterIndex) {
       if (armor_) {
-        text = "used";
-      } else {
-        text = "not used";
-      }
-    }
-
-    size_t current_row = 0;
-    size_t current_column = 0;
-    size_t index = 0;
-    while (index < text.size() && current_row < kCellHeight - 2) {
-      cell_region.Get(util::Vector2<size_t>{
-          current_column + 1,
-          current_row + kTopTextHeight + 1
-      }) = CharData(text[index], color);
-      ++index;
-      ++current_column;
-      if (current_column == kCellWidth - 2) {
-        current_column = 0;
-        ++current_row;
+        cell_region.Draw(
+            resources.GetTexture("soldier_armor"),
+            util::Vector2<size_t>{1, kTopTextHeight + 1}
+        );
       }
     }
   }

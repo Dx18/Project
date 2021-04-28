@@ -11,26 +11,30 @@
 
 namespace game::main_menu_screen {
 
-/** Main menu screen. */
-template<typename RenderContext>
-class MainMenuScreen : public game::IScreen<RenderContext> {
+/**
+ * Main menu screen.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
+ */
+template<typename Context>
+class MainMenuScreen : public game::IScreen<Context> {
  private:
-  using Action = typename game::IScreen<RenderContext>::Action;
-  using PushScreenAction = typename game::IScreen<RenderContext>::PushScreenAction;
-  using PopScreenAction = typename game::IScreen<RenderContext>::PopScreenAction;
-  using QuitAction = typename game::IScreen<RenderContext>::QuitAction;
+  using Action = typename game::IScreen<Context>::Action;
+  using PushScreenAction = typename game::IScreen<Context>::PushScreenAction;
+  using PopScreenAction = typename game::IScreen<Context>::PopScreenAction;
+  using QuitAction = typename game::IScreen<Context>::QuitAction;
 
-  using Widget = widget::Widget<RenderContext>;
-  using GridContainerWidget = widget::GridContainerWidget<RenderContext>;
-  using TextWidget = widget::TextWidget<RenderContext>;
-  using SelectionListWidget = widget::SelectionListWidget<RenderContext>;
+  using Widget = widget::Widget<Context>;
+  using GridContainerWidget = widget::GridContainerWidget<Context>;
+  using TextWidget = widget::TextWidget<Context>;
+  using SelectionListWidget = widget::SelectionListWidget<Context>;
 
   using WidgetPtr = std::shared_ptr<Widget>;
   using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget>;
   using TextWidgetPtr = std::shared_ptr<TextWidget>;
   using SelectionListWidgetPtr = std::shared_ptr<SelectionListWidget>;
 
-  using WidgetSystem = widget::WidgetSystem<RenderContext>;
+  using WidgetSystem = widget::WidgetSystem<Context>;
 
  public:
   /**
@@ -63,26 +67,26 @@ class MainMenuScreen : public game::IScreen<RenderContext> {
 
 };
 
-template<typename RenderContext>
-MainMenuScreen<RenderContext>::MainMenuScreen(const config::GameConfig &game_config)
+template<typename Context>
+MainMenuScreen<Context>::MainMenuScreen(const config::GameConfig &game_config)
     : game_config_(game_config), widget_system_(), menu_() {
   InitUI();
 }
 
-template<typename RenderContext>
-std::optional<typename game::IScreen<RenderContext>::Action>
-MainMenuScreen<RenderContext>::Update(std::chrono::microseconds delta) {
+template<typename Context>
+std::optional<typename game::IScreen<Context>::Action>
+MainMenuScreen<Context>::Update(std::chrono::microseconds delta) {
   return {};
 }
 
-template<typename RenderContext>
-widget::Widget<RenderContext> &MainMenuScreen<RenderContext>::Render(std::chrono::microseconds delta) {
+template<typename Context>
+widget::Widget<Context> &MainMenuScreen<Context>::Render(std::chrono::microseconds delta) {
   return widget_system_.Root();
 }
 
-template<typename RenderContext>
-std::optional<typename game::IScreen<RenderContext>::Action>
-MainMenuScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
+template<typename Context>
+std::optional<typename game::IScreen<Context>::Action>
+MainMenuScreen<Context>::OnInput(const frontend::InputEvent &event) {
   if (widget_system_.HandleInput(event.input)) {
     return {};
   }
@@ -90,7 +94,7 @@ MainMenuScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
   if (event.input.IsKey() && event.input.GetKey() == frontend::Key::kEnter) {
     size_t selected = menu_->SelectedItem();
     if (selected == kNewGameButtonIndex) {
-      return PushScreenAction{std::make_unique<headquarters_screen::HeadquartersScreen<RenderContext>>(game_config_)};
+      return PushScreenAction{std::make_unique<headquarters_screen::HeadquartersScreen<Context>>(game_config_)};
     } else if (selected == kLoadGameButtonIndex) {
 
     } else if (selected == kQuitButtonIndex) {
@@ -101,8 +105,8 @@ MainMenuScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
   return {};
 }
 
-template<typename RenderContext>
-void MainMenuScreen<RenderContext>::InitUI() {
+template<typename Context>
+void MainMenuScreen<Context>::InitUI() {
   using namespace widget;
 
   GridContainerWidgetPtr container = std::make_shared<GridContainerWidget>(util::Vector2<size_t>{1, 2});

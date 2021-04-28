@@ -2,8 +2,8 @@
 
 namespace widget::terminal {
 
-TerminalContext::TerminalContext(ITerminalInput &input, ITerminalRenderer &renderer)
-    : events_(input), renderer_(renderer), surface_() {
+TerminalContext::TerminalContext(ITerminalInput &input, ITerminalRenderer &renderer, const std::string &resources_path)
+    : events_(input), resources_(resources_path), renderer_(renderer), surface_() {
 
 }
 
@@ -11,7 +11,7 @@ TerminalEvents &TerminalContext::Events() {
   return events_;
 }
 
-void TerminalContext::Render(widget::Widget<IRenderSurfaceWrite> &widget) {
+void TerminalContext::Render(widget::Widget<TerminalContext> &widget) {
   using namespace frontend::terminal;
 
   surface_.ResizeClear(renderer_.Size(),
@@ -20,7 +20,7 @@ void TerminalContext::Render(widget::Widget<IRenderSurfaceWrite> &widget) {
                            ColorPair(Color::kWhite, Color::kBlack)
                        ));
 
-  widget.Render(surface_);
+  widget.Render(surface_, resources_);
   renderer_.Render(surface_, {0, 0});
 }
 

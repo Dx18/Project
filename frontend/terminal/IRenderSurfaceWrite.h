@@ -31,6 +31,13 @@ class IRenderSurfaceWrite : public IRenderSurfaceRead {
    * @param char_data Character data used to clear.
    */
   virtual void Clear(const CharData &char_data);
+  /**
+   * Draws given surface on current. Throws `std::runtime_error` if rectangle where surface will be drawn does not fit
+   * current surface rectangle.
+   * @param surface Surface to draw.
+   * @param position Position of top-left corner of rectangle where surface will be drawn.
+   */
+  virtual void Draw(const IRenderSurfaceRead &surface, const util::Vector2<size_t> &position);
 
 };
 

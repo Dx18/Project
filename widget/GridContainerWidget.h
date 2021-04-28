@@ -13,12 +13,13 @@ namespace widget {
 
 /**
  * Widget containing set of widgets arranged as table.
- * @tparam RenderContext Context used to render widget.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
-class GridContainerWidget : public Widget<RenderContext> {
+template<typename Context>
+class GridContainerWidget : public Widget<Context> {
  private:
-  using WidgetType = Widget<RenderContext>;
+  using WidgetType = Widget<Context>;
   using WidgetPtr = std::shared_ptr<WidgetType>;
 
  public:
@@ -56,8 +57,8 @@ class GridContainerWidget : public Widget<RenderContext> {
    * Returns min size of grid container based on min sizes of contained widgets. If row (column) does not contain any
    * widgets its height (width) is considered as 0.
    */
-  [[nodiscard]] util::Vector2<size_t> MinSize() const override;
-  void Render(RenderContext &context) override;
+  [[nodiscard]] util::Vector2<size_t> MinSize(typename Context::Resources &resources) const override;
+  void Render(typename Context::RenderContext &context, typename Context::Resources &resources) override;
 
  private:
   /** Dimensions of grid. */
@@ -90,9 +91,9 @@ class GridContainerWidget : public Widget<RenderContext> {
   };
 
   /** Creates linear cells corresponding to rows. */
-  std::vector<LinearCell> CreateRowCells() const;
+  std::vector<LinearCell> CreateRowCells(typename Context::Resources &resources) const;
   /** Creates linear cells corresponding to columns. */
-  std::vector<LinearCell> CreateColumnCells() const;
+  std::vector<LinearCell> CreateColumnCells(typename Context::Resources &resources) const;
 
   /**
    * Method used to calculate optimal sizes of "cells" (rows or columns). The result is stored in `result`. Each cell
@@ -115,46 +116,42 @@ class GridContainerWidget : public Widget<RenderContext> {
 
 };
 
-/** Alias for shared pointer to grid container widget. */
-template<typename RenderContext>
-using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget<RenderContext>>;
-
-template<typename RenderContext>
-GridContainerWidget<RenderContext>::GridContainerWidget(const util::Vector2<size_t> &dimensions)
+template<typename Context>
+GridContainerWidget<Context>::GridContainerWidget(const util::Vector2<size_t> &dimensions)
     : dimensions_(dimensions), widgets_(dimensions_.x * dimensions_.y), render_separators_(false) {
 
 }
 
-template<typename RenderContext>
-const util::Vector2<size_t> &GridContainerWidget<RenderContext>::Dimensions() const {
+template<typename Context>
+const util::Vector2<size_t> &GridContainerWidget<Context>::Dimensions() const {
   return dimensions_;
 }
 
-template<typename RenderContext>
-const typename GridContainerWidget<RenderContext>::WidgetPtr &
-GridContainerWidget<RenderContext>::Get(const util::Vector2<size_t> &position) const {
+template<typename Context>
+const typename GridContainerWidget<Context>::WidgetPtr &
+GridContainerWidget<Context>::Get(const util::Vector2<size_t> &position) const {
   CheckIfContainsSlot(position);
   return widgets_[GetSlotIndex(position)];
 }
 
-template<typename RenderContext>
-void GridContainerWidget<RenderContext>::Set(const util::Vector2<size_t> &position, const WidgetPtr &widget) {
+template<typename Context>
+void GridContainerWidget<Context>::Set(const util::Vector2<size_t> &position, const WidgetPtr &widget) {
   CheckIfContainsSlot(position);
   widgets_[GetSlotIndex(position)] = widget;
 }
 
-template<typename RenderContext>
-bool GridContainerWidget<RenderContext>::RenderSeparators() const {
+template<typename Context>
+bool GridContainerWidget<Context>::RenderSeparators() const {
   return render_separators_;
 }
 
-template<typename RenderContext>
-void GridContainerWidget<RenderContext>::SetRenderSeparators(bool render_separators) {
+template<typename Context>
+void GridContainerWidget<Context>::SetRenderSeparators(bool render_separators) {
   render_separators_ = render_separators;
 }
 
-template<typename RenderContext>
-void GridContainerWidget<RenderContext>::CheckIfContainsSlot(const util::Vector2<size_t> &position) const {
+template<typename Context>
+void GridContainerWidget<Context>::CheckIfContainsSlot(const util::Vector2<size_t> &position) const {
   util::Rectangle<size_t> current_rectangle = {0, 0, dimensions_.x, dimensions_.y};
   if (!current_rectangle.ContainsPoint(position)) {
     std::stringstream message;
@@ -163,19 +160,19 @@ void GridContainerWidget<RenderContext>::CheckIfContainsSlot(const util::Vector2
   }
 }
 
-template<typename RenderContext>
-size_t GridContainerWidget<RenderContext>::GetSlotIndex(const util::Vector2<size_t> &position) const {
+template<typename Context>
+size_t GridContainerWidget<Context>::GetSlotIndex(const util::Vector2<size_t> &position) const {
   return position.y * dimensions_.x + position.x;
 }
 
-template<typename RenderContext>
-std::vector<typename GridContainerWidget<RenderContext>::LinearCell>
-GridContainerWidget<RenderContext>::CreateRowCells() const {
+template<typename Context>
+std::vector<typename GridContainerWidget<Context>::LinearCell>
+GridContainerWidget<Context>::CreateRowCells(typename Context::Resources &resources) const {
   std::vector<LinearCell> result(dimensions_.y, {0, false});
   for (size_t i = 0; i < dimensions_.y; ++i) {
     for (size_t j = 0; j < dimensions_.x; ++j) {
       const WidgetPtr &widget = widgets_[GetSlotIndex({j, i})];
-      util::Vector2<size_t> min_size = widget ? widget->MinSize() : util::Vector2<size_t>{0, 0};
+      util::Vector2<size_t> min_size = widget ? widget->MinSize(resources) : util::Vector2<size_t>{0, 0};
       util::Vector2<bool> expand = widget ? widget->PreferExpand() : util::Vector2<bool>{false, false};
 
       result[i].min_size = std::max(result[i].min_size, min_size.y);
@@ -185,14 +182,14 @@ GridContainerWidget<RenderContext>::CreateRowCells() const {
   return result;
 }
 
-template<typename RenderContext>
-std::vector<typename GridContainerWidget<RenderContext>::LinearCell>
-GridContainerWidget<RenderContext>::CreateColumnCells() const {
+template<typename Context>
+std::vector<typename GridContainerWidget<Context>::LinearCell>
+GridContainerWidget<Context>::CreateColumnCells(typename Context::Resources &resources) const {
   std::vector<LinearCell> result(dimensions_.x, {0, false});
   for (size_t i = 0; i < dimensions_.y; ++i) {
     for (size_t j = 0; j < dimensions_.x; ++j) {
       const WidgetPtr &widget = widgets_[GetSlotIndex({j, i})];
-      util::Vector2<size_t> min_size = widget ? widget->MinSize() : util::Vector2<size_t>{0, 0};
+      util::Vector2<size_t> min_size = widget ? widget->MinSize(resources) : util::Vector2<size_t>{0, 0};
       util::Vector2<bool> expand = widget ? widget->PreferExpand() : util::Vector2<bool>{false, false};
 
       result[j].min_size = std::max(result[j].min_size, min_size.x);
@@ -202,9 +199,9 @@ GridContainerWidget<RenderContext>::CreateColumnCells() const {
   return result;
 }
 
-template<typename RenderContext>
-bool GridContainerWidget<RenderContext>::ResolveLinearCells(const std::vector<LinearCell> &cells, size_t max_size,
-                                                            std::vector<size_t> &result) {
+template<typename Context>
+bool GridContainerWidget<Context>::ResolveLinearCells(const std::vector<LinearCell> &cells, size_t max_size,
+                                                      std::vector<size_t> &result) {
   size_t sum_size = 0;
   size_t expandable_count = 0;
   for (const LinearCell &cell : cells) {

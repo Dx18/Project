@@ -1,13 +1,14 @@
 #include "widget/SelectionBoxWidget.h"
 
-#include "frontend/terminal/IRenderSurfaceWrite.h"
+#include "TerminalContext.h"
 
 namespace widget {
 
 using namespace frontend::terminal;
 
 template<>
-util::Vector2<size_t> SelectionBoxWidget<IRenderSurfaceWrite>::MinSize() const {
+util::Vector2<size_t>
+SelectionBoxWidget<widget::terminal::TerminalContext>::MinSize(TerminalResources &resources) const {
   static const size_t kMarkerSize = 1;
   const size_t max_item_size = std::max_element(items_.begin(), items_.end(),
                                                 [](const std::string &item1, const std::string &item2) {
@@ -17,7 +18,8 @@ util::Vector2<size_t> SelectionBoxWidget<IRenderSurfaceWrite>::MinSize() const {
 }
 
 template<>
-void SelectionBoxWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &context) {
+void SelectionBoxWidget<widget::terminal::TerminalContext>::Render(IRenderSurfaceWrite &context,
+                                                                   TerminalResources &resources) {
   util::Vector2<size_t> size = context.Size();
 
   if (size.y == 0 || size.x <= 2) {

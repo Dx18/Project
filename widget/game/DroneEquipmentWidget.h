@@ -10,9 +10,13 @@ namespace widget::game {
 
 using namespace object_database;
 
-/** Widget for equipping soldier. */
-template<typename RenderContext>
-class DroneEquipmentWidget : public Widget<RenderContext> {
+/**
+ * Widget for equipping soldier.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
+ */
+template<typename Context>
+class DroneEquipmentWidget : public Widget<Context> {
  private:
   using WeaponChangedListener = std::function<void(DroneEquipmentWidget &)>;
   using ArmorChangedListener = std::function<void(DroneEquipmentWidget &)>;
@@ -30,8 +34,8 @@ class DroneEquipmentWidget : public Widget<RenderContext> {
   /** Returns current armor. */
   [[nodiscard]] bool Armor() const;
 
-  [[nodiscard]] util::Vector2<size_t> MinSize() const override;
-  void Render(RenderContext &context) override;
+  [[nodiscard]] util::Vector2<size_t> MinSize(typename Context::Resources &resources) const override;
+  void Render(typename Context::RenderContext &context, typename Context::Resources &resources) override;
   bool HandleInput(const frontend::Input &input) override;
 
   /**
@@ -106,29 +110,29 @@ class DroneEquipmentWidget : public Widget<RenderContext> {
 
 };
 
-template<typename RenderContext>
-const std::array<WeaponClassType, 1> DroneEquipmentWidget<RenderContext>::kAvailableWeaponClasses = {
+template<typename Context>
+const std::array<WeaponClassType, 1> DroneEquipmentWidget<Context>::kAvailableWeaponClasses = {
     WeaponClassType::kMachineGun
 };
 
-template<typename RenderContext>
-DroneEquipmentWidget<RenderContext>::DroneEquipmentWidget(std::optional<WeaponClassType> weapon, bool armor)
+template<typename Context>
+DroneEquipmentWidget<Context>::DroneEquipmentWidget(std::optional<WeaponClassType> weapon, bool armor)
     : weapon_(weapon), armor_(armor), current_parameter_(0) {
 
 }
 
-template<typename RenderContext>
-std::optional<WeaponClassType> DroneEquipmentWidget<RenderContext>::Weapon() const {
+template<typename Context>
+std::optional<WeaponClassType> DroneEquipmentWidget<Context>::Weapon() const {
   return weapon_;
 }
 
-template<typename RenderContext>
-bool DroneEquipmentWidget<RenderContext>::Armor() const {
+template<typename Context>
+bool DroneEquipmentWidget<Context>::Armor() const {
   return armor_;
 }
 
-template<typename RenderContext>
-bool DroneEquipmentWidget<RenderContext>::HandleInput(const frontend::Input &input) {
+template<typename Context>
+bool DroneEquipmentWidget<Context>::HandleInput(const frontend::Input &input) {
   if (input.IsKey()) {
     if (input.GetKey() == frontend::Key::kLeft) {
       SwitchParameter(false);
@@ -143,26 +147,26 @@ bool DroneEquipmentWidget<RenderContext>::HandleInput(const frontend::Input &inp
   return false;
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::
+template<typename Context>
+void DroneEquipmentWidget<Context>::
 AddWeaponChangedListener(DroneEquipmentWidget::WeaponChangedListener listener) {
   weapon_changed_.push_back(listener);
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::
+template<typename Context>
+void DroneEquipmentWidget<Context>::
 AddArmorChangedListener(DroneEquipmentWidget::ArmorChangedListener listener) {
   armor_changed_.push_back(listener);
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::SwitchParameter(bool to_next) {
+template<typename Context>
+void DroneEquipmentWidget<Context>::SwitchParameter(bool to_next) {
   current_parameter_ = (kParameterCount + current_parameter_ + (to_next ? 1 : -1)) % kParameterCount;
 }
 
-template<typename RenderContext>
+template<typename Context>
 std::optional<WeaponClassType>
-DroneEquipmentWidget<RenderContext>::NextWeapon(std::optional<WeaponClassType> weapon) const {
+DroneEquipmentWidget<Context>::NextWeapon(std::optional<WeaponClassType> weapon) const {
   if (!weapon.has_value()) {
     return kAvailableWeaponClasses.front();
   }
@@ -175,9 +179,9 @@ DroneEquipmentWidget<RenderContext>::NextWeapon(std::optional<WeaponClassType> w
   return {};
 }
 
-template<typename RenderContext>
+template<typename Context>
 std::optional<WeaponClassType>
-DroneEquipmentWidget<RenderContext>::PreviousWeapon(std::optional<WeaponClassType> weapon) const {
+DroneEquipmentWidget<Context>::PreviousWeapon(std::optional<WeaponClassType> weapon) const {
   if (!weapon.has_value()) {
     return kAvailableWeaponClasses.back();
   }
@@ -190,8 +194,8 @@ DroneEquipmentWidget<RenderContext>::PreviousWeapon(std::optional<WeaponClassTyp
   return {};
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::SwitchParameterValue(bool to_next) {
+template<typename Context>
+void DroneEquipmentWidget<Context>::SwitchParameterValue(bool to_next) {
   if (current_parameter_ == kWeaponParameterIndex) {
     SwitchWeapon(to_next);
   } else if (current_parameter_ == kArmorParameterIndex) {
@@ -199,27 +203,27 @@ void DroneEquipmentWidget<RenderContext>::SwitchParameterValue(bool to_next) {
   }
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::SwitchWeapon(bool to_next) {
+template<typename Context>
+void DroneEquipmentWidget<Context>::SwitchWeapon(bool to_next) {
   weapon_ = to_next ? NextWeapon(weapon_) : PreviousWeapon(weapon_);
   TriggerWeaponChanged();
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::SwitchArmor() {
+template<typename Context>
+void DroneEquipmentWidget<Context>::SwitchArmor() {
   armor_ = !armor_;
   TriggerArmorChanged();
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::TriggerWeaponChanged() {
+template<typename Context>
+void DroneEquipmentWidget<Context>::TriggerWeaponChanged() {
   for (auto &listener : weapon_changed_) {
     listener(*this);
   }
 }
 
-template<typename RenderContext>
-void DroneEquipmentWidget<RenderContext>::TriggerArmorChanged() {
+template<typename Context>
+void DroneEquipmentWidget<Context>::TriggerArmorChanged() {
   for (auto &listener : armor_changed_) {
     listener(*this);
   }

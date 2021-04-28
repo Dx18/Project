@@ -8,12 +8,13 @@ namespace widget {
 
 /**
  * System of widget which is able to store current focused widget, perform input handling.
- * @tparam RenderContext Context used to render widgets.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
+template<typename Context>
 class WidgetSystem {
  private:
-  using WidgetType = Widget<RenderContext>;
+  using WidgetType = Widget<Context>;
   using WidgetPtr = std::shared_ptr<WidgetType>;
   using WidgetWeakPtr = std::weak_ptr<WidgetType>;
 
@@ -50,29 +51,29 @@ class WidgetSystem {
 
 };
 
-template<typename RenderContext>
-WidgetSystem<RenderContext>::WidgetSystem()
+template<typename Context>
+WidgetSystem<Context>::WidgetSystem()
     : root_(), focused_() {
 
 }
 
-template<typename RenderContext>
-bool WidgetSystem<RenderContext>::HasRoot() const {
+template<typename Context>
+bool WidgetSystem<Context>::HasRoot() const {
   return root_;
 }
 
-template<typename RenderContext>
-typename WidgetSystem<RenderContext>::WidgetType &WidgetSystem<RenderContext>::Root() {
+template<typename Context>
+typename WidgetSystem<Context>::WidgetType &WidgetSystem<Context>::Root() {
   return *root_;
 }
 
-template<typename RenderContext>
-void WidgetSystem<RenderContext>::SetRoot(const WidgetSystem::WidgetPtr &root) {
+template<typename Context>
+void WidgetSystem<Context>::SetRoot(const WidgetSystem::WidgetPtr &root) {
   root_ = root;
 }
 
-template<typename RenderContext>
-void WidgetSystem<RenderContext>::SetFocused(const WidgetSystem::WidgetWeakPtr &focused) {
+template<typename Context>
+void WidgetSystem<Context>::SetFocused(const WidgetSystem::WidgetWeakPtr &focused) {
   if (!focused_.expired()) {
     focused_.lock()->SetFocused(false);
   }
@@ -82,13 +83,13 @@ void WidgetSystem<RenderContext>::SetFocused(const WidgetSystem::WidgetWeakPtr &
   }
 }
 
-template<typename RenderContext>
-void WidgetSystem<RenderContext>::ResetFocus() {
+template<typename Context>
+void WidgetSystem<Context>::ResetFocus() {
   SetFocused(nullptr);
 }
 
-template<typename RenderContext>
-bool WidgetSystem<RenderContext>::HandleInput(const frontend::Input &input) {
+template<typename Context>
+bool WidgetSystem<Context>::HandleInput(const frontend::Input &input) {
   WidgetPtr locked = focused_.lock();
   if (locked) {
     return locked->HandleInput(input);

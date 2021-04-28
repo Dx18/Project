@@ -12,27 +12,28 @@ using namespace headquarters_model::tech;
 
 /**
  * Screen used to create initial squad.
- * @tparam RenderContext Context used to render widgets.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
-class SquadFormationScreen : public game::IScreen<RenderContext> {
+template<typename Context>
+class SquadFormationScreen : public game::IScreen<Context> {
  private:
-  using Action = typename game::IScreen<RenderContext>::Action;
-  using PushScreenAction = typename game::IScreen<RenderContext>::PushScreenAction;
-  using PopScreenAction = typename game::IScreen<RenderContext>::PopScreenAction;
-  using QuitAction = typename game::IScreen<RenderContext>::QuitAction;
+  using Action = typename game::IScreen<Context>::Action;
+  using PushScreenAction = typename game::IScreen<Context>::PushScreenAction;
+  using PopScreenAction = typename game::IScreen<Context>::PopScreenAction;
+  using QuitAction = typename game::IScreen<Context>::QuitAction;
 
-  using Widget = widget::Widget<RenderContext>;
-  using GridContainerWidget = widget::GridContainerWidget<RenderContext>;
-  using TextWidget = widget::TextWidget<RenderContext>;
-  using SelectionWidget = widget::SelectionWidget<RenderContext>;
-  using SelectionBoxWidget = widget::SelectionBoxWidget<RenderContext>;
+  using Widget = widget::Widget<Context>;
+  using GridContainerWidget = widget::GridContainerWidget<Context>;
+  using TextWidget = widget::TextWidget<Context>;
+  using SelectionWidget = widget::SelectionWidget<Context>;
+  using SelectionBoxWidget = widget::SelectionBoxWidget<Context>;
 
   using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget>;
   using TextWidgetPtr = std::shared_ptr<TextWidget>;
   using SelectionBoxWidgetPtr = std::shared_ptr<SelectionBoxWidget>;
 
-  using WidgetSystem = widget::WidgetSystem<RenderContext>;
+  using WidgetSystem = widget::WidgetSystem<Context>;
 
  public:
   /**
@@ -150,9 +151,9 @@ class SquadFormationScreen : public game::IScreen<RenderContext> {
 
 };
 
-template<typename RenderContext>
-SquadFormationScreen<RenderContext>::SquadFormationScreen(const config::GameConfig &game_config,
-                                                          const HeadquartersModel &model)
+template<typename Context>
+SquadFormationScreen<Context>::SquadFormationScreen(const config::GameConfig &game_config,
+                                                    const HeadquartersModel &model)
     : game_config_(game_config), model_(model), current_parameter_(kSoldierCountParameter),
       current_soldier_count_(0), current_drone_count_(0),
       current_soldier_weapon_tech_type_(), current_soldier_armor_tech_type_(),
@@ -182,20 +183,20 @@ SquadFormationScreen<RenderContext>::SquadFormationScreen(const config::GameConf
   InitUI();
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action>
-SquadFormationScreen<RenderContext>::Update(std::chrono::microseconds delta) {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action>
+SquadFormationScreen<Context>::Update(std::chrono::microseconds delta) {
   return std::optional<Action>();
 }
 
-template<typename RenderContext>
-widget::Widget<RenderContext> &SquadFormationScreen<RenderContext>::Render(std::chrono::microseconds delta) {
+template<typename Context>
+widget::Widget<Context> &SquadFormationScreen<Context>::Render(std::chrono::microseconds delta) {
   return widget_system_.Root();
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action>
-SquadFormationScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action>
+SquadFormationScreen<Context>::OnInput(const frontend::InputEvent &event) {
   if (widget_system_.HandleInput(event.input)) {
     return {};
   }
@@ -217,8 +218,8 @@ SquadFormationScreen<RenderContext>::OnInput(const frontend::InputEvent &event) 
   return {};
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::InitUI() {
+template<typename Context>
+void SquadFormationScreen<Context>::InitUI() {
   if (!can_form_squad_) {
     std::stringstream message;
     if (weapon_tech_types_.empty()) {
@@ -350,56 +351,56 @@ void SquadFormationScreen<RenderContext>::InitUI() {
   SwitchToParameter(current_parameter_);
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SwitchParameter(bool to_next) {
+template<typename Context>
+void SquadFormationScreen<Context>::SwitchParameter(bool to_next) {
   SwitchToParameter((kParameterCount + current_parameter_ + (to_next ? 1 : -1)) % kParameterCount);
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SwitchToParameter(size_t index) {
+template<typename Context>
+void SquadFormationScreen<Context>::SwitchToParameter(size_t index) {
   current_parameter_ = index;
   widget_system_.SetFocused(parameter_selectors_[current_parameter_]);
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SetSoldierCount(size_t count) {
+template<typename Context>
+void SquadFormationScreen<Context>::SetSoldierCount(size_t count) {
   current_soldier_count_ = count;
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SetDroneCount(size_t count) {
+template<typename Context>
+void SquadFormationScreen<Context>::SetDroneCount(size_t count) {
   current_drone_count_ = count;
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SetSoldierWeaponTechType(WeaponTechType tech_type) {
+template<typename Context>
+void SquadFormationScreen<Context>::SetSoldierWeaponTechType(WeaponTechType tech_type) {
   current_soldier_weapon_tech_type_ = tech_type;
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SetSoldierArmorTechType(ArmorTechType tech_type) {
+template<typename Context>
+void SquadFormationScreen<Context>::SetSoldierArmorTechType(ArmorTechType tech_type) {
   current_soldier_armor_tech_type_ = tech_type;
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SetDroneWeaponTechType(WeaponTechType tech_type) {
+template<typename Context>
+void SquadFormationScreen<Context>::SetDroneWeaponTechType(WeaponTechType tech_type) {
   current_drone_weapon_tech_type_ = tech_type;
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::SetDroneArmorTechType(ArmorTechType tech_type) {
+template<typename Context>
+void SquadFormationScreen<Context>::SetDroneArmorTechType(ArmorTechType tech_type) {
   current_drone_armor_tech_type_ = tech_type;
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadFormationScreen<RenderContext>::UpdateInfoText() {
+template<typename Context>
+void SquadFormationScreen<Context>::UpdateInfoText() {
   std::stringstream info;
 
   if (current_parameter_ == kSoldierCountParameter || current_parameter_ == kDroneCountParameter) {
@@ -450,25 +451,25 @@ void SquadFormationScreen<RenderContext>::UpdateInfoText() {
   info_text_->SetText(info.str());
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action> SquadFormationScreen<RenderContext>::OnContinue() {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action> SquadFormationScreen<Context>::OnContinue() {
   if (current_soldier_count_ + current_drone_count_ > game_config_.SquadSize()) {
     return PushScreenAction{
-        std::make_unique<message_screen::MessageScreen<RenderContext>>(
+        std::make_unique<message_screen::MessageScreen<Context>>(
             "Cannot continue",
             "Current size of your squad is greater than max possible."
         )
     };
   } else if (current_soldier_count_ + current_drone_count_ == 0) {
     return PushScreenAction{
-        std::make_unique<message_screen::MessageScreen<RenderContext>>(
+        std::make_unique<message_screen::MessageScreen<Context>>(
             "Cannot continue",
             "Your squad is empty."
         )
     };
   } else {
     return PushScreenAction{
-        std::make_unique<squad_modification_screen::SquadModificationScreen<RenderContext>>(
+        std::make_unique<squad_modification_screen::SquadModificationScreen<Context>>(
             model_,
             current_soldier_count_,
             current_drone_count_,

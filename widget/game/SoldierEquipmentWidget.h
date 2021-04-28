@@ -10,9 +10,13 @@ namespace widget::game {
 
 using namespace object_database;
 
-/** Widget for equipping soldier. */
-template<typename RenderContext>
-class SoldierEquipmentWidget : public Widget<RenderContext> {
+/**
+ * Widget for equipping soldier.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
+ */
+template<typename Context>
+class SoldierEquipmentWidget : public Widget<Context> {
  private:
   using PrimaryWeaponChangedListener = std::function<void(SoldierEquipmentWidget &)>;
   using SecondaryWeaponChangedListener = std::function<void(SoldierEquipmentWidget &)>;
@@ -36,8 +40,8 @@ class SoldierEquipmentWidget : public Widget<RenderContext> {
   /** Returns current armor. */
   [[nodiscard]] bool Armor() const;
 
-  [[nodiscard]] util::Vector2<size_t> MinSize() const override;
-  void Render(RenderContext &context) override;
+  [[nodiscard]] util::Vector2<size_t> MinSize(typename Context::Resources &resources) const override;
+  void Render(typename Context::RenderContext &context, typename Context::Resources &resources) override;
   bool HandleInput(const frontend::Input &input) override;
 
   /**
@@ -130,40 +134,40 @@ class SoldierEquipmentWidget : public Widget<RenderContext> {
 
 };
 
-template<typename RenderContext>
-const std::array<WeaponClassType, 4> SoldierEquipmentWidget<RenderContext>::kAvailableWeaponClasses = {
+template<typename Context>
+const std::array<WeaponClassType, 4> SoldierEquipmentWidget<Context>::kAvailableWeaponClasses = {
     WeaponClassType::kPistol,
     WeaponClassType::kShotgun,
     WeaponClassType::kSniperRifle,
     WeaponClassType::kMachineGun
 };
 
-template<typename RenderContext>
-SoldierEquipmentWidget<RenderContext>::SoldierEquipmentWidget(std::optional<WeaponClassType> primary_weapon,
-                                                              std::optional<WeaponClassType> secondary_weapon,
-                                                              bool armor)
+template<typename Context>
+SoldierEquipmentWidget<Context>::SoldierEquipmentWidget(std::optional<WeaponClassType> primary_weapon,
+                                                        std::optional<WeaponClassType> secondary_weapon,
+                                                        bool armor)
     : primary_weapon_(primary_weapon), secondary_weapon_(secondary_weapon), armor_(armor),
       current_parameter_(0) {
 
 }
 
-template<typename RenderContext>
-std::optional<WeaponClassType> SoldierEquipmentWidget<RenderContext>::PrimaryWeapon() const {
+template<typename Context>
+std::optional<WeaponClassType> SoldierEquipmentWidget<Context>::PrimaryWeapon() const {
   return primary_weapon_;
 }
 
-template<typename RenderContext>
-std::optional<WeaponClassType> SoldierEquipmentWidget<RenderContext>::SecondaryWeapon() const {
+template<typename Context>
+std::optional<WeaponClassType> SoldierEquipmentWidget<Context>::SecondaryWeapon() const {
   return secondary_weapon_;
 }
 
-template<typename RenderContext>
-bool SoldierEquipmentWidget<RenderContext>::Armor() const {
+template<typename Context>
+bool SoldierEquipmentWidget<Context>::Armor() const {
   return armor_;
 }
 
-template<typename RenderContext>
-bool SoldierEquipmentWidget<RenderContext>::HandleInput(const frontend::Input &input) {
+template<typename Context>
+bool SoldierEquipmentWidget<Context>::HandleInput(const frontend::Input &input) {
   if (input.IsKey()) {
     if (input.GetKey() == frontend::Key::kLeft) {
       SwitchParameter(false);
@@ -178,32 +182,32 @@ bool SoldierEquipmentWidget<RenderContext>::HandleInput(const frontend::Input &i
   return false;
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::
+template<typename Context>
+void SoldierEquipmentWidget<Context>::
 AddPrimaryWeaponChangedListener(SoldierEquipmentWidget::PrimaryWeaponChangedListener listener) {
   primary_weapon_changed_.push_back(listener);
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::
+template<typename Context>
+void SoldierEquipmentWidget<Context>::
 AddSecondaryWeaponChangedListener(SoldierEquipmentWidget::SecondaryWeaponChangedListener listener) {
   secondary_weapon_changed_.push_back(listener);
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::
+template<typename Context>
+void SoldierEquipmentWidget<Context>::
 AddArmorChangedListener(SoldierEquipmentWidget::ArmorChangedListener listener) {
   armor_changed_.push_back(listener);
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::SwitchParameter(bool to_next) {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::SwitchParameter(bool to_next) {
   current_parameter_ = (kParameterCount + current_parameter_ + (to_next ? 1 : -1)) % kParameterCount;
 }
 
-template<typename RenderContext>
+template<typename Context>
 std::optional<WeaponClassType>
-SoldierEquipmentWidget<RenderContext>::NextWeapon(std::optional<WeaponClassType> weapon) const {
+SoldierEquipmentWidget<Context>::NextWeapon(std::optional<WeaponClassType> weapon) const {
   if (!weapon.has_value()) {
     return kAvailableWeaponClasses.front();
   }
@@ -216,9 +220,9 @@ SoldierEquipmentWidget<RenderContext>::NextWeapon(std::optional<WeaponClassType>
   return {};
 }
 
-template<typename RenderContext>
+template<typename Context>
 std::optional<WeaponClassType>
-SoldierEquipmentWidget<RenderContext>::PreviousWeapon(std::optional<WeaponClassType> weapon) const {
+SoldierEquipmentWidget<Context>::PreviousWeapon(std::optional<WeaponClassType> weapon) const {
   if (!weapon.has_value()) {
     return kAvailableWeaponClasses.back();
   }
@@ -231,8 +235,8 @@ SoldierEquipmentWidget<RenderContext>::PreviousWeapon(std::optional<WeaponClassT
   return {};
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::SwitchParameterValue(bool to_next) {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::SwitchParameterValue(bool to_next) {
   if (current_parameter_ == kPrimaryWeaponParameterIndex) {
     SwitchPrimaryWeapon(to_next);
   } else if (current_parameter_ == kSecondaryWeaponParameterIndex) {
@@ -242,40 +246,40 @@ void SoldierEquipmentWidget<RenderContext>::SwitchParameterValue(bool to_next) {
   }
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::SwitchPrimaryWeapon(bool to_next) {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::SwitchPrimaryWeapon(bool to_next) {
   primary_weapon_ = to_next ? NextWeapon(primary_weapon_) : PreviousWeapon(primary_weapon_);
   TriggerPrimaryWeaponChanged();
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::SwitchSecondaryWeapon(bool to_next) {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::SwitchSecondaryWeapon(bool to_next) {
   secondary_weapon_ = to_next ? NextWeapon(secondary_weapon_) : PreviousWeapon(secondary_weapon_);
   TriggerSecondaryWeaponChanged();
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::SwitchArmor() {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::SwitchArmor() {
   armor_ = !armor_;
   TriggerArmorChanged();
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::TriggerPrimaryWeaponChanged() {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::TriggerPrimaryWeaponChanged() {
   for (auto &listener : primary_weapon_changed_) {
     listener(*this);
   }
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::TriggerSecondaryWeaponChanged() {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::TriggerSecondaryWeaponChanged() {
   for (auto &listener : secondary_weapon_changed_) {
     listener(*this);
   }
 }
 
-template<typename RenderContext>
-void SoldierEquipmentWidget<RenderContext>::TriggerArmorChanged() {
+template<typename Context>
+void SoldierEquipmentWidget<Context>::TriggerArmorChanged() {
   for (auto &listener : armor_changed_) {
     listener(*this);
   }

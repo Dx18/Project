@@ -36,24 +36,25 @@ using namespace object_database;
 
 /**
  * Screen used to modify squad and start battle.
- * @tparam RenderContext Context used to render widgets.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
-class SquadModificationScreen : public IScreen<RenderContext> {
+template<typename Context>
+class SquadModificationScreen : public IScreen<Context> {
  private:
-  using Action = typename game::IScreen<RenderContext>::Action;
-  using PushScreenAction = typename game::IScreen<RenderContext>::PushScreenAction;
-  using PopScreenAction = typename game::IScreen<RenderContext>::PopScreenAction;
-  using QuitAction = typename game::IScreen<RenderContext>::QuitAction;
+  using Action = typename game::IScreen<Context>::Action;
+  using PushScreenAction = typename game::IScreen<Context>::PushScreenAction;
+  using PopScreenAction = typename game::IScreen<Context>::PopScreenAction;
+  using QuitAction = typename game::IScreen<Context>::QuitAction;
 
-  using Widget = widget::Widget<RenderContext>;
-  using GridContainerWidget = widget::GridContainerWidget<RenderContext>;
-  using TextWidget = widget::TextWidget<RenderContext>;
-  using SelectionWidget = widget::SelectionWidget<RenderContext>;
-  using SelectionListWidget = widget::SelectionListWidget<RenderContext>;
-  using SelectionBoxWidget = widget::SelectionListWidget<RenderContext>;
-  using SoldierEquipmentWidget = widget::game::SoldierEquipmentWidget<RenderContext>;
-  using DroneEquipmentWidget = widget::game::DroneEquipmentWidget<RenderContext>;
+  using Widget = widget::Widget<Context>;
+  using GridContainerWidget = widget::GridContainerWidget<Context>;
+  using TextWidget = widget::TextWidget<Context>;
+  using SelectionWidget = widget::SelectionWidget<Context>;
+  using SelectionListWidget = widget::SelectionListWidget<Context>;
+  using SelectionBoxWidget = widget::SelectionListWidget<Context>;
+  using SoldierEquipmentWidget = widget::game::SoldierEquipmentWidget<Context>;
+  using DroneEquipmentWidget = widget::game::DroneEquipmentWidget<Context>;
 
   using WidgetPtr = std::shared_ptr<Widget>;
   using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget>;
@@ -63,7 +64,7 @@ class SquadModificationScreen : public IScreen<RenderContext> {
   using SoldierEquipmentWidgetPtr = std::shared_ptr<SoldierEquipmentWidget>;
   using DroneEquipmentWidgetPtr = std::shared_ptr<DroneEquipmentWidget>;
 
-  using WidgetSystem = widget::WidgetSystem<RenderContext>;
+  using WidgetSystem = widget::WidgetSystem<Context>;
 
  public:
   /**
@@ -158,8 +159,8 @@ class SquadModificationScreen : public IScreen<RenderContext> {
 
 };
 
-template<typename RenderContext>
-SquadModificationScreen<RenderContext>::
+template<typename Context>
+SquadModificationScreen<Context>::
 SquadModificationScreen(const headquarters_model::HeadquartersModel &model,
                         size_t soldier_count, size_t drone_count,
                         WeaponTechType soldier_weapon_tech_type,
@@ -227,20 +228,20 @@ SquadModificationScreen(const headquarters_model::HeadquartersModel &model,
   InitUI();
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action>
-SquadModificationScreen<RenderContext>::Update(std::chrono::microseconds delta) {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action>
+SquadModificationScreen<Context>::Update(std::chrono::microseconds delta) {
   return {};
 }
 
-template<typename RenderContext>
-widget::Widget<RenderContext> &SquadModificationScreen<RenderContext>::Render(std::chrono::microseconds delta) {
+template<typename Context>
+widget::Widget<Context> &SquadModificationScreen<Context>::Render(std::chrono::microseconds delta) {
   return widget_system_.Root();
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action>
-SquadModificationScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action>
+SquadModificationScreen<Context>::OnInput(const frontend::InputEvent &event) {
   if (widget_system_.HandleInput(event.input)) {
     return {};
   }
@@ -257,8 +258,8 @@ SquadModificationScreen<RenderContext>::OnInput(const frontend::InputEvent &even
   return {};
 }
 
-template<typename RenderContext>
-void SquadModificationScreen<RenderContext>::InitUI() {
+template<typename Context>
+void SquadModificationScreen<Context>::InitUI() {
   main_container_ = std::make_shared<GridContainerWidget>(util::Vector2<size_t>{1, 4});
   main_container_->SetRenderSeparators(true);
 
@@ -307,14 +308,14 @@ void SquadModificationScreen<RenderContext>::InitUI() {
   UpdateInfoText();
 }
 
-template<typename RenderContext>
-void SquadModificationScreen<RenderContext>::SwitchUnit(bool to_next) {
+template<typename Context>
+void SquadModificationScreen<Context>::SwitchUnit(bool to_next) {
   SwitchToUnit((soldier_count_ + drone_count_ + current_unit_ + (to_next ? 1 : -1))
                    % (soldier_count_ + drone_count_));
 }
 
-template<typename RenderContext>
-void SquadModificationScreen<RenderContext>::SwitchToUnit(size_t index) {
+template<typename Context>
+void SquadModificationScreen<Context>::SwitchToUnit(size_t index) {
   if (index < soldier_count_) {
     SwitchToSoldier(index);
   } else if (index < soldier_count_ + drone_count_) {
@@ -323,8 +324,8 @@ void SquadModificationScreen<RenderContext>::SwitchToUnit(size_t index) {
   current_unit_ = index;
 }
 
-template<typename RenderContext>
-void SquadModificationScreen<RenderContext>::SwitchToSoldier(size_t index) {
+template<typename Context>
+void SquadModificationScreen<Context>::SwitchToSoldier(size_t index) {
   std::stringstream name;
   name << "Soldier " << index + 1;
   title_text_->SetText(name.str());
@@ -333,8 +334,8 @@ void SquadModificationScreen<RenderContext>::SwitchToSoldier(size_t index) {
   widget_system_.SetFocused(soldiers_widgets_[index]);
 }
 
-template<typename RenderContext>
-void SquadModificationScreen<RenderContext>::SwitchToDrone(size_t index) {
+template<typename Context>
+void SquadModificationScreen<Context>::SwitchToDrone(size_t index) {
   std::stringstream name;
   name << "Drone " << index + 1;
   title_text_->SetText(name.str());
@@ -343,8 +344,8 @@ void SquadModificationScreen<RenderContext>::SwitchToDrone(size_t index) {
   widget_system_.SetFocused(drones_widgets_[index]);
 }
 
-template<typename RenderContext>
-void SquadModificationScreen<RenderContext>::UpdateInfoText() {
+template<typename Context>
+void SquadModificationScreen<Context>::UpdateInfoText() {
   std::stringstream message;
   message << "Armory usage (used / available):\n";
   for (WeaponType weapon_type : soldier_weapon_types_) {

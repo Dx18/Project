@@ -69,6 +69,8 @@ set(SOURCES
         frontend/terminal/ITerminalInput.cpp
         frontend/terminal/TerminalEvents.cpp
         frontend/terminal/CursesTerminalFrontend.cpp
+        frontend/terminal/TextureReader.cpp
+        frontend/terminal/TerminalResources.cpp
 
         widget/terminal/TerminalContext.cpp
         widget/terminal/TextWidget.cpp

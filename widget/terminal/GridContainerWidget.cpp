@@ -2,17 +2,19 @@
 
 #include <optional>
 
-#include "frontend/terminal/IRenderSurfaceWrite.h"
 #include "frontend/terminal/RenderSurfaceRegion.h"
+
+#include "TerminalContext.h"
 
 namespace widget {
 
 using namespace frontend::terminal;
 
 template<>
-util::Vector2<size_t> GridContainerWidget<IRenderSurfaceWrite>::MinSize() const {
+util::Vector2<size_t>
+GridContainerWidget<widget::terminal::TerminalContext>::MinSize(TerminalResources &resources) const {
   size_t min_size_y = 0;
-  for (const LinearCell &cell : CreateRowCells()) {
+  for (const LinearCell &cell : CreateRowCells(resources)) {
     min_size_y += cell.min_size;
   }
   if (render_separators_ && dimensions_.y > 0) {
@@ -20,7 +22,7 @@ util::Vector2<size_t> GridContainerWidget<IRenderSurfaceWrite>::MinSize() const 
   }
 
   size_t min_size_x = 0;
-  for (const LinearCell &cell : CreateColumnCells()) {
+  for (const LinearCell &cell : CreateColumnCells(resources)) {
     min_size_x += cell.min_size;
   }
   if (render_separators_ && dimensions_.x > 0) {
@@ -31,7 +33,8 @@ util::Vector2<size_t> GridContainerWidget<IRenderSurfaceWrite>::MinSize() const 
 }
 
 template<>
-void GridContainerWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &context) {
+void GridContainerWidget<widget::terminal::TerminalContext>::Render(IRenderSurfaceWrite &context,
+                                                                    TerminalResources &resources) {
   util::Vector2<size_t> size = context.Size();
 
   if (render_separators_ && (dimensions_.y > size.y + 1 || dimensions_.x > size.x + 1)) {
@@ -42,9 +45,9 @@ void GridContainerWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &conte
   size_t available_width = size.x - (render_separators_ ? 1 : 0) * (dimensions_.x - 1);
 
   std::vector<size_t> actual_row_sizes;
-  ResolveLinearCells(CreateRowCells(), available_height, actual_row_sizes);
+  ResolveLinearCells(CreateRowCells(resources), available_height, actual_row_sizes);
   std::vector<size_t> actual_column_sizes;
-  ResolveLinearCells(CreateColumnCells(), available_width, actual_column_sizes);
+  ResolveLinearCells(CreateColumnCells(resources), available_width, actual_column_sizes);
 
   std::vector<size_t> prefix_row_sizes(actual_row_sizes.size() + 1);
   for (size_t i = 0; i < actual_row_sizes.size(); ++i) {
@@ -91,7 +94,7 @@ void GridContainerWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &conte
       RenderSurfaceRegion region(context, rectangle);
       WidgetPtr widget = widgets_[GetSlotIndex({j, i})];
       if (widget) {
-        widget->Render(region);
+        widget->Render(region, resources);
       }
     }
   }

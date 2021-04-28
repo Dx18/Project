@@ -26,10 +26,9 @@ int main() {
   CursesTerminalFrontend frontend;
   frontend.SetCursorState(false);
 
-  widget::terminal::TerminalContext context(frontend, frontend);
+  widget::terminal::TerminalContext context(frontend, frontend, "resources/terminal");
 
-  auto initial_screen =
-      std::make_unique<main_menu_screen::MainMenuScreen<typename TerminalContext::RenderContext>>(config.game_config);
+  auto initial_screen = std::make_unique<main_menu_screen::MainMenuScreen<TerminalContext>>(config.game_config);
 
   Game<TerminalContext> game(context, std::move(initial_screen));
   game.Run();
