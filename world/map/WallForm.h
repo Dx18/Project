@@ -5,11 +5,11 @@ namespace world::map {
 /** Form of wall. */
 enum WallForm {
   /** No wall. Cannot be used as cover by units. */
-  kNoWall,
+  kNoWall = 0,
   /** Half height wall. Can be used as average cover by units. */
-  kHalf,
+  kHalf = 1,
   /** Full height wall. Can be used as good cover by units. */
-  kFull
+  kFull = 2
 };
 
 }
