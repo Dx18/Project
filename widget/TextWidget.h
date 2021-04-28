@@ -6,10 +6,11 @@ namespace widget {
 
 /**
  * Widget containing text.
- * @tparam RenderContext Context used to render widget.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
-class TextWidget : public Widget<RenderContext> {
+template<typename Context>
+class TextWidget : public Widget<Context> {
  public:
   /**
    * Creates text widget using given text.
@@ -25,8 +26,8 @@ class TextWidget : public Widget<RenderContext> {
    */
   void SetText(const std::string &text);
 
-  [[nodiscard]] util::Vector2<size_t> MinSize() const override;
-  void Render(RenderContext &context) override;
+  [[nodiscard]] util::Vector2<size_t> MinSize(typename Context::Resources &resources) const override;
+  void Render(typename Context::RenderContext &context, typename Context::Resources &resources) override;
 
  private:
   /** Current text. */
@@ -34,23 +35,19 @@ class TextWidget : public Widget<RenderContext> {
 
 };
 
-/** Alias for shared pointer to text widget. */
-template<typename RenderContext>
-using TextWidgetPtr = std::shared_ptr<TextWidget<RenderContext>>;
-
-template<typename RenderContext>
-TextWidget<RenderContext>::TextWidget(const std::string &text)
+template<typename Context>
+TextWidget<Context>::TextWidget(const std::string &text)
     : text_(text) {
 
 }
 
-template<typename RenderContext>
-const std::string &TextWidget<RenderContext>::Text() const {
+template<typename Context>
+const std::string &TextWidget<Context>::Text() const {
   return text_;
 }
 
-template<typename RenderContext>
-void TextWidget<RenderContext>::SetText(const std::string &text) {
+template<typename Context>
+void TextWidget<Context>::SetText(const std::string &text) {
   text_ = text;
 }
 

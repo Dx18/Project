@@ -1,13 +1,13 @@
 #include "widget/TextWidget.h"
 
-#include "frontend/terminal/IRenderSurfaceWrite.h"
+#include "TerminalContext.h"
 
 namespace widget {
 
 using namespace frontend::terminal;
 
 template<>
-util::Vector2<size_t> TextWidget<IRenderSurfaceWrite>::MinSize() const {
+util::Vector2<size_t> TextWidget<widget::terminal::TerminalContext>::MinSize(TerminalResources &resources) const {
   if (text_.empty()) {
     return {1, 1};
   }
@@ -29,7 +29,8 @@ util::Vector2<size_t> TextWidget<IRenderSurfaceWrite>::MinSize() const {
 }
 
 template<>
-void widget::TextWidget<frontend::terminal::IRenderSurfaceWrite>::Render(frontend::terminal::IRenderSurfaceWrite &context) {
+void widget::TextWidget<widget::terminal::TerminalContext>::Render(IRenderSurfaceWrite &context,
+                                                                   TerminalResources &resources) {
   using namespace frontend::terminal;
 
   util::Vector2<size_t> size = context.Size();

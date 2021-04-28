@@ -9,9 +9,10 @@ namespace widget {
 
 /**
  * Abstract widget.
- * @tparam RenderContext Context used to render widget.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
+template<typename Context>
 class Widget {
  public:
   /** Creates widget with default parameters. */
@@ -36,12 +37,12 @@ class Widget {
   virtual void SetFocused(bool focused);
 
   /** Returns weak pointer to parent of current widget. */
-  [[nodiscard]] virtual const std::weak_ptr<Widget<RenderContext>> &Parent() const;
+  [[nodiscard]] virtual const std::weak_ptr<Widget<Context>> &Parent() const;
   /**
    * Sets parent of current widget.
    * @param parent Weak pointer to new parent of current widget.
    */
-  virtual void SetParent(const std::weak_ptr<Widget<RenderContext>> &parent);
+  virtual void SetParent(const std::weak_ptr<Widget<Context>> &parent);
 
   /**
    * Handles keyboard input. Returns true if input is successfully handled.
@@ -50,13 +51,13 @@ class Widget {
   virtual bool HandleInput(const frontend::Input &input);
 
   /** Returns minimum possible size current widget can occupy. Behaviour of this method depends on render context. */
-  [[nodiscard]] virtual util::Vector2<size_t> MinSize() const = 0;
+  [[nodiscard]] virtual util::Vector2<size_t> MinSize(typename Context::Resources &resources) const = 0;
   /**
    * Renders widget using given render context. Behaviour of this method depends on render context. This method must
    * be specialized by every render context.
    * @param context Render context.
    */
-  virtual void Render(RenderContext &context) = 0;
+  virtual void Render(typename Context::RenderContext &context, typename Context::Resources &resources) = 0;
 
  protected:
   /** Expanding preference. */
@@ -64,55 +65,51 @@ class Widget {
   /** True if current widget is currently focused. Otherwise false. */
   bool focused_;
   /** Weak pointer to parent of current widget. */
-  std::weak_ptr<Widget<RenderContext>> parent_;
+  std::weak_ptr<Widget<Context>> parent_;
 
 };
 
-/** Alias for shared pointer to abstract widget. */
-template<typename RenderContext>
-using WidgetPtr = std::shared_ptr<Widget<RenderContext>>;
-
-template<typename RenderContext>
-Widget<RenderContext>::Widget()
+template<typename Context>
+Widget<Context>::Widget()
     : expand_({false, false}), focused_(false), parent_() {
 
 }
 
-template<typename RenderContext>
-Widget<RenderContext>::~Widget() = default;
+template<typename Context>
+Widget<Context>::~Widget() = default;
 
-template<typename RenderContext>
-util::Vector2<bool> Widget<RenderContext>::PreferExpand() const {
+template<typename Context>
+util::Vector2<bool> Widget<Context>::PreferExpand() const {
   return expand_;
 }
 
-template<typename RenderContext>
-void Widget<RenderContext>::SetPreferExpand(const util::Vector2<bool> &expand) {
+template<typename Context>
+void Widget<Context>::SetPreferExpand(const util::Vector2<bool> &expand) {
   expand_ = expand;
 }
 
-template<typename RenderContext>
-bool Widget<RenderContext>::Focused() const {
+template<typename Context>
+bool Widget<Context>::Focused() const {
   return focused_;
 }
 
-template<typename RenderContext>
-void Widget<RenderContext>::SetFocused(bool focused) {
+template<typename Context>
+void Widget<Context>::SetFocused(bool focused) {
   focused_ = focused;
 }
 
-template<typename RenderContext>
-const std::weak_ptr<Widget<RenderContext>> &Widget<RenderContext>::Parent() const {
+template<typename Context>
+const std::weak_ptr<Widget<Context>> &Widget<Context>::Parent() const {
   return parent_;
 }
 
-template<typename RenderContext>
-void Widget<RenderContext>::SetParent(const std::weak_ptr<Widget<RenderContext>> &parent) {
+template<typename Context>
+void Widget<Context>::SetParent(const std::weak_ptr<Widget<Context>> &parent) {
   parent_ = parent;
 }
 
-template<typename RenderContext>
-bool Widget<RenderContext>::HandleInput(const frontend::Input &input) {
+template<typename Context>
+bool Widget<Context>::HandleInput(const frontend::Input &input) {
   return false;
 }
 

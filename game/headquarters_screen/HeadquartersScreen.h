@@ -14,27 +14,31 @@ namespace game::headquarters_screen {
 
 using namespace headquarters_model;
 
-/** Main menu screen. */
-template<typename RenderContext>
-class HeadquartersScreen : public game::IScreen<RenderContext> {
+/**
+ * Main menu screen.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
+ */
+template<typename Context>
+class HeadquartersScreen : public game::IScreen<Context> {
  private:
-  using Action = typename game::IScreen<RenderContext>::Action;
-  using PushScreenAction = typename game::IScreen<RenderContext>::PushScreenAction;
-  using PopScreenAction = typename game::IScreen<RenderContext>::PopScreenAction;
-  using QuitAction = typename game::IScreen<RenderContext>::QuitAction;
+  using Action = typename game::IScreen<Context>::Action;
+  using PushScreenAction = typename game::IScreen<Context>::PushScreenAction;
+  using PopScreenAction = typename game::IScreen<Context>::PopScreenAction;
+  using QuitAction = typename game::IScreen<Context>::QuitAction;
 
-  using Widget = widget::Widget<RenderContext>;
-  using GridContainerWidget = widget::GridContainerWidget<RenderContext>;
-  using TextWidget = widget::TextWidget<RenderContext>;
-  using SelectionWidget = widget::SelectionWidget<RenderContext>;
-  using SelectionListWidget = widget::SelectionListWidget<RenderContext>;
+  using Widget = widget::Widget<Context>;
+  using GridContainerWidget = widget::GridContainerWidget<Context>;
+  using TextWidget = widget::TextWidget<Context>;
+  using SelectionWidget = widget::SelectionWidget<Context>;
+  using SelectionListWidget = widget::SelectionListWidget<Context>;
 
   using WidgetPtr = std::shared_ptr<Widget>;
   using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget>;
   using TextWidgetPtr = std::shared_ptr<TextWidget>;
   using SelectionListWidgetPtr = std::shared_ptr<SelectionListWidget>;
 
-  using WidgetSystem = widget::WidgetSystem<RenderContext>;
+  using WidgetSystem = widget::WidgetSystem<Context>;
 
  public:
   /**
@@ -120,33 +124,33 @@ class HeadquartersScreen : public game::IScreen<RenderContext> {
 
 };
 
-template<typename RenderContext>
-HeadquartersScreen<RenderContext>::HeadquartersScreen(const config::GameConfig &game_config)
+template<typename Context>
+HeadquartersScreen<Context>::HeadquartersScreen(const config::GameConfig &game_config)
     : game_config_(game_config), model_(game_config), current_mode_(Mode::kTech), widget_system_() {
   InitUI();
 }
 
-template<typename RenderContext>
-HeadquartersScreen<RenderContext>::HeadquartersScreen(const config::GameConfig &game_config,
-                                                      const config::ConfigStructure &headquarters_info)
+template<typename Context>
+HeadquartersScreen<Context>::HeadquartersScreen(const config::GameConfig &game_config,
+                                                const config::ConfigStructure &headquarters_info)
     : game_config_(game_config), model_(game_config, headquarters_info), current_mode_(Mode::kTech), widget_system_() {
   InitUI();
 }
 
-template<typename RenderContext>
-std::optional<typename game::IScreen<RenderContext>::Action>
-HeadquartersScreen<RenderContext>::Update(std::chrono::microseconds delta) {
+template<typename Context>
+std::optional<typename game::IScreen<Context>::Action>
+HeadquartersScreen<Context>::Update(std::chrono::microseconds delta) {
   return {};
 }
 
-template<typename RenderContext>
-widget::Widget<RenderContext> &HeadquartersScreen<RenderContext>::Render(std::chrono::microseconds delta) {
+template<typename Context>
+widget::Widget<Context> &HeadquartersScreen<Context>::Render(std::chrono::microseconds delta) {
   return widget_system_.Root();
 }
 
-template<typename RenderContext>
-std::optional<typename game::IScreen<RenderContext>::Action>
-HeadquartersScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
+template<typename Context>
+std::optional<typename game::IScreen<Context>::Action>
+HeadquartersScreen<Context>::OnInput(const frontend::InputEvent &event) {
   if (widget_system_.HandleInput(event.input)) {
     return {};
   }
@@ -168,7 +172,7 @@ HeadquartersScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
       SwitchMode(Mode::kArmory);
     } else if (event.input.GetChar() == '3') {
       return PushScreenAction{
-          std::make_unique<squad_formation_screen::SquadFormationScreen<RenderContext>>(game_config_, model_)
+          std::make_unique<squad_formation_screen::SquadFormationScreen<Context>>(game_config_, model_)
       };
     }
   }
@@ -176,8 +180,8 @@ HeadquartersScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
   return {};
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::InitUI() {
+template<typename Context>
+void HeadquartersScreen<Context>::InitUI() {
   using namespace widget;
 
   main_container_ = std::make_shared<GridContainerWidget>(util::Vector2<size_t>{1, 2});
@@ -195,8 +199,8 @@ void HeadquartersScreen<RenderContext>::InitUI() {
   SwitchMode(current_mode_);
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::InitTechUI() {
+template<typename Context>
+void HeadquartersScreen<Context>::InitTechUI() {
   tech_root_ = std::make_shared<GridContainerWidget>(util::Vector2<size_t>{2, 2});
   tech_root_->SetPreferExpand(util::Vector2<bool>{true, true});
   tech_root_->SetRenderSeparators(true);
@@ -234,8 +238,8 @@ void HeadquartersScreen<RenderContext>::InitTechUI() {
   OnTechSelectionChanged();
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::InitArmoryUI() {
+template<typename Context>
+void HeadquartersScreen<Context>::InitArmoryUI() {
   armory_root_ = std::make_shared<GridContainerWidget>(util::Vector2<size_t>{2, 2});
   armory_root_->SetPreferExpand(util::Vector2<bool>{true, true});
   armory_root_->SetRenderSeparators(true);
@@ -273,8 +277,8 @@ void HeadquartersScreen<RenderContext>::InitArmoryUI() {
   OnArmorySelectionChanged();
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::SwitchMode(HeadquartersScreen::Mode mode) {
+template<typename Context>
+void HeadquartersScreen<Context>::SwitchMode(HeadquartersScreen::Mode mode) {
   if (mode == Mode::kTech) {
     main_container_->Set({0, 0}, tech_root_);
     widget_system_.SetFocused(tech_list_);
@@ -285,9 +289,9 @@ void HeadquartersScreen<RenderContext>::SwitchMode(HeadquartersScreen::Mode mode
   current_mode_ = mode;
 }
 
-template<typename RenderContext>
-std::variant<object_database::WeaponTechType,
-             object_database::ArmorTechType> HeadquartersScreen<RenderContext>::SelectedTechType() const {
+template<typename Context>
+std::variant<object_database::WeaponTechType, object_database::ArmorTechType>
+HeadquartersScreen<Context>::SelectedTechType() const {
   using namespace object_database;
 
   auto selected = tech_list_->SelectedItem();
@@ -300,9 +304,9 @@ std::variant<object_database::WeaponTechType,
   throw std::runtime_error("cannot get type of selected tech type");
 }
 
-template<typename RenderContext>
-std::variant<object_database::WeaponType,
-             object_database::ArmorType> HeadquartersScreen<RenderContext>::SelectedArmoryType() const {
+template<typename Context>
+std::variant<object_database::WeaponType, object_database::ArmorType>
+HeadquartersScreen<Context>::SelectedArmoryType() const {
   using namespace object_database;
 
   auto selected = armory_list_->SelectedItem();
@@ -315,8 +319,8 @@ std::variant<object_database::WeaponType,
   throw std::runtime_error("cannot get type of selected armory type");
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::OnResearch() {
+template<typename Context>
+void HeadquartersScreen<Context>::OnResearch() {
   using namespace object_database;
   using namespace headquarters_model::tech;
 
@@ -340,8 +344,8 @@ void HeadquartersScreen<RenderContext>::OnResearch() {
   OnTechSelectionChanged();
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::OnTechSelectionChanged() {
+template<typename Context>
+void HeadquartersScreen<Context>::OnTechSelectionChanged() {
   using namespace object_database;
   using namespace headquarters_model::tech;
 
@@ -364,8 +368,8 @@ void HeadquartersScreen<RenderContext>::OnTechSelectionChanged() {
   }
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::OnBuild() {
+template<typename Context>
+void HeadquartersScreen<Context>::OnBuild() {
   using namespace object_database;
   using namespace headquarters_model::armory;
 
@@ -389,8 +393,8 @@ void HeadquartersScreen<RenderContext>::OnBuild() {
   OnArmorySelectionChanged();
 }
 
-template<typename RenderContext>
-void HeadquartersScreen<RenderContext>::OnArmorySelectionChanged() {
+template<typename Context>
+void HeadquartersScreen<Context>::OnArmorySelectionChanged() {
   using namespace object_database;
   using namespace headquarters_model::armory;
 

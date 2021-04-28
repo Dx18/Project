@@ -6,24 +6,25 @@ namespace game::message_screen {
 
 /**
  * Basic screen with message.
- * @tparam RenderContext Render context used to draw widgets.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
-class MessageScreen : public game::IScreen<RenderContext> {
+template<typename Context>
+class MessageScreen : public game::IScreen<Context> {
  private:
-  using Action = typename game::IScreen<RenderContext>::Action;
-  using PushScreenAction = typename game::IScreen<RenderContext>::PushScreenAction;
-  using PopScreenAction = typename game::IScreen<RenderContext>::PopScreenAction;
-  using QuitAction = typename game::IScreen<RenderContext>::QuitAction;
+  using Action = typename game::IScreen<Context>::Action;
+  using PushScreenAction = typename game::IScreen<Context>::PushScreenAction;
+  using PopScreenAction = typename game::IScreen<Context>::PopScreenAction;
+  using QuitAction = typename game::IScreen<Context>::QuitAction;
 
-  using Widget = widget::Widget<RenderContext>;
-  using GridContainerWidget = widget::GridContainerWidget<RenderContext>;
-  using TextWidget = widget::TextWidget<RenderContext>;
+  using Widget = widget::Widget<Context>;
+  using GridContainerWidget = widget::GridContainerWidget<Context>;
+  using TextWidget = widget::TextWidget<Context>;
 
   using GridContainerWidgetPtr = std::shared_ptr<GridContainerWidget>;
   using TextWidgetPtr = std::shared_ptr<TextWidget>;
 
-  using WidgetSystem = widget::WidgetSystem<RenderContext>;
+  using WidgetSystem = widget::WidgetSystem<Context>;
 
  public:
   /**
@@ -46,13 +47,13 @@ class MessageScreen : public game::IScreen<RenderContext> {
 
 };
 
-template<typename RenderContext>
-MessageScreen<RenderContext>::MessageScreen(const std::string &title, const std::string &text) {
+template<typename Context>
+MessageScreen<Context>::MessageScreen(const std::string &title, const std::string &text) {
   InitUI(title, text);
 }
 
-template<typename RenderContext>
-void MessageScreen<RenderContext>::InitUI(const std::string &title, const std::string &text) {
+template<typename Context>
+void MessageScreen<Context>::InitUI(const std::string &title, const std::string &text) {
   GridContainerWidgetPtr main_container = std::make_shared<GridContainerWidget>(util::Vector2<size_t>{1, 2});
   main_container->SetRenderSeparators(true);
 
@@ -67,20 +68,20 @@ void MessageScreen<RenderContext>::InitUI(const std::string &title, const std::s
   widget_system_.SetRoot(main_container);
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action>
-MessageScreen<RenderContext>::Update(std::chrono::microseconds delta) {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action>
+MessageScreen<Context>::Update(std::chrono::microseconds delta) {
   return {};
 }
 
-template<typename RenderContext>
-widget::Widget<RenderContext> &MessageScreen<RenderContext>::Render(std::chrono::microseconds delta) {
+template<typename Context>
+widget::Widget<Context> &MessageScreen<Context>::Render(std::chrono::microseconds delta) {
   return widget_system_.Root();
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action>
-MessageScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action>
+MessageScreen<Context>::OnInput(const frontend::InputEvent &event) {
   return PopScreenAction{};
 }
 

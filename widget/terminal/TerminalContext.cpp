@@ -11,7 +11,7 @@ TerminalEvents &TerminalContext::Events() {
   return events_;
 }
 
-void TerminalContext::Render(widget::Widget<IRenderSurfaceWrite> &widget) {
+void TerminalContext::Render(widget::Widget<TerminalContext> &widget) {
   using namespace frontend::terminal;
 
   surface_.ResizeClear(renderer_.Size(),
@@ -20,7 +20,7 @@ void TerminalContext::Render(widget::Widget<IRenderSurfaceWrite> &widget) {
                            ColorPair(Color::kWhite, Color::kBlack)
                        ));
 
-  widget.Render(surface_);
+  widget.Render(surface_, resources_);
   renderer_.Render(surface_, {0, 0});
 }
 

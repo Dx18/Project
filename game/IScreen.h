@@ -25,21 +25,22 @@ namespace game {
  * Other events:
  * - OnInput: character or key input is received.
  *
- * @tparam RenderContext Context used to render widgets.
+ * @tparam Context Type with following associated types: `Context::RenderContext` (used to render widget),
+ *                 `Context::ResourcesContext` (resources associated with context).
  */
-template<typename RenderContext>
+template<typename Context>
 class IScreen {
  public:
   /** Request to push given screen to screen stack. */
   struct PushScreenAction {
     /** New screen. */
-    std::unique_ptr<game::IScreen<RenderContext>> new_screen;
+    std::unique_ptr<game::IScreen<Context>> new_screen;
 
     /**
      * Creates push screen action.
      * @param new_screen New screen.
      */
-    explicit PushScreenAction(std::unique_ptr<game::IScreen<RenderContext>> new_screen);
+    explicit PushScreenAction(std::unique_ptr<game::IScreen<Context>> new_screen);
 
   };
 
@@ -63,7 +64,7 @@ class IScreen {
    * Called when screen needs to be rendered. May return game action.
    * @param delta Time passed from previous frame in seconds.
    */
-  virtual widget::Widget<RenderContext> &Render(std::chrono::microseconds delta) = 0;
+  virtual widget::Widget<Context> &Render(std::chrono::microseconds delta) = 0;
   /**
    * Called after:
    * - post-constructor initialization;
@@ -84,27 +85,27 @@ class IScreen {
 
 };
 
-template<typename RenderContext>
-IScreen<RenderContext>::PushScreenAction::PushScreenAction(std::unique_ptr<game::IScreen<RenderContext>> _new_screen)
+template<typename Context>
+IScreen<Context>::PushScreenAction::PushScreenAction(std::unique_ptr<game::IScreen<Context>> _new_screen)
     : new_screen(std::move(_new_screen)) {
 
 }
 
-template<typename RenderContext>
-IScreen<RenderContext>::~IScreen() = default;
+template<typename Context>
+IScreen<Context>::~IScreen() = default;
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action> IScreen<RenderContext>::OnResume() {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action> IScreen<Context>::OnResume() {
   return {};
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action> IScreen<RenderContext>::OnPause() {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action> IScreen<Context>::OnPause() {
   return {};
 }
 
-template<typename RenderContext>
-std::optional<typename IScreen<RenderContext>::Action> IScreen<RenderContext>::OnInput(const frontend::InputEvent &event) {
+template<typename Context>
+std::optional<typename IScreen<Context>::Action> IScreen<Context>::OnInput(const frontend::InputEvent &event) {
   return {};
 }
 

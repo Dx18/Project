@@ -28,8 +28,7 @@ int main() {
 
   widget::terminal::TerminalContext context(frontend, frontend);
 
-  auto initial_screen =
-      std::make_unique<main_menu_screen::MainMenuScreen<typename TerminalContext::RenderContext>>(config.game_config);
+  auto initial_screen = std::make_unique<main_menu_screen::MainMenuScreen<TerminalContext>>(config.game_config);
 
   Game<TerminalContext> game(context, std::move(initial_screen));
   game.Run();

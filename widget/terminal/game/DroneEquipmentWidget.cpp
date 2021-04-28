@@ -2,15 +2,17 @@
 
 #include <vector>
 
-#include "frontend/terminal/IRenderSurfaceWrite.h"
 #include "frontend/terminal/RenderSurfaceRegion.h"
+
+#include "../TerminalContext.h"
 
 namespace widget::game {
 
 using namespace frontend::terminal;
 
 template<>
-util::Vector2<size_t> DroneEquipmentWidget<IRenderSurfaceWrite>::MinSize() const {
+util::Vector2<size_t>
+DroneEquipmentWidget<widget::terminal::TerminalContext>::MinSize(TerminalResources &resources) const {
   const size_t kCellHeight = 12;
   const size_t kCellWidth = 10;
   const size_t kGap = 1;
@@ -22,14 +24,15 @@ util::Vector2<size_t> DroneEquipmentWidget<IRenderSurfaceWrite>::MinSize() const
 }
 
 template<>
-void DroneEquipmentWidget<IRenderSurfaceWrite>::Render(IRenderSurfaceWrite &context) {
+void DroneEquipmentWidget<widget::terminal::TerminalContext>::Render(IRenderSurfaceWrite &context,
+                                                                     TerminalResources &resources) {
   const size_t kCellHeight = 12;
   const size_t kCellWidth = 10;
   const size_t kGap = 1;
   const size_t kTopTextHeight = 1;
 
   util::Vector2<size_t> size = context.Size();
-  util::Vector2<size_t> min_size = MinSize();
+  util::Vector2<size_t> min_size = MinSize(resources);
 
   if (size.x < min_size.x || size.y < min_size.y) {
     return;

@@ -14,14 +14,14 @@ namespace game {
 /**
  * Game loop.
  *
- * @tparam Context Type with associated type `RenderContext` and following methods:
+ * @tparam Context Type with associated types `RenderContext` and `Resources` and following methods:
  *                 - `void Render(const widget::Widget<RenderContext> &widget)`;
  *                 - `IFrontendEvents &Events()`.
  */
 template<typename Context>
 class Game {
  private:
-  using IScreenType = IScreen<typename Context::RenderContext>;
+  using IScreenType = IScreen<Context>;
   using IScreenPtr = std::unique_ptr<IScreenType>;
   using Action = typename IScreenType::Action;
   using PushScreenAction = typename IScreenType::PushScreenAction;
@@ -115,7 +115,7 @@ void Game<Context>::Run() {
 
     actions.push_back(screen.Update(delta));
 
-    widget::Widget<typename Context::RenderContext> &widget = screen.Render(delta);
+    widget::Widget<Context> &widget = screen.Render(delta);
     context_.Render(widget);
 
     for (std::optional<Action> &action : actions) {
