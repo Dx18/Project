@@ -26,7 +26,7 @@ class TerminalContext {
    * @param input Terminal input.
    * @param renderer Terminal renderer.
    */
-  TerminalContext(ITerminalInput &input, ITerminalRenderer &renderer);
+  TerminalContext(ITerminalInput &input, ITerminalRenderer &renderer, const std::string &resources_path);
 
   /** Returns reference to terminal events. */
   TerminalEvents &Events();

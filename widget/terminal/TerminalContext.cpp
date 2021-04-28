@@ -2,8 +2,8 @@
 
 namespace widget::terminal {
 
-TerminalContext::TerminalContext(ITerminalInput &input, ITerminalRenderer &renderer)
-    : events_(input), renderer_(renderer), surface_() {
+TerminalContext::TerminalContext(ITerminalInput &input, ITerminalRenderer &renderer, const std::string &resources_path)
+    : events_(input), resources_(resources_path), renderer_(renderer), surface_() {
 
 }
 
