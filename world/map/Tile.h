@@ -6,7 +6,7 @@
 #include "Wall.h"
 #include "FloorMaterialType.h"
 
-namespace world {
+namespace world::map {
 
 /** World tile. */
 struct Tile {
@@ -37,8 +37,8 @@ struct Tile {
 namespace std {
 
 template<>
-struct hash<world::Tile> {
-  size_t operator()(const world::Tile &tile) const;
+struct hash<world::map::Tile> {
+  size_t operator()(const world::map::Tile &tile) const;
 };
 
 }

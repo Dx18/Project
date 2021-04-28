@@ -8,7 +8,7 @@
 
 #include "InstantiatedTiles.h"
 
-namespace world {
+namespace world::map {
 
 /** Tiled world map. */
 class WorldMap {

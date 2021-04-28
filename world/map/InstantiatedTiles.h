@@ -5,7 +5,7 @@
 #include "Tile.h"
 #include "TileID.h"
 
-namespace world {
+namespace world::map {
 
 /** Currently instantiated tiles in world. */
 class InstantiatedTiles {

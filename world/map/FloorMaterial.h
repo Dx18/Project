@@ -5,7 +5,7 @@
 
 #include "FloorMaterialType.h"
 
-namespace world {
+namespace world::map {
 
 /** Floor material. */
 class FloorMaterial {

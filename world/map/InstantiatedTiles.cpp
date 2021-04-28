@@ -1,6 +1,6 @@
 #include "InstantiatedTiles.h"
 
-namespace world {
+namespace world::map {
 
 const size_t InstantiatedTiles::kMissingTileID = 0;
 
@@ -19,7 +19,7 @@ TileID InstantiatedTiles::GetTileID(Tile tile) {
   ++next_tile_id_;
 
   tiles_.insert({result, tile});
-  tile_ids_.insert({std::move(tile), result});
+  tile_ids_.insert({tile, result});
 
   return result;
 }

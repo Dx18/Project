@@ -1,6 +1,6 @@
 #include "WorldMap.h"
 
-namespace world {
+namespace world::map {
 
 WorldMap::WorldMap(const util::Vector2<size_t> &size)
     : size_(size), data_(size.x * size.y, InstantiatedTiles::kMissingTileID), tiles_() {
@@ -22,7 +22,7 @@ std::optional<Tile> WorldMap::Get(const util::Vector2<size_t> &position) const {
 
 void WorldMap::Set(const util::Vector2<size_t> &position, Tile tile) {
   CheckIfContainsPoint(position);
-  data_[GetTileIndex(position)] = tiles_.GetTileID(std::move(tile));
+  data_[GetTileIndex(position)] = tiles_.GetTileID(tile);
 }
 
 void WorldMap::CheckIfContainsPoint(const util::Vector2<size_t> &point) const {

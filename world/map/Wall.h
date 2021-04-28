@@ -4,7 +4,7 @@
 
 #include "WallForm.h"
 
-namespace world {
+namespace world::map {
 
 /** Tile wall. */
 struct Wall {
@@ -29,8 +29,8 @@ struct Wall {
 namespace std {
 
 template<>
-struct hash<world::Wall> {
-  size_t operator()(const world::Wall &wall) const;
+struct hash<world::map::Wall> {
+  size_t operator()(const world::map::Wall &wall) const;
 };
 
 }

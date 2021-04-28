@@ -1,6 +1,6 @@
 #pragma once
 
-namespace world {
+namespace world::map {
 
 /** Form of wall. */
 enum WallForm {

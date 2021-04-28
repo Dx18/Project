@@ -1,6 +1,6 @@
 #include "Wall.h"
 
-namespace world {
+namespace world::map {
 
 Wall::Wall(WallForm _form)
     : form(_form) {
@@ -19,8 +19,8 @@ bool Wall::operator!=(const Wall &other) const {
 
 namespace std {
 
-size_t hash<world::Wall>::operator()(const world::Wall &wall) const {
-  return hash<world::WallForm>{}(wall.form);
+size_t hash<world::map::Wall>::operator()(const world::map::Wall &wall) const {
+  return hash<world::map::WallForm>{}(wall.form);
 }
 
 }

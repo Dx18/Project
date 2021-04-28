@@ -1,6 +1,6 @@
 #include "FloorMaterial.h"
 
-namespace world {
+namespace world::map {
 
 FloorMaterial::FloorMaterial(FloorMaterialType _type, std::string _name)
     : type(_type), name(std::move(_name)) {

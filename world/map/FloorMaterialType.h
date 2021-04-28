@@ -1,6 +1,6 @@
 #pragma once
 
-namespace world {
+namespace world::map {
 
 /** Type of floor material. */
 enum FloorMaterialType {
