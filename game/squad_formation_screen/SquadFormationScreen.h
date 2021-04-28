@@ -327,7 +327,6 @@ void SquadFormationScreen<RenderContext>::InitUI() {
   });
   parameters_container->Set(util::Vector2<size_t>{1, 5}, drone_armor_tech_type_selector);
 
-  parameter_selectors_.resize(kParameterCount);
   parameter_selectors_[kSoldierCountParameter] = soldier_count_selector;
   parameter_selectors_[kDroneCountParameter] = drone_count_selector;
   parameter_selectors_[kSoldierWeaponTechTypeParameter] = soldier_weapon_tech_type_selector;

@@ -105,13 +105,13 @@ class SquadModificationScreen : public IScreen<RenderContext> {
   ArmorType drone_armor_type_;
 
   /** Soldier weapon factory. */
-  std::unique_ptr<unit::soldier::ISoldierWeaponFactory> soldier_weapon_factory_;
+  std::unique_ptr<unit::soldier::weapon::ISoldierWeaponFactory> soldier_weapon_factory_;
   /** Soldier armor factory. */
-  std::unique_ptr<unit::soldier::ISoldierArmorFactory> soldier_armor_factory_;
+  std::unique_ptr<unit::soldier::armor::ISoldierArmorFactory> soldier_armor_factory_;
   /** Drone weapon factory. */
-  std::unique_ptr<unit::drone::IDroneWeaponFactory> drone_weapon_factory_;
+  std::unique_ptr<unit::drone::weapon::IDroneWeaponFactory> drone_weapon_factory_;
   /** Drone armor factory. */
-  std::unique_ptr<unit::drone::IDroneArmorFactory> drone_armor_factory_;
+  std::unique_ptr<unit::drone::armor::IDroneArmorFactory> drone_armor_factory_;
 
   /** Widget system. */
   WidgetSystem widget_system_;
