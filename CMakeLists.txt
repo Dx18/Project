@@ -91,7 +91,8 @@ set(SOURCES
         world/map/FloorMaterial.cpp
         world/map/Tile.cpp
         world/map/InstantiatedTiles.cpp
-        world/map/WorldMap.cpp)
+        world/map/WorldMap.cpp
+        world/World.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
