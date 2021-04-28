@@ -83,7 +83,13 @@ set(SOURCES
         object_database/WeaponTechInfo.cpp
         object_database/ArmorTechInfo.cpp
         object_database/WeaponInfo.cpp
-        object_database/ArmorInfo.cpp)
+        object_database/ArmorInfo.cpp
+
+        world/Wall.cpp
+        world/FloorMaterial.cpp
+        world/Tile.cpp
+        world/InstantiatedTiles.cpp
+        world/WorldMap.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})
