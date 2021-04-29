@@ -41,6 +41,17 @@ class WorldRenderer {
    */
   void RenderMap(const WorldMap &map, const util::Vector2<double> &camera_position,
                  IRenderSurfaceWrite &context, TerminalResources &resources) const;
+  /**
+   * Renders units.
+   * @param enemy Are given units belonging to enemy or not.
+   * @param units Units.
+   * @param camera_position Camera position.
+   * @param context Surface for rendering.
+   * @param resources Terminal resources.
+   */
+  void RenderUnits(bool enemy, const std::vector<std::unique_ptr<unit::Unit>> &units,
+                   const util::Vector2<double> &camera_position, IRenderSurfaceWrite &context,
+                   TerminalResources &resources) const;
 
   /**
    * Creates new texture and renders tile to it.
