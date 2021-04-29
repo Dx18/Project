@@ -11,6 +11,8 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Common sources
 set(SOURCES
         unit/Unit.cpp
+        unit/IArmor.cpp
+        unit/IWeapon.cpp
         unit/BasicArmor.cpp
         unit/BasicFirearmWeapon.cpp
         unit/BasicLaserWeapon.cpp
