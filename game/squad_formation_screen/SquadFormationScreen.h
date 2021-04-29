@@ -470,6 +470,7 @@ std::optional<typename IScreen<Context>::Action> SquadFormationScreen<Context>::
   } else {
     return PushScreenAction{
         std::make_unique<squad_modification_screen::SquadModificationScreen<Context>>(
+            game_config_,
             model_,
             current_soldier_count_,
             current_drone_count_,

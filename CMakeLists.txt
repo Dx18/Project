@@ -96,7 +96,8 @@ set(SOURCES
         world/map/Tile.cpp
         world/map/InstantiatedTiles.cpp
         world/map/WorldMap.cpp
-        world/World.cpp)
+        world/World.cpp
+        world/WorldGenerator.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})

@@ -17,6 +17,15 @@ GameConfig::GameConfig(const ConfigSectionStructure &section)
 
   advanced_tech_level_effect_ = std::stod(section.values.at("advanced_tech_level_effect"));
   squad_size_ = std::stoi(section.values.at("squad_size"));
+
+  world_map_subdivision_ = std::stoi(section.values.at("world_map_subdivision"));
+  world_map_part_size_ = std::stoi(section.values.at("world_map_part_size"));
+  world_map_max_house_count_ = std::stoi(section.values.at("world_map_max_house_count"));
+
+  min_enemy_squad_size_ = std::stoi(section.values.at("min_enemy_squad_size"));
+  laser_weapon_difficulty_threshold_ = std::stod(section.values.at("laser_weapon_difficulty_threshold"));
+  composite_armor_difficulty_threshold_ = std::stod(section.values.at("composite_armor_difficulty_threshold"));
+  enemy_secondary_weapon_probability_ = std::stod(section.values.at("enemy_secondary_weapon_probability"));
 }
 
 std::optional<int> GameConfig::WeaponMaxAmmo(WeaponType type) const {
@@ -41,6 +50,34 @@ double GameConfig::AdvancedTechLevelEffect() const {
 
 int GameConfig::SquadSize() const {
   return squad_size_;
+}
+
+int GameConfig::WorldMapSubdivision() const {
+  return world_map_subdivision_;
+}
+
+int GameConfig::WorldMapPartSize() const {
+  return world_map_part_size_;
+}
+
+int GameConfig::WorldMapMaxHouseCount() const {
+  return world_map_max_house_count_;
+}
+
+int GameConfig::MinEnemySquadSize() const {
+  return min_enemy_squad_size_;
+}
+
+double GameConfig::LaserWeaponDifficultyThreshold() const {
+  return laser_weapon_difficulty_threshold_;
+}
+
+double GameConfig::CompositeArmorDifficultyThreshold() const {
+  return composite_armor_difficulty_threshold_;
+}
+
+double GameConfig::EnemySecondaryWeaponProbability() const {
+  return enemy_secondary_weapon_probability_;
 }
 
 }
