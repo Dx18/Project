@@ -73,12 +73,14 @@ set(SOURCES
         frontend/terminal/TerminalResources.cpp
 
         widget/terminal/TerminalContext.cpp
+        widget/terminal/WorldRenderer.cpp
         widget/terminal/TextWidget.cpp
         widget/terminal/SelectionListWidget.cpp
         widget/terminal/SelectionBoxWidget.cpp
         widget/terminal/GridContainerWidget.cpp
         widget/terminal/game/SoldierEquipmentWidget.cpp
         widget/terminal/game/DroneEquipmentWidget.cpp
+        widget/terminal/game/WorldViewWidget.cpp
 
         object_database/UnitInfo.cpp
         object_database/WeaponClassInfo.cpp
