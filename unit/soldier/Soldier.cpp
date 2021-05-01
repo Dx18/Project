@@ -76,4 +76,22 @@ void Soldier::SetArmor(std::unique_ptr<ISoldierArmor> armor) {
   armor_ = std::move(armor);
 }
 
+int Soldier::MaxTravelDistance(const config::GameConfig &game_config) const {
+  int mass = 0;
+  if (primary_weapon_) {
+    mass += primary_weapon_->Mass();
+  }
+  if (secondary_weapon_) {
+    mass += secondary_weapon_->Mass();
+  }
+  if (armor_) {
+    mass += armor_->Mass();
+  }
+  return util::math::clamp(
+      game_config.BaseSoldierTravelDistanceLimit() - mass,
+      game_config.MinSoldierTravelDistanceLimit(),
+      game_config.MaxSoldierTravelDistanceLimit()
+  );
+}
+
 }

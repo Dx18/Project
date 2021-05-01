@@ -42,4 +42,19 @@ Drone &Drone::operator=(Drone &&other) noexcept {
   return *this;
 }
 
+int Drone::MaxTravelDistance(const config::GameConfig &game_config) const {
+  int mass = 0;
+  if (weapon_) {
+    mass += weapon_->Mass();
+  }
+  if (armor_) {
+    mass += armor_->Mass();
+  }
+  return util::math::clamp(
+      game_config.BaseDroneTravelDistanceLimit() - mass,
+      game_config.MinDroneTravelDistanceLimit(),
+      game_config.MaxDroneTravelDistanceLimit()
+  );
+}
+
 }

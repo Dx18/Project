@@ -61,6 +61,21 @@ class GameConfig {
   /** Probability of enemy soldier having secondary weapon - pistol. */
   [[nodiscard]] double EnemySecondaryWeaponProbability() const;
 
+  /** Max limit of distance soldier can travel at one step. */
+  [[nodiscard]] int MaxSoldierTravelDistanceLimit() const;
+  /** Min limit of distance soldier can travel at one step. */
+  [[nodiscard]] int MinSoldierTravelDistanceLimit() const;
+  /** Base limit of travel distance of soldier. */
+  [[nodiscard]] int BaseSoldierTravelDistanceLimit() const;
+  /** Max limit of distance drone can travel at one step. */
+  [[nodiscard]] int MaxDroneTravelDistanceLimit() const;
+  /** Min limit of distance drone can travel at one step. */
+  [[nodiscard]] int MinDroneTravelDistanceLimit() const;
+  /** Base limit of travel distance of drone. */
+  [[nodiscard]] int BaseDroneTravelDistanceLimit() const;
+  /** Unit movement speed (tiles per second). */
+  [[nodiscard]] double UnitMoveSpeed() const;
+
  private:
   /** Array with weapon max ammo. */
   std::array<std::optional<int>, kWeaponInfo.size()> weapon_max_ammo_;
@@ -90,6 +105,21 @@ class GameConfig {
   double composite_armor_difficulty_threshold_;
   /** Probability of enemy soldier having secondary weapon - pistol. */
   double enemy_secondary_weapon_probability_;
+
+  /** Max limit of distance soldier can travel at one step. */
+  int max_soldier_travel_distance_limit_;
+  /** Min limit of distance soldier can travel at one step. */
+  int min_soldier_travel_distance_limit_;
+  /** Base limit of travel distance of soldier. */
+  int base_soldier_travel_distance_limit_;
+  /** Max limit of distance drone can travel at one step. */
+  int max_drone_travel_distance_limit_;
+  /** Min limit of distance drone can travel at one step. */
+  int min_drone_travel_distance_limit_;
+  /** Base limit of travel distance of drone. */
+  int base_drone_travel_distance_limit_;
+  /** Unit movement speed (tiles per second). */
+  double unit_move_speed_;
 
 };
 

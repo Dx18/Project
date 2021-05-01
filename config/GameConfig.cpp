@@ -26,6 +26,14 @@ GameConfig::GameConfig(const ConfigSectionStructure &section)
   laser_weapon_difficulty_threshold_ = std::stod(section.values.at("laser_weapon_difficulty_threshold"));
   composite_armor_difficulty_threshold_ = std::stod(section.values.at("composite_armor_difficulty_threshold"));
   enemy_secondary_weapon_probability_ = std::stod(section.values.at("enemy_secondary_weapon_probability"));
+
+  max_soldier_travel_distance_limit_ = std::stoi(section.values.at("max_soldier_travel_distance_limit"));
+  min_soldier_travel_distance_limit_ = std::stoi(section.values.at("min_soldier_travel_distance_limit"));
+  base_soldier_travel_distance_limit_ = std::stoi(section.values.at("base_soldier_travel_distance_limit"));
+  max_drone_travel_distance_limit_ = std::stoi(section.values.at("max_drone_travel_distance_limit"));
+  min_drone_travel_distance_limit_ = std::stoi(section.values.at("min_drone_travel_distance_limit"));
+  base_drone_travel_distance_limit_ = std::stoi(section.values.at("base_drone_travel_distance_limit"));
+  unit_move_speed_ = std::stod(section.values.at("unit_move_speed"));
 }
 
 std::optional<int> GameConfig::WeaponMaxAmmo(WeaponType type) const {
@@ -78,6 +86,34 @@ double GameConfig::CompositeArmorDifficultyThreshold() const {
 
 double GameConfig::EnemySecondaryWeaponProbability() const {
   return enemy_secondary_weapon_probability_;
+}
+
+int GameConfig::MaxSoldierTravelDistanceLimit() const {
+  return max_soldier_travel_distance_limit_;
+}
+
+int GameConfig::MinSoldierTravelDistanceLimit() const {
+  return min_soldier_travel_distance_limit_;
+}
+
+int GameConfig::BaseSoldierTravelDistanceLimit() const {
+  return base_soldier_travel_distance_limit_;
+}
+
+int GameConfig::MaxDroneTravelDistanceLimit() const {
+  return max_drone_travel_distance_limit_;
+}
+
+int GameConfig::MinDroneTravelDistanceLimit() const {
+  return min_drone_travel_distance_limit_;
+}
+
+int GameConfig::BaseDroneTravelDistanceLimit() const {
+  return base_drone_travel_distance_limit_;
+}
+
+double GameConfig::UnitMoveSpeed() const {
+  return unit_move_speed_;
 }
 
 }

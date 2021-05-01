@@ -96,6 +96,7 @@ set(SOURCES
         world/map/Tile.cpp
         world/map/InstantiatedTiles.cpp
         world/map/WorldMap.cpp
+        world/map/WorldMovementMap.cpp
         world/entities/WorldEntities.cpp
         world/script/IWorldScript.cpp
         world/script/ScriptSequence.cpp
