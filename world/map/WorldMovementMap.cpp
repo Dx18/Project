@@ -40,12 +40,26 @@ WorldMovementMap::WorldMovementMap(const WorldMap &map, const util::Vector2<size
 
       if (next_row >= 0 && next_row < map_size_.y && next_column >= 0 && next_column < map_size_.x
           && !positions_[next_row * map_size_.x + next_column].has_value()) {
+        util::Vector2<size_t> next = {static_cast<size_t>(next_row), static_cast<size_t>(next_column)};
+
+        std::optional<Tile> tile_curr = map.Get(curr);
+        std::optional<Tile> tile_next = map.Get(next);
+        WallForm max_wall = std::max(
+            tile_curr.has_value()
+            ? tile_curr->walls[transition.wall_current].form
+            : WallForm::kNoWall,
+            tile_next.has_value()
+            ? tile_next->walls[transition.wall_next].form
+            : WallForm::kNoWall
+        );
+        if (max_wall == WallForm::kFull) {
+          continue;
+        }
+
         long long distance = positions_[curr.y * map_size_.x + curr.x]->distance + 1;
         if (distance_cap.has_value() && distance >= *distance_cap) {
           continue;
         }
-
-        util::Vector2<size_t> next = {static_cast<size_t>(next_row), static_cast<size_t>(next_column)};
 
         position_queue.push(next);
         positions_[next.y * map_size_.x + next.x] = PositionInfo(next, distance, curr);
