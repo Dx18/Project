@@ -5,6 +5,7 @@
 #include "unit/Unit.h"
 
 #include "map/WorldMap.h"
+#include "entities/WorldEntities.h"
 
 namespace world {
 
@@ -23,18 +24,17 @@ class World {
 
   /** Returns const reference to game world map. */
   const map::WorldMap &Map() const;
-  /** Returns const reference to array of player's units. */
-  const std::vector<std::unique_ptr<unit::Unit>> &PlayerUnits() const;
-  /** Returns const reference to array of enemy's units. */
-  const std::vector<std::unique_ptr<unit::Unit>> &EnemyUnits() const;
+
+  /** Returns reference to game world entities. */
+  entities::WorldEntities &Entities();
+  /** Returns const reference to game world entities. */
+  const entities::WorldEntities &Entities() const;
 
  private:
   /** World map. */
   map::WorldMap map_;
-  /** Player's units. */
-  std::vector<std::unique_ptr<unit::Unit>> player_units_;
-  /** Enemy's units. */
-  std::vector<std::unique_ptr<unit::Unit>> enemy_units_;
+  /** World entities. */
+  entities::WorldEntities entities_;
 
 };
 

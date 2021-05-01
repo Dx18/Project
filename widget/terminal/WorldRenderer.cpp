@@ -11,8 +11,8 @@ const size_t WorldRenderer::kTileSubdivision = 3;
 void WorldRenderer::Render(const World &world, const util::Vector2<double> &camera_position,
                            IRenderSurfaceWrite &context, TerminalResources &resources) const {
   RenderMap(world.Map(), camera_position, context, resources);
-  RenderUnits(false, world.PlayerUnits(), camera_position, context, resources);
-  RenderUnits(true, world.EnemyUnits(), camera_position, context, resources);
+  RenderUnits(false, world.Entities().PlayerUnits(), camera_position, context, resources);
+  RenderUnits(true, world.Entities().EnemyUnits(), camera_position, context, resources);
 }
 
 void WorldRenderer::RenderMap(const WorldMap &map, const util::Vector2<double> &camera_position,
