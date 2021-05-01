@@ -36,6 +36,12 @@ class WorldMap {
    */
   void Set(const util::Vector2<size_t> &position, Tile tile);
 
+  /**
+   * Checks if world map contains given point. Throws `std::runtime_error` if check is failed.
+   * @param point Point to check.
+   */
+  void CheckIfContainsPoint(const util::Vector2<size_t> &point) const;
+
  private:
   /** Size of world map. */
   util::Vector2<size_t> size_;
@@ -44,11 +50,6 @@ class WorldMap {
   /** Instantiated tiles. */
   InstantiatedTiles tiles_;
 
-  /**
-   * Checks if world map contains given point. Throws `std::runtime_error` if check is failed.
-   * @param point Point to check.
-   */
-  void CheckIfContainsPoint(const util::Vector2<size_t> &point) const;
   /**
    * Returns index of tile in internal data array. Does not perform any bound checks.
    * @param position Position of tile.
