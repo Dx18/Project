@@ -99,6 +99,7 @@ set(SOURCES
         world/entities/WorldEntities.cpp
         world/script/IWorldScript.cpp
         world/script/ScriptSequence.cpp
+        world/script/UnitMovingScript.cpp
         world/World.cpp
         world/WorldGenerator.cpp)
 
