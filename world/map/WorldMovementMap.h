@@ -27,7 +27,7 @@ class WorldMovementMap {
      * @param distance Distance to this position.
      * @param next_to_start Parent vertex in BFS, or `position`, if there is no parent.
      */
-    PositionInfo(util::Vector2<size_t> position, long long distance, util::Vector2<size_t> next_to_start);
+    PositionInfo(util::Vector2<size_t> _position, long long _distance, util::Vector2<size_t> _next_to_start);
 
   };
 
@@ -42,12 +42,12 @@ class WorldMovementMap {
                    std::optional<size_t> distance_cap);
 
   /** Returns array of reachable positions with use of distance cap if it was given in constructor. */
-  std::vector<PositionInfo> AvailablePositions() const;
+  [[nodiscard]] std::vector<PositionInfo> AvailablePositions() const;
   /**
    * Returns positions on path from start position passed in constructor to given end position.
    * @param end_position End position.
    */
-  std::optional<std::vector<PositionInfo>> Path(util::Vector2<size_t> end_position) const;
+  [[nodiscard]] std::optional<std::vector<PositionInfo>> Path(util::Vector2<size_t> end_position) const;
 
  private:
   /** Size of map. */

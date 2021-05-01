@@ -67,8 +67,8 @@ Unit::CreateMovementScript(size_t unit_id, const world::map::WorldMap &map, cons
   std::vector<util::Vector3<double>> final_path;
   for (const WorldMovementMap::PositionInfo &path_position : *path) {
     final_path.push_back({
-                             static_cast<double>(path_position.position.x),
-                             static_cast<double>(path_position.position.y),
+                             static_cast<double>(path_position.position.x) + 0.5,
+                             static_cast<double>(path_position.position.y) + 0.5,
                              0.0
                          });
   }

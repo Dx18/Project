@@ -2,8 +2,9 @@
 
 namespace world::map {
 
-WorldMovementMap::PositionInfo::PositionInfo(util::Vector2<size_t> position, long long distance,
-                                             util::Vector2<size_t> next_to_start) {
+WorldMovementMap::PositionInfo::PositionInfo(util::Vector2<size_t> _position, long long _distance,
+                                             util::Vector2<size_t> _next_to_start)
+    : position(_position), distance(_distance), next_to_start(_next_to_start) {
 
 }
 
@@ -17,10 +18,10 @@ WorldMovementMap::WorldMovementMap(const WorldMap &map, const util::Vector2<size
   };
 
   static const std::array<Transition, 4> kTransitions = {
-      {{{-1, 0}, Tile::kWallUp, Tile::kWallDown},
-       {{0, 1}, Tile::kWallRight, Tile::kWallLeft},
-       {{1, 0}, Tile::kWallDown, Tile::kWallUp},
-       {{0, -1}, Tile::kWallLeft, Tile::kWallRight}}
+      {{{0, -1}, Tile::kWallUp, Tile::kWallDown},
+       {{1, 0}, Tile::kWallRight, Tile::kWallLeft},
+       {{0, 1}, Tile::kWallDown, Tile::kWallUp},
+       {{-1, 0}, Tile::kWallLeft, Tile::kWallRight}}
   };
 
   map.CheckIfContainsPoint(start_position);
@@ -40,7 +41,7 @@ WorldMovementMap::WorldMovementMap(const WorldMap &map, const util::Vector2<size
 
       if (next_row >= 0 && next_row < map_size_.y && next_column >= 0 && next_column < map_size_.x
           && !positions_[next_row * map_size_.x + next_column].has_value()) {
-        util::Vector2<size_t> next = {static_cast<size_t>(next_row), static_cast<size_t>(next_column)};
+        util::Vector2<size_t> next = {static_cast<size_t>(next_column), static_cast<size_t>(next_row)};
 
         std::optional<Tile> tile_curr = map.Get(curr);
         std::optional<Tile> tile_next = map.Get(next);
@@ -57,7 +58,7 @@ WorldMovementMap::WorldMovementMap(const WorldMap &map, const util::Vector2<size
         }
 
         long long distance = positions_[curr.y * map_size_.x + curr.x]->distance + 1;
-        if (distance_cap.has_value() && distance >= *distance_cap) {
+        if (distance_cap.has_value() && distance > *distance_cap) {
           continue;
         }
 
@@ -80,7 +81,7 @@ std::vector<WorldMovementMap::PositionInfo> WorldMovementMap::AvailablePositions
 
 std::optional<std::vector<WorldMovementMap::PositionInfo>> WorldMovementMap::Path(util::Vector2<size_t> end_position) const {
   if (end_position.y >= map_size_.y || end_position.x >= map_size_.x
-      || positions_[end_position.y * map_size_.x + end_position.x]) {
+      || !positions_[end_position.y * map_size_.x + end_position.x].has_value()) {
     return {};
   }
 
