@@ -278,6 +278,7 @@ SquadModificationScreen<Context>::OnInput(const frontend::InputEvent &event) {
 
       return PushScreenAction{
           std::make_unique<game::battle_screen::BattleScreen<Context>>(
+              game_config_,
               std::make_shared<world::World>(
                   std::move(world::WorldGenerator(
                       game_config_,

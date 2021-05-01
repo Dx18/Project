@@ -25,13 +25,14 @@ class BattleScreen : public IScreen<Context> {
   using WidgetSystem = widget::WidgetSystem<Context>;
 
  public:
-  explicit BattleScreen(std::shared_ptr<world::World> world);
+  BattleScreen(const config::GameConfig &game_config, std::shared_ptr<world::World> world);
 
   std::optional<Action> Update(std::chrono::microseconds delta) override;
   Widget &Render(std::chrono::microseconds delta) override;
   std::optional<Action> OnInput(const frontend::InputEvent &event) override;
 
  private:
+  const config::GameConfig &game_config_;
   std::shared_ptr<world::World> world_;
 
   WorldViewWidgetPtr world_view_;
@@ -42,13 +43,14 @@ class BattleScreen : public IScreen<Context> {
 };
 
 template<typename Context>
-BattleScreen<Context>::BattleScreen(std::shared_ptr<world::World> world)
-    : world_(std::move(world)), widget_system_() {
+BattleScreen<Context>::BattleScreen(const config::GameConfig &game_config, std::shared_ptr<world::World> world)
+    : game_config_(game_config), world_(std::move(world)), widget_system_() {
   InitUI();
 }
 
 template<typename Context>
 std::optional<typename IScreen<Context>::Action> BattleScreen<Context>::Update(std::chrono::microseconds delta) {
+  world_->Update(delta);
   return {};
 }
 
