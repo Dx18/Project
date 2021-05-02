@@ -169,6 +169,11 @@ class SquadModificationScreen : public IScreen<Context> {
   std::unique_ptr<unit::drone::weapon::IDroneWeapon> BuildDroneWeapon(WeaponClassType weapon_class);
   std::unique_ptr<unit::drone::armor::IDroneArmor> BuildDroneArmor();
 
+  std::vector<std::pair<size_t, size_t>> CalculateSoldierWeaponUsage();
+  std::pair<size_t, size_t> CalculateSoldierArmorUsage();
+  std::vector<std::pair<size_t, size_t>> CalculateDroneWeaponUsage();
+  std::pair<size_t, size_t> CalculateDroneArmorUsage();
+
   /** Builds units or returns no value if building is failed. */
   std::optional<std::vector<std::unique_ptr<unit::Unit>>> BuildUnits();
 
@@ -273,7 +278,10 @@ SquadModificationScreen<Context>::OnInput(const frontend::InputEvent &event) {
       std::optional<std::vector<std::unique_ptr<unit::Unit>>> units = BuildUnits();
 
       if (!units.has_value()) {
-        return {};
+        return PushScreenAction{
+            std::make_unique<game::message_screen::MessageScreen<Context>>("Couldn't create squad",
+                                                                           "Too many armory used")
+        };
       }
 
       return PushScreenAction{
@@ -380,67 +388,46 @@ template<typename Context>
 void SquadModificationScreen<Context>::UpdateInfoText() {
   std::stringstream message;
   message << "Armory usage (used / available):\n";
+
+  std::vector<std::pair<size_t, size_t>> soldier_weapon_usage = CalculateSoldierWeaponUsage();
+  size_t index = 0;
   for (WeaponType weapon_type : soldier_weapon_types_) {
-    size_t times_used = 0;
-    for (size_t soldier = 0; soldier < soldier_count_; ++soldier) {
-      if (soldiers_widgets_[soldier]->PrimaryWeapon() == kWeaponInfo[weapon_type].class_type) {
-        ++times_used;
-      }
-      if (soldiers_widgets_[soldier]->SecondaryWeapon() == kWeaponInfo[weapon_type].class_type) {
-        ++times_used;
-      }
-    }
-
-    size_t max_available = model_.GetArmory().WeaponCount(weapon_type);
-
+    auto[times_used, max_available] = soldier_weapon_usage[index];
     message << kWeaponInfo[weapon_type].name << ": " << times_used << " / " << max_available;
     if (times_used > max_available) {
       message << " (!)";
     }
     message << "\n";
+
+    ++index;
   }
+
+  std::pair<size_t, size_t> soldier_armor_usage = CalculateSoldierArmorUsage();
   {
-    size_t times_used = 0;
-    for (size_t soldier = 0; soldier < soldier_count_; ++soldier) {
-      if (soldiers_widgets_[soldier]->Armor()) {
-        ++times_used;
-      }
-    }
-
-    size_t max_available = model_.GetArmory().ArmorCount(soldier_armor_type_);
-
+    auto[times_used, max_available] = soldier_armor_usage;
     message << kArmorInfo[soldier_armor_type_].name << ": " << times_used << " / " << max_available;
     if (times_used > max_available) {
       message << " (!)";
     }
     message << "\n";
   }
+
+  std::vector<std::pair<size_t, size_t>> drone_weapon_usage = CalculateDroneWeaponUsage();
+  index = 0;
   for (WeaponType weapon_type : drone_weapon_types_) {
-    size_t times_used = 0;
-    for (size_t drone = 0; drone < drone_count_; ++drone) {
-      if (drones_widgets_[drone]->Weapon() == kWeaponInfo[weapon_type].class_type) {
-        ++times_used;
-      }
-    }
-
-    size_t max_available = model_.GetArmory().WeaponCount(weapon_type);
-
+    auto[times_used, max_available] = drone_weapon_usage[index];
     message << kWeaponInfo[weapon_type].name << ": " << times_used << " / " << max_available;
     if (times_used > max_available) {
       message << " (!)";
     }
     message << "\n";
+
+    ++index;
   }
+
+  std::pair<size_t, size_t> drone_armor_usage = CalculateDroneArmorUsage();
   {
-    size_t times_used = 0;
-    for (size_t drone = 0; drone < drone_count_; ++drone) {
-      if (drones_widgets_[drone]->Armor()) {
-        ++times_used;
-      }
-    }
-
-    size_t max_available = model_.GetArmory().ArmorCount(drone_armor_type_);
-
+    auto[times_used, max_available] = drone_armor_usage;
     message << kArmorInfo[drone_armor_type_].name << ": " << times_used << " / " << max_available;
     if (times_used > max_available) {
       message << " (!)";
@@ -489,6 +476,33 @@ SquadModificationScreen<Context>::BuildDroneArmor() {
 
 template<typename Context>
 std::optional<std::vector<std::unique_ptr<unit::Unit>>> SquadModificationScreen<Context>::BuildUnits() {
+  std::vector<std::pair<size_t, size_t>> soldier_weapon_usage = CalculateSoldierWeaponUsage();
+  for (auto[times_used, max_available] : soldier_weapon_usage) {
+    if (times_used > max_available) {
+      return {};
+    }
+  }
+  std::pair<size_t, size_t> soldier_armor_usage = CalculateSoldierArmorUsage();
+  {
+    auto[times_used, max_available] = soldier_armor_usage;
+    if (times_used > max_available) {
+      return {};
+    }
+  }
+  std::vector<std::pair<size_t, size_t>> drone_weapon_usage = CalculateDroneWeaponUsage();
+  for (auto[times_used, max_available] : drone_weapon_usage) {
+    if (times_used > max_available) {
+      return {};
+    }
+  }
+  std::pair<size_t, size_t> drone_armor_usage = CalculateDroneArmorUsage();
+  {
+    auto[times_used, max_available] = drone_armor_usage;
+    if (times_used > max_available) {
+      return {};
+    }
+  }
+
   std::vector<std::unique_ptr<unit::Unit>> units;
 
   for (size_t index = 0; index < soldier_count_; ++index) {
@@ -540,6 +554,76 @@ std::optional<std::vector<std::unique_ptr<unit::Unit>>> SquadModificationScreen<
   }
 
   return units;
+}
+
+template<typename Context>
+std::vector<std::pair<size_t, size_t>> SquadModificationScreen<Context>::CalculateSoldierWeaponUsage() {
+  std::vector<std::pair<size_t, size_t>> result;
+  for (WeaponType weapon_type : soldier_weapon_types_) {
+    size_t times_used = 0;
+    for (size_t soldier = 0; soldier < soldier_count_; ++soldier) {
+      if (soldiers_widgets_[soldier]->PrimaryWeapon() == kWeaponInfo[weapon_type].class_type) {
+        ++times_used;
+      }
+      if (soldiers_widgets_[soldier]->SecondaryWeapon() == kWeaponInfo[weapon_type].class_type) {
+        ++times_used;
+      }
+    }
+
+    size_t max_available = model_.GetArmory().WeaponCount(weapon_type);
+
+    result.emplace_back(times_used, max_available);
+  }
+
+  return result;
+}
+
+template<typename Context>
+std::pair<size_t, size_t> SquadModificationScreen<Context>::CalculateSoldierArmorUsage() {
+  std::vector<std::pair<size_t, size_t>> result;
+  size_t times_used = 0;
+  for (size_t soldier = 0; soldier < soldier_count_; ++soldier) {
+    if (soldiers_widgets_[soldier]->Armor()) {
+      ++times_used;
+    }
+  }
+
+  size_t max_available = model_.GetArmory().ArmorCount(soldier_armor_type_);
+
+  return {times_used, max_available};
+}
+
+template<typename Context>
+std::vector<std::pair<size_t, size_t>> SquadModificationScreen<Context>::CalculateDroneWeaponUsage() {
+  std::vector<std::pair<size_t, size_t>> result;
+  for (WeaponType weapon_type : drone_weapon_types_) {
+    size_t times_used = 0;
+    for (size_t drone = 0; drone < drone_count_; ++drone) {
+      if (drones_widgets_[drone]->Weapon() == kWeaponInfo[weapon_type].class_type) {
+        ++times_used;
+      }
+    }
+
+    size_t max_available = model_.GetArmory().WeaponCount(weapon_type);
+
+    result.emplace_back(times_used, max_available);
+  }
+
+  return result;
+}
+
+template<typename Context>
+std::pair<size_t, size_t> SquadModificationScreen<Context>::CalculateDroneArmorUsage() {
+  size_t times_used = 0;
+  for (size_t drone = 0; drone < drone_count_; ++drone) {
+    if (drones_widgets_[drone]->Armor()) {
+      ++times_used;
+    }
+  }
+
+  size_t max_available = model_.GetArmory().ArmorCount(drone_armor_type_);
+
+  return {times_used, max_available};
 }
 
 }
