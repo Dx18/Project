@@ -17,13 +17,17 @@ using namespace world::map;
 class WorldRenderer {
  public:
   /**
-   * Renders world.
+   * Renders world. Throws `std::runtime_error` if size of given navigation map is incorrect.
    * @param world World to render.
    * @param camera_position Camera position: tile with this position will be rendered in the middle of surface.
+   * @param pointed_tile_highlighted Should pointed tile be highlighted.
+   * @param navigation_tiles Map of navigation tiles. Size must be equal to product of world map dimensions.
+   * @param selected_unit Optional unit highlighted on render.
    * @param context Surface for rendering.
    * @param resources Terminal resources.
    */
-  void Render(const World &world, const util::Vector2<double> &camera_position,
+  void Render(const World &world, const util::Vector2<double> &camera_position, bool pointed_tile_highlighted,
+              const std::vector<bool> &navigation_tiles, std::optional<size_t> selected_unit,
               IRenderSurfaceWrite &context, TerminalResources &resources) const;
 
  private:
@@ -33,25 +37,29 @@ class WorldRenderer {
   static const size_t kTileSubdivision;
 
   /**
-   * Renders world map.
+   * Renders world map. Size of highlight map is not checked.
    * @param map World map to render.
    * @param camera_position Camera position: tile with this position will be rendered in the middle of surface.
+   * @param pointed_tile_highlighted Should pointed tile be highlighted.
+   * @param navigation_tiles Map of navigation tiles.
    * @param context Surface for rendering.
    * @param resources Terminal resources.
    */
-  void RenderMap(const WorldMap &map, const util::Vector2<double> &camera_position,
-                 IRenderSurfaceWrite &context, TerminalResources &resources) const;
+  void RenderMap(const WorldMap &map, const util::Vector2<double> &camera_position, bool pointed_tile_highlighted,
+                 const std::vector<bool> &navigation_tiles, IRenderSurfaceWrite &context,
+                 TerminalResources &resources) const;
   /**
    * Renders units.
    * @param enemy Are given units belonging to enemy or not.
    * @param units Units.
    * @param camera_position Camera position.
+   * @param selected_unit Optional unit highlighted on render.
    * @param context Surface for rendering.
    * @param resources Terminal resources.
    */
-  void RenderUnits(bool enemy, const std::vector<std::unique_ptr<unit::Unit>> &units,
-                   const util::Vector2<double> &camera_position, IRenderSurfaceWrite &context,
-                   TerminalResources &resources) const;
+  void RenderUnits(bool enemy, const world::entities::WorldEntities &entities,
+                   const util::Vector2<double> &camera_position, std::optional<size_t> selected_unit,
+                   IRenderSurfaceWrite &context, TerminalResources &resources) const;
 
   /**
    * Creates new texture and renders tile to it.

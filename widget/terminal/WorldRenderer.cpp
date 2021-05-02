@@ -9,13 +9,21 @@ const CharData WorldRenderer::kUndefinedChar = CharData(
 const size_t WorldRenderer::kTileSubdivision = 3;
 
 void WorldRenderer::Render(const World &world, const util::Vector2<double> &camera_position,
-                           IRenderSurfaceWrite &context, TerminalResources &resources) const {
-  RenderMap(world.Map(), camera_position, context, resources);
-  RenderUnits(false, world.Entities().PlayerUnits(), camera_position, context, resources);
-  RenderUnits(true, world.Entities().EnemyUnits(), camera_position, context, resources);
+                           bool pointed_tile_highlighted, const std::vector<bool> &navigation_tiles,
+                           std::optional<size_t> selected_unit, IRenderSurfaceWrite &context,
+                           TerminalResources &resources) const {
+  util::Vector2<size_t> map_size = world.Map().Size();
+  if (navigation_tiles.size() != map_size.x * map_size.y) {
+    throw std::runtime_error("size of highlight map is incorrect");
+  }
+
+  RenderMap(world.Map(), camera_position, pointed_tile_highlighted, navigation_tiles, context, resources);
+  RenderUnits(false, world.Entities(), camera_position, selected_unit, context, resources);
+  RenderUnits(true, world.Entities(), camera_position, selected_unit, context, resources);
 }
 
 void WorldRenderer::RenderMap(const WorldMap &map, const util::Vector2<double> &camera_position,
+                              bool pointed_tile_highlighted, const std::vector<bool> &navigation_tiles,
                               IRenderSurfaceWrite &context, TerminalResources &resources) const {
   auto tile_row = static_cast<ssize_t>(std::floor(camera_position.y));
   auto tile_column = static_cast<ssize_t>(std::floor(camera_position.x));
@@ -41,16 +49,35 @@ void WorldRenderer::RenderMap(const WorldMap &map, const util::Vector2<double> &
 
       RenderSurfaceBase texture = CreateTileTexture(*tile, resources);
       util::Vector2<size_t> texture_size = texture.Size();
+
+      if (pointed_tile_highlighted && tile_row == row && tile_column == column) {
+        RenderSurfaceBase pointed_tile_texture = resources.GetTexture("pointed_tile");
+        for (size_t texture_row = 0; texture_row < texture_size.y; ++texture_row) {
+          for (size_t texture_column = 0; texture_column < texture_size.x; ++texture_column) {
+            CharData ch = pointed_tile_texture.Get({texture_column, texture_row});
+
+            if (ch.color.foreground != Color::kBlack) {
+              texture.Get({texture_column, texture_row}) = ch;
+            }
+          }
+        }
+      }
+
       for (size_t texture_row = 0; texture_row < texture_size.y; ++texture_row) {
         for (size_t texture_column = 0; texture_column < texture_size.x; ++texture_column) {
           ssize_t final_surface_row = surface_row + static_cast<ssize_t>(texture_row);
           ssize_t final_surface_column = surface_column + static_cast<ssize_t>(texture_column);
           if (final_surface_row >= 0 && final_surface_row < surface_size.y
               && final_surface_column >= 0 && final_surface_column < surface_size.x) {
+            CharData ch = texture.Get({texture_column, texture_row});
+            if (navigation_tiles[row * map_size.x + column]) {
+              ch.color = ch.color.Inverted();
+            }
+
             context.Get({
                             static_cast<size_t>(final_surface_column),
                             static_cast<size_t>(final_surface_row)
-                        }) = texture.Get({texture_column, texture_row});
+                        }) = ch;
           }
         }
       }
@@ -58,9 +85,9 @@ void WorldRenderer::RenderMap(const WorldMap &map, const util::Vector2<double> &
   }
 }
 
-void WorldRenderer::RenderUnits(bool enemy, const std::vector<std::unique_ptr<unit::Unit>> &units,
-                                const util::Vector2<double> &camera_position, IRenderSurfaceWrite &context,
-                                TerminalResources &resources) const {
+void WorldRenderer::RenderUnits(bool enemy, const world::entities::WorldEntities &entities,
+                                const util::Vector2<double> &camera_position, std::optional<size_t> selected_unit,
+                                IRenderSurfaceWrite &context, TerminalResources &resources) const {
   auto tile_row = static_cast<ssize_t>(std::floor(camera_position.y));
   auto tile_column = static_cast<ssize_t>(std::floor(camera_position.x));
 
@@ -74,19 +101,25 @@ void WorldRenderer::RenderUnits(bool enemy, const std::vector<std::unique_ptr<un
 
   CharData texture = GetOnePixelTexture(enemy ? "enemy_unit" : "player_unit", resources);
 
-  for (size_t i = 0; i < units.size(); ++i) {
-    const unit::Unit &unit = *units[i];
-    util::Vector3<double> position = unit.Position();
+  const unit::Unit *selected_unit_ptr = selected_unit.has_value() ? &entities.GetUnit(*selected_unit) : nullptr;
+
+  for (const std::unique_ptr<unit::Unit> &unit : (enemy ? entities.EnemyUnits() : entities.PlayerUnits())) {
+    util::Vector3<double> position = unit->Position();
 
     ssize_t surface_row = std::floor(tile_surface_row + (position.y - tile_row) * kTileSubdivision);
     ssize_t surface_column = std::floor(tile_surface_column + (position.x - tile_column) * kTileSubdivision);
 
     if (surface_row >= 0 && surface_row < surface_size.y
         && surface_column >= 0 && surface_column < surface_size.x) {
+      CharData curr_texture = texture;
+      if (unit.get() == selected_unit_ptr) {
+        curr_texture.color = curr_texture.color.Inverted();
+      }
+
       context.Get({
                       static_cast<size_t>(surface_column),
                       static_cast<size_t>(surface_row)
-                  }) = texture;
+                  }) = curr_texture;
     }
   }
 }

@@ -64,6 +64,14 @@ class Unit {
   void SetPosition(util::Vector3<double> position);
 
   /**
+   * Creates map of possible movement.
+   * @param map World map.
+   * @param game_config Const reference to game config.
+   */
+  [[nodiscard]] world::map::WorldMovementMap CreateMovementMap(const world::map::WorldMap &map,
+                                                               const config::GameConfig &game_config) const;
+
+  /**
    * Creates unit moving script.
    * @param unit_id ID of current unit.
    * @param map World map.

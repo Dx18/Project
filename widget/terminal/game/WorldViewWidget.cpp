@@ -16,7 +16,10 @@ template<>
 void WorldViewWidget<widget::terminal::TerminalContext>::Render(IRenderSurfaceWrite &context,
                                                                 TerminalResources &resources) {
   widget::terminal::WorldRenderer renderer;
-  renderer.Render(*world_, camera_position_, context, resources);
+  renderer.Render(
+      *world_, camera_position_, pointed_tile_highlighted_, navigation_tiles_, selected_unit_,
+      context, resources
+  );
 }
 
 }

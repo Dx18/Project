@@ -39,11 +39,9 @@ void Unit::SetPosition(util::Vector3<double> position) {
   position_ = position;
 }
 
-std::unique_ptr<world::script::IWorldScript>
-Unit::CreateMovementScript(size_t unit_id, const world::map::WorldMap &map, const config::GameConfig &game_config,
-                           util::Vector3<double> position) {
+world::map::WorldMovementMap Unit::CreateMovementMap(const world::map::WorldMap &map,
+                                                     const config::GameConfig &game_config) const {
   using namespace world::map;
-  using namespace world::script;
 
   util::Vector2<size_t> map_size = map.Size();
   auto tile_position = [map_size](const util::Vector3<double> &position) {
@@ -57,7 +55,28 @@ Unit::CreateMovementScript(size_t unit_id, const world::map::WorldMap &map, cons
     };
   };
 
-  WorldMovementMap movement_map(map, tile_position(position_), MaxTravelDistance(game_config));
+  return WorldMovementMap(map, tile_position(position_), MaxTravelDistance(game_config));
+}
+
+std::unique_ptr<world::script::IWorldScript>
+Unit::CreateMovementScript(size_t unit_id, const world::map::WorldMap &map, const config::GameConfig &game_config,
+                           util::Vector3<double> position) {
+  using namespace world::map;
+  using namespace world::script;
+
+  world::map::WorldMovementMap movement_map = CreateMovementMap(map, game_config);
+
+  util::Vector2<size_t> map_size = map.Size();
+  auto tile_position = [map_size](const util::Vector3<double> &position) {
+    return util::Vector2<size_t>{
+        static_cast<size_t>(util::math::clamp(
+            std::floor(position.x), 0.0, static_cast<double>(map_size.x - 1)
+        )),
+        static_cast<size_t>(util::math::clamp(
+            std::floor(position.y), 0.0, static_cast<double>(map_size.y - 1)
+        )),
+    };
+  };
 
   std::optional<std::vector<WorldMovementMap::PositionInfo>> path = movement_map.Path(tile_position(position));
   if (!path.has_value()) {
