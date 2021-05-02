@@ -7,4 +7,8 @@ InputEvent::InputEvent(Input _input)
 
 }
 
+void InputEvent::Accept(EventVisitor &visitor) {
+  visitor.VisitInputEvent(*this);
+}
+
 }

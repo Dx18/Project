@@ -59,6 +59,7 @@ set(SOURCES
         frontend/IEvent.cpp
         frontend/Input.cpp
         frontend/InputEvent.cpp
+        frontend/EventVisitor.cpp
 
         frontend/terminal/ColorPair.cpp
         frontend/terminal/CharData.cpp
