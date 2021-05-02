@@ -40,7 +40,10 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
   };
 
   util::Vector2<double> current_position = {position_.x + 0.5, position_.y + 0.5};
-  util::Vector2<ssize_t> current_tile_position = {static_cast<ssize_t>(position.x), static_cast<ssize_t>(position.y)};
+  util::Vector2<ssize_t> current_tile_position = {
+      static_cast<ssize_t>(position_.x),
+      static_cast<ssize_t>(position_.y)
+  };
 
   double visibility = 1.0;
 
@@ -64,6 +67,7 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
 
     double min_t = std::min(t_vertical, t_horizontal);
     WallForm obstacle = WallForm::kFull;
+    ssize_t delta_row = 0;
     if (t_vertical == min_t) {
       WallForm current_wall = WallForm::kNoWall;
 
@@ -74,6 +78,7 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
                     });
 
       if (direction.y > 0) {
+        delta_row = 1;
         if (current_tile.has_value()) {
           current_wall = current_tile->walls[Tile::kWallDown].form;
         }
@@ -90,6 +95,7 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
           }
         }
       } else if (direction.y < 0) {
+        delta_row = -1;
         if (current_tile.has_value()) {
           current_wall = current_tile->walls[Tile::kWallUp].form;
         }
@@ -109,6 +115,8 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
 
       obstacle = std::min(obstacle, current_wall);
     }
+
+    ssize_t delta_column = 0;
     if (t_horizontal == min_t) {
       WallForm current_wall = WallForm::kNoWall;
 
@@ -119,6 +127,7 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
                     });
 
       if (direction.x > 0) {
+        delta_column = 1;
         if (current_tile.has_value()) {
           current_wall = current_tile->walls[Tile::kWallRight].form;
         }
@@ -135,6 +144,7 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
           }
         }
       } else if (direction.x < 0) {
+        delta_column = -1;
         if (current_tile.has_value()) {
           current_wall = current_tile->walls[Tile::kWallLeft].form;
         }
@@ -160,6 +170,11 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
     } else if (obstacle == WallForm::kFull) {
       visibility = 0.0;
     }
+
+    current_tile_position.y += delta_row;
+    current_tile_position.x += delta_column;
+    current_position.y += direction.y * min_t;
+    current_position.x += direction.x * min_t;
   }
 
   double distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
