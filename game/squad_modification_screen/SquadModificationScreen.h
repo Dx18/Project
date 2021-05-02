@@ -498,6 +498,8 @@ std::optional<std::vector<std::unique_ptr<unit::Unit>>> SquadModificationScreen<
     name << "Soldier " << index + 1;
     soldier.WithName(name.str());
 
+    soldier.WithBaseHealth(game_config_.SoldierBaseHealth());
+
     std::optional<WeaponClassType> primary_weapon = soldiers_widgets_[index]->PrimaryWeapon();
     if (primary_weapon.has_value()) {
       soldier.WithPrimaryWeapon(BuildSoldierWeapon(*primary_weapon));
@@ -510,7 +512,9 @@ std::optional<std::vector<std::unique_ptr<unit::Unit>>> SquadModificationScreen<
       soldier.WithArmor(BuildSoldierArmor());
     }
 
-    units.push_back(std::make_unique<unit::soldier::Soldier>(soldier.Build()));
+    unit::soldier::Soldier soldier_result = soldier.Build();
+    soldier_result.SetHealth(soldier_result.MaxHealth());
+    units.push_back(std::make_unique<unit::soldier::Soldier>(std::move(soldier_result)));
   }
 
   for (size_t index = 0; index < drone_count_; ++index) {
@@ -520,6 +524,8 @@ std::optional<std::vector<std::unique_ptr<unit::Unit>>> SquadModificationScreen<
     name << "Drone " << index + 1;
     drone.WithName(name.str());
 
+    drone.WithBaseHealth(game_config_.DroneBaseHealth());
+
     std::optional<WeaponClassType> weapon = drones_widgets_[index]->Weapon();
     if (weapon.has_value()) {
       drone.WithWeapon(BuildDroneWeapon(*weapon));
@@ -528,7 +534,9 @@ std::optional<std::vector<std::unique_ptr<unit::Unit>>> SquadModificationScreen<
       drone.WithArmor(BuildDroneArmor());
     }
 
-    units.push_back(std::make_unique<unit::drone::Drone>(drone.Build()));
+    unit::drone::Drone drone_result = drone.Build();
+    drone_result.SetHealth(drone_result.MaxHealth());
+    units.push_back(std::make_unique<unit::drone::Drone>(std::move(drone_result)));
   }
 
   return units;

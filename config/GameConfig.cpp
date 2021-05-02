@@ -27,6 +27,9 @@ GameConfig::GameConfig(const ConfigSectionStructure &section)
   composite_armor_difficulty_threshold_ = std::stod(section.values.at("composite_armor_difficulty_threshold"));
   enemy_secondary_weapon_probability_ = std::stod(section.values.at("enemy_secondary_weapon_probability"));
 
+  soldier_base_health_ = std::stoi(section.values.at("soldier_base_health"));
+  drone_base_health_ = std::stoi(section.values.at("drone_base_health"));
+
   max_soldier_travel_distance_limit_ = std::stoi(section.values.at("max_soldier_travel_distance_limit"));
   min_soldier_travel_distance_limit_ = std::stoi(section.values.at("min_soldier_travel_distance_limit"));
   base_soldier_travel_distance_limit_ = std::stoi(section.values.at("base_soldier_travel_distance_limit"));
@@ -86,6 +89,14 @@ double GameConfig::CompositeArmorDifficultyThreshold() const {
 
 double GameConfig::EnemySecondaryWeaponProbability() const {
   return enemy_secondary_weapon_probability_;
+}
+
+int GameConfig::SoldierBaseHealth() const {
+  return soldier_base_health_;
+}
+
+int GameConfig::DroneBaseHealth() const {
+  return drone_base_health_;
 }
 
 int GameConfig::MaxSoldierTravelDistanceLimit() const {

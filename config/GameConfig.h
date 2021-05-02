@@ -61,6 +61,11 @@ class GameConfig {
   /** Probability of enemy soldier having secondary weapon - pistol. */
   [[nodiscard]] double EnemySecondaryWeaponProbability() const;
 
+  /** Base health of soldier. */
+  [[nodiscard]] int SoldierBaseHealth() const;
+  /** Base health of drone. */
+  [[nodiscard]] int DroneBaseHealth() const;
+
   /** Max limit of distance soldier can travel at one step. */
   [[nodiscard]] int MaxSoldierTravelDistanceLimit() const;
   /** Min limit of distance soldier can travel at one step. */
@@ -105,6 +110,11 @@ class GameConfig {
   double composite_armor_difficulty_threshold_;
   /** Probability of enemy soldier having secondary weapon - pistol. */
   double enemy_secondary_weapon_probability_;
+
+  /** Base health of soldier. */
+  int soldier_base_health_;
+  /** Base health of drone. */
+  int drone_base_health_;
 
   /** Max limit of distance soldier can travel at one step. */
   int max_soldier_travel_distance_limit_;
