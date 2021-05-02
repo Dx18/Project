@@ -86,6 +86,9 @@ class GameConfig {
   /** Unit movement speed (tiles per second). */
   [[nodiscard]] double UnitMoveSpeed() const;
 
+  /** Effect on visibility of half-sized obstacle. */
+  [[nodiscard]] double HalfWallVisibilityEffect() const;
+
  private:
   /** Array with weapon max ammo. */
   std::array<std::optional<int>, kWeaponInfo.size()> weapon_max_ammo_;
@@ -137,6 +140,9 @@ class GameConfig {
   int base_drone_travel_distance_limit_;
   /** Unit movement speed (tiles per second). */
   double unit_move_speed_;
+
+  /** Effect on visibility of half-sized obstacle. */
+  double half_wall_visibility_effect_;
 
 };
 

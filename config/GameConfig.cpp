@@ -39,6 +39,8 @@ GameConfig::GameConfig(const ConfigSectionStructure &section)
   min_drone_travel_distance_limit_ = std::stoi(section.values.at("min_drone_travel_distance_limit"));
   base_drone_travel_distance_limit_ = std::stoi(section.values.at("base_drone_travel_distance_limit"));
   unit_move_speed_ = std::stod(section.values.at("unit_move_speed"));
+
+  half_wall_visibility_effect_ = std::stod(section.values.at("half_wall_visibility_effect"));
 }
 
 std::optional<int> GameConfig::WeaponMaxAmmo(WeaponType type) const {
