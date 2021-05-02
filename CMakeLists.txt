@@ -97,10 +97,12 @@ set(SOURCES
         world/map/InstantiatedTiles.cpp
         world/map/WorldMap.cpp
         world/map/WorldMovementMap.cpp
+        world/entities/Projectile.cpp
         world/entities/WorldEntities.cpp
         world/script/IWorldScript.cpp
         world/script/ScriptSequence.cpp
         world/script/UnitMovingScript.cpp
+        world/script/ProjectileScript.cpp
         world/World.cpp
         world/WorldGenerator.cpp)
 

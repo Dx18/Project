@@ -91,7 +91,7 @@ util::Vector2<double> WorldViewWidget<Context>::CameraPosition() const {
 }
 
 template<typename Context>
-void WorldViewWidget<Context>::SetCameraPosition(util::Vector2<double> &camera_position) {
+void WorldViewWidget<Context>::SetCameraPosition(const util::Vector2<double> &camera_position) {
   camera_position_ = camera_position;
   util::Vector2<size_t> map_size = world_->Map().Size();
   camera_position_.x = util::math::clamp(camera_position_.x, 0.0, static_cast<double>(map_size.x));

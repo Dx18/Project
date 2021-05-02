@@ -51,7 +51,7 @@ class WorldRenderer {
   /**
    * Renders units.
    * @param enemy Are given units belonging to enemy or not.
-   * @param units Units.
+   * @param entities World entities.
    * @param camera_position Camera position.
    * @param selected_unit Optional unit highlighted on render.
    * @param context Surface for rendering.
@@ -60,6 +60,16 @@ class WorldRenderer {
   void RenderUnits(bool enemy, const world::entities::WorldEntities &entities,
                    const util::Vector2<double> &camera_position, std::optional<size_t> selected_unit,
                    IRenderSurfaceWrite &context, TerminalResources &resources) const;
+
+  /**
+   * Renders projectiles.
+   * @param entities World entities.
+   * @param camera_position Camera position.
+   * @param context Surface for rendering.
+   * @param resources Terminal resources.
+   */
+  void RenderProjectiles(const world::entities::WorldEntities &entities, const util::Vector2<double> &camera_position,
+                         IRenderSurfaceWrite &context, TerminalResources &resources) const;
 
   /**
    * Creates new texture and renders tile to it.

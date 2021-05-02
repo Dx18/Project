@@ -20,6 +20,7 @@ void WorldRenderer::Render(const World &world, const util::Vector2<double> &came
   RenderMap(world.Map(), camera_position, pointed_tile_highlighted, navigation_tiles, context, resources);
   RenderUnits(false, world.Entities(), camera_position, selected_unit, context, resources);
   RenderUnits(true, world.Entities(), camera_position, selected_unit, context, resources);
+  RenderProjectiles(world.Entities(), camera_position, context, resources);
 }
 
 void WorldRenderer::RenderMap(const WorldMap &map, const util::Vector2<double> &camera_position,
@@ -120,6 +121,37 @@ void WorldRenderer::RenderUnits(bool enemy, const world::entities::WorldEntities
                       static_cast<size_t>(surface_column),
                       static_cast<size_t>(surface_row)
                   }) = curr_texture;
+    }
+  }
+}
+
+void WorldRenderer::RenderProjectiles(const world::entities::WorldEntities &entities,
+                                      const util::Vector2<double> &camera_position, IRenderSurfaceWrite &context,
+                                      TerminalResources &resources) const {
+  auto tile_row = static_cast<ssize_t>(std::floor(camera_position.y));
+  auto tile_column = static_cast<ssize_t>(std::floor(camera_position.x));
+
+  util::Vector2<size_t> surface_size = context.Size();
+  ssize_t tile_surface_row = static_cast<ssize_t>(surface_size.y) / 2 - static_cast<ssize_t>(std::floor(
+      (camera_position.y - tile_row) * kTileSubdivision
+  ));
+  ssize_t tile_surface_column = static_cast<ssize_t>(surface_size.x) / 2 - static_cast<ssize_t>(std::floor(
+      (camera_position.x - tile_column) * kTileSubdivision
+  ));
+
+  CharData texture = GetOnePixelTexture("projectile", resources);
+
+  for (const world::entities::Projectile &projectile : entities.Projectiles()) {
+    util::Vector3<double> position = projectile.CurrentPosition();
+
+    ssize_t surface_row = std::floor(tile_surface_row + (position.y - tile_row) * kTileSubdivision);
+    ssize_t surface_column = std::floor(tile_surface_column + (position.x - tile_column) * kTileSubdivision);
+
+    if (surface_row >= 0 && surface_row < surface_size.y && surface_column >= 0 && surface_column < surface_size.x) {
+      context.Get({
+        static_cast<size_t>(surface_column),
+        static_cast<size_t>(surface_row)
+      }) = texture;
     }
   }
 }

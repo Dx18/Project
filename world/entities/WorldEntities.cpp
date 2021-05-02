@@ -17,6 +17,15 @@ WorldEntities::WorldEntities(std::vector<std::unique_ptr<unit::Unit>> &&player_u
   }
 }
 
+void WorldEntities::Update(std::chrono::microseconds delta) {
+  for (size_t i = 0; i < projectiles_.size(); ++i) {
+    projectiles_[i].Update(delta);
+    if (!projectiles_[i].IsAlive()) {
+      RemoveProjectile(i);
+    }
+  }
+}
+
 size_t WorldEntities::PlayerUnitID(size_t index) const {
   auto iter = player_index_to_unit_id_.find(index);
   if (iter != player_index_to_unit_id_.end()) {
@@ -60,6 +69,39 @@ const std::vector<std::unique_ptr<unit::Unit>> &WorldEntities::PlayerUnits() con
 
 const std::vector<std::unique_ptr<unit::Unit>> &WorldEntities::EnemyUnits() const {
   return enemy_units_;
+}
+
+size_t WorldEntities::CreateProjectile(const Projectile &projectile) {
+  size_t projectile_id = projectile_id_counter_;
+  ++projectile_id_counter_;
+
+  projectile_id_to_index_.insert({projectile_id, projectiles_.size()});
+  projectile_index_to_id_.insert({projectiles_.size(), projectile_id});
+  projectiles_.push_back(projectile);
+
+  return projectile_id;
+}
+
+bool WorldEntities::IsProjectileAlive(size_t projectile_id) const {
+  auto iter = projectile_id_to_index_.find(projectile_id);
+  return iter != projectile_id_to_index_.end() && projectiles_[iter->second].IsAlive();
+}
+
+const std::vector<Projectile> &WorldEntities::Projectiles() const {
+  return projectiles_;
+}
+
+void WorldEntities::RemoveProjectile(size_t index) {
+  size_t removed_projectile_id = projectile_index_to_id_[index];
+  size_t moved_projectile_id = projectile_index_to_id_[projectiles_.size() - 1];
+
+  projectile_index_to_id_[index] = moved_projectile_id;
+  projectile_id_to_index_[moved_projectile_id] = index;
+  projectile_index_to_id_.erase(projectiles_.size() - 1);
+  projectile_id_to_index_.erase(removed_projectile_id);
+
+  std::swap(projectiles_[index], projectiles_.back());
+  projectiles_.pop_back();
 }
 
 }

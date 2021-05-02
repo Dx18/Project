@@ -345,8 +345,9 @@ BattleScreen<Context>::EnemyMoveState::Update(const config::GameConfig &game_con
 
 template<typename Context>
 std::unique_ptr<typename BattleScreen<Context>::IState>
-BattleScreen<Context>::EnemyMoveState::OnInput(const config::GameConfig &game_config, std::shared_ptr<world::World> world,
-                                               BattleScreen::UI &ui, const frontend::InputEvent &event) {
+BattleScreen<Context>::EnemyMoveState::OnInput(const config::GameConfig &game_config,
+                                               std::shared_ptr<world::World> world, BattleScreen::UI &ui,
+                                               const frontend::InputEvent &event) {
   return {};
 }
 

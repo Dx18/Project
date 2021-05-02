@@ -23,17 +23,22 @@ const entities::WorldEntities &World::Entities() const {
 
 void World::Update(std::chrono::microseconds delta) {
   for (auto &script : scripts_) {
+    if (!script) {
+      continue;
+    }
     script->Update(delta, Entities());
   }
 
   for (size_t i = 0; i < scripts_.size();) {
-    if (scripts_[i]->IsCompleted()) {
+    if (!scripts_[i] || scripts_[i]->IsCompleted()) {
       std::swap(scripts_[i], scripts_.back());
       scripts_.pop_back();
     } else {
       ++i;
     }
   }
+
+  entities_.Update(delta);
 }
 
 void World::AddScript(std::unique_ptr<script::IWorldScript> script) {
