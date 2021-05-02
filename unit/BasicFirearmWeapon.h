@@ -12,14 +12,16 @@ class BasicFirearmWeapon : public virtual IWeapon {
    * @param ammo Initial ammo.
    * @param max_ammo Max possible ammo.
    * @param mass Mass of weapon.
+   * @param base_damage Base damage of weapon.
    */
-  BasicFirearmWeapon(int ammo, int max_ammo, int mass);
+  BasicFirearmWeapon(int ammo, int max_ammo, int mass, int base_damage);
 
   [[nodiscard]] std::optional<int> ShotsLeft() const override;
   [[nodiscard]] std::optional<int> MaxShots() const override;
   [[nodiscard]] int Mass() const override;
   [[nodiscard]] bool CanBeReloaded() const override;
   void Reload() override;
+  int BaseDamage() const override;
 
  private:
   /** Current ammo. */
@@ -28,6 +30,8 @@ class BasicFirearmWeapon : public virtual IWeapon {
   int max_ammo_;
   /** Mass of weapon. */
   int mass_;
+  /** Base damage of weapon. */
+  int base_damage_;
 
 };
 

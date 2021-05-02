@@ -20,6 +20,8 @@ class IWeapon {
   [[nodiscard]] virtual bool CanBeReloaded() const = 0;
   /** Reloads weapon. */
   virtual void Reload() = 0;
+  /** Returns base damage of weapon. */
+  [[nodiscard]] virtual int BaseDamage() const = 0;
 
 };
 

@@ -54,6 +54,12 @@ class Tech {
    */
   [[nodiscard]] int WeaponMass(WeaponType type) const;
   /**
+   * Returns base damage of weapons of given weapon type. Uses current tech level. Returns 0 if technology is not
+   * researched.
+   * @param type Type of weapon.
+   */
+  [[nodiscard]] int WeaponBaseDamage(WeaponType type) const;
+  /**
    * Returns defence of armor of given armor type. Uses current tech level. Returns 0 if technology is not researched
    * @param type Type of armor.
    */

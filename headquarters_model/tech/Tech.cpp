@@ -37,6 +37,13 @@ int Tech::WeaponMass(WeaponType type) const {
   return CalculateDecreasing(weapon_tech_level_[tech_type], base_value);
 }
 
+int Tech::WeaponBaseDamage(WeaponType type) const {
+  int base_value = game_config_.WeaponBaseDamage(type);
+
+  WeaponTechType tech_type = kWeaponInfo[type].tech_type;
+  return CalculateIncreasing(weapon_tech_level_[tech_type], base_value);
+}
+
 int Tech::ArmorDefence(ArmorType type) const {
   int base_value = game_config_.ArmorDefence(type);
 

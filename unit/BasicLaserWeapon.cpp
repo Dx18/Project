@@ -2,8 +2,8 @@
 
 namespace unit {
 
-BasicLaserWeapon::BasicLaserWeapon(int mass)
-    : mass_(mass) {
+BasicLaserWeapon::BasicLaserWeapon(int mass, int base_damage)
+    : mass_(mass), base_damage_(base_damage) {
 
 }
 
@@ -25,6 +25,10 @@ bool BasicLaserWeapon::CanBeReloaded() const {
 
 void BasicLaserWeapon::Reload() {
 
+}
+
+int BasicLaserWeapon::BaseDamage() const {
+  return base_damage_;
 }
 
 }

@@ -3,12 +3,14 @@
 namespace config {
 
 GameConfig::GameConfig(const ConfigSectionStructure &section)
-    : weapon_max_ammo_(), weapon_mass_(), armor_defence_(), armor_mass_(), advanced_tech_level_effect_() {
+    : weapon_max_ammo_(), weapon_mass_(), weapon_base_damage_(), armor_defence_(), armor_mass_(),
+      advanced_tech_level_effect_() {
   for (const WeaponInfo &weapon_info : kWeaponInfo) {
     if (weapon_info.has_max_ammo) {
       weapon_max_ammo_[weapon_info.type] = std::stoi(section.values.at(weapon_info.name + "_max_ammo"));
     }
     weapon_mass_[weapon_info.type] = std::stoi(section.values.at(weapon_info.name + "_mass"));
+    weapon_base_damage_[weapon_info.type] = std::stoi(section.values.at(weapon_info.name + "_base_damage"));
   }
   for (const ArmorInfo &armor_info : kArmorInfo) {
     armor_defence_[armor_info.type] = std::stoi(section.values.at(armor_info.name + "_defence"));
@@ -45,6 +47,10 @@ std::optional<int> GameConfig::WeaponMaxAmmo(WeaponType type) const {
 
 int GameConfig::WeaponMass(WeaponType type) const {
   return weapon_mass_[type];
+}
+
+int GameConfig::WeaponBaseDamage(WeaponType type) const {
+  return weapon_base_damage_[type];
 }
 
 int GameConfig::ArmorDefence(ArmorType type) const {

@@ -29,6 +29,11 @@ class GameConfig {
    */
   [[nodiscard]] int WeaponMass(WeaponType type) const;
   /**
+   * Returns base damage of weapon of given type.
+   * @param typeType of weapon.
+   */
+  [[nodiscard]] int WeaponBaseDamage(WeaponType type) const;
+  /**
    * Returns defence of armor of given type.
    * @param type Type of armor.
    */
@@ -86,6 +91,8 @@ class GameConfig {
   std::array<std::optional<int>, kWeaponInfo.size()> weapon_max_ammo_;
   /** Array with weapon mass. */
   std::array<int, kWeaponInfo.size()> weapon_mass_;
+  /** Array with weapon base damage. */
+  std::array<int, kWeaponInfo.size()> weapon_base_damage_;
   /** Array with armor defence. */
   std::array<int, kArmorInfo.size()> armor_defence_;
   /** Array with armor mass. */
