@@ -10,6 +10,17 @@ namespace unit {
 
 Unit::~Unit() = default;
 
+Unit::Unit()
+    : name_(""), health_(0), base_health_(0), position_({0.0, 0.0, 0.0}) {
+
+}
+
+Unit::Unit(Unit &&other) noexcept
+    : name_(std::move(other.name_)), health_(other.health_), base_health_(other.base_health_),
+      position_(other.position_) {
+
+}
+
 const std::string &Unit::Name() const {
   return name_;
 }
@@ -27,11 +38,11 @@ void Unit::SetHealth(int health) {
 }
 
 int Unit::BaseHealth() const {
-  return max_health_;
+  return base_health_;
 }
 
 void Unit::SetBaseHealth(int base_health) {
-  max_health_ = base_health;
+  base_health_ = base_health;
 }
 
 util::Vector3<double> Unit::Position() const {
@@ -99,17 +110,27 @@ Unit::CreateAttackScript(world::World &world, const config::GameConfig &game_con
     size_t projectile_id = world.Entities().CreateProjectile(world::entities::Projectile(
         position_, target_position, game_config.ProjectileMoveSpeed()
     ));
+
+    int damage = target.HasActiveArmor()
+                 ? std::max(1, static_cast<int>(ActiveWeapon().BaseDamage()
+            / (game_config.DefenceEffect() * target.ActiveArmor().Defence())))
+                 : ActiveWeapon().BaseDamage();
+
     return std::make_unique<world::script::ProjectileScript>(
         projectile_id,
-        world::script::ProjectileScript::ProjectileTarget{
-            target_unit_id,
-            std::max(1, static_cast<int>(ActiveWeapon().BaseDamage()
-                / (game_config.DefenceEffect() * target.ActiveArmor().Defence())))
-        }
+        world::script::ProjectileScript::ProjectileTarget{target_unit_id, damage}
     );
   }
 
   return nullptr;
+}
+
+Unit &Unit::operator=(Unit &&other) noexcept {
+  name_.swap(other.name_);
+  health_ = other.health_;
+  base_health_ = other.base_health_;
+  position_ = other.position_;
+  return *this;
 }
 
 }

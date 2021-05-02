@@ -102,7 +102,9 @@ void WorldRenderer::RenderUnits(bool enemy, const world::entities::WorldEntities
 
   CharData texture = GetOnePixelTexture(enemy ? "enemy_unit" : "player_unit", resources);
 
-  const unit::Unit *selected_unit_ptr = selected_unit.has_value() ? &entities.GetUnit(*selected_unit) : nullptr;
+  const unit::Unit *selected_unit_ptr = selected_unit.has_value() && entities.UnitExists(*selected_unit)
+                                        ? &entities.GetUnit(*selected_unit)
+                                        : nullptr;
 
   for (const std::unique_ptr<unit::Unit> &unit : (enemy ? entities.EnemyUnits() : entities.PlayerUnits())) {
     util::Vector3<double> position = unit->Position();
@@ -149,9 +151,9 @@ void WorldRenderer::RenderProjectiles(const world::entities::WorldEntities &enti
 
     if (surface_row >= 0 && surface_row < surface_size.y && surface_column >= 0 && surface_column < surface_size.x) {
       context.Get({
-        static_cast<size_t>(surface_column),
-        static_cast<size_t>(surface_row)
-      }) = texture;
+                      static_cast<size_t>(surface_column),
+                      static_cast<size_t>(surface_row)
+                  }) = texture;
     }
   }
 }

@@ -39,6 +39,11 @@ class WorldEntities {
   [[nodiscard]] size_t EnemyUnitID(size_t index) const;
 
   /**
+   * Returns true if unit with given ID exists.
+   * @param unit_id ID of unit.
+   */
+  [[nodiscard]] bool UnitExists(size_t unit_id) const;
+  /**
    * Returns reference to unit with given ID. Throws `std::runtime_error` if unit with given ID does not exist.
    * @param unit_id ID of unit.
    */
@@ -89,6 +94,17 @@ class WorldEntities {
   std::unordered_map<size_t, size_t> projectile_id_to_index_;
   /** Map from projectile's index in array of projectiles to its ID. */
   std::unordered_map<size_t, size_t> projectile_index_to_id_;
+
+  /**
+   * Removes player unit with given index. Does not check index for correctness.
+   * @param index Index of player unit to remove.
+   */
+  void RemovePlayerUnit(size_t index);
+  /**
+   * Removes enemy unit with given index. Does not check index for correctness.
+   * @param index Index of enemy unit to remove.
+   */
+  void RemoveEnemyUnit(size_t index);
 
   /**
    * Removes projectile with given index. Does not check index for correctness.

@@ -24,6 +24,18 @@ void WorldEntities::Update(std::chrono::microseconds delta) {
       RemoveProjectile(i);
     }
   }
+
+  for (size_t i = 0; i < player_units_.size(); ++i) {
+    if (player_units_[i]->Health() <= 0) {
+      RemovePlayerUnit(i);
+    }
+  }
+
+  for (size_t i = 0; i < enemy_units_.size(); ++i) {
+    if (enemy_units_[i]->Health() <= 0) {
+      RemoveEnemyUnit(i);
+    }
+  }
 }
 
 size_t WorldEntities::PlayerUnitID(size_t index) const {
@@ -42,6 +54,11 @@ size_t WorldEntities::EnemyUnitID(size_t index) const {
   }
 
   throw std::runtime_error("enemy's unit with given ID does not exist");
+}
+
+bool WorldEntities::UnitExists(size_t unit_id) const {
+  return player_unit_id_to_index_.find(unit_id) != player_unit_id_to_index_.end()
+      || enemy_unit_id_to_index_.find(unit_id) != enemy_unit_id_to_index_.end();
 }
 
 unit::Unit &WorldEntities::GetUnit(size_t unit_id) {
@@ -89,6 +106,32 @@ bool WorldEntities::IsProjectileAlive(size_t projectile_id) const {
 
 const std::vector<Projectile> &WorldEntities::Projectiles() const {
   return projectiles_;
+}
+
+void WorldEntities::RemovePlayerUnit(size_t index) {
+  size_t removed_unit_id = player_index_to_unit_id_[index];
+  size_t moved_unit_id = player_index_to_unit_id_[player_units_.size() - 1];
+
+  player_index_to_unit_id_[index] = moved_unit_id;
+  player_unit_id_to_index_[moved_unit_id] = index;
+  player_index_to_unit_id_.erase(player_units_.size() - 1);
+  player_unit_id_to_index_.erase(removed_unit_id);
+
+  std::swap(player_units_[index], player_units_.back());
+  player_units_.pop_back();
+}
+
+void WorldEntities::RemoveEnemyUnit(size_t index) {
+  size_t removed_unit_id = enemy_index_to_unit_id_[index];
+  size_t moved_unit_id = enemy_index_to_unit_id_[enemy_units_.size() - 1];
+
+  enemy_index_to_unit_id_[index] = moved_unit_id;
+  enemy_unit_id_to_index_[moved_unit_id] = index;
+  enemy_index_to_unit_id_.erase(enemy_units_.size() - 1);
+  enemy_unit_id_to_index_.erase(removed_unit_id);
+
+  std::swap(enemy_units_[index], enemy_units_.back());
+  enemy_units_.pop_back();
 }
 
 void WorldEntities::RemoveProjectile(size_t index) {

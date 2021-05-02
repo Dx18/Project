@@ -5,7 +5,8 @@ namespace unit::drone {
 using namespace unit::drone::weapon;
 
 Drone::Drone(Drone &&other) noexcept
-    : weapon_(std::move(other.weapon_)) {
+    : Unit(std::move(other)),
+      weapon_(std::move(other.weapon_)) {
 
 }
 
@@ -69,6 +70,7 @@ void Drone::SetArmor(std::unique_ptr<IDroneArmor> armor) {
 }
 
 Drone &Drone::operator=(Drone &&other) noexcept {
+  static_cast<Unit &>(*this) = std::move(other);
   std::swap(weapon_, other.weapon_);
   return *this;
 }

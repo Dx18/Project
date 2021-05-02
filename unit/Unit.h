@@ -32,6 +32,11 @@ class Unit {
  public:
   virtual ~Unit() = 0;
 
+  Unit();
+
+  /** Move constructor. */
+  Unit(Unit &&other) noexcept;
+
   /** Returns name of unit. */
   [[nodiscard]] const std::string &Name() const;
   /**
@@ -119,13 +124,15 @@ class Unit {
   std::unique_ptr<world::script::IWorldScript>
   CreateAttackScript(world::World &world, const config::GameConfig &game_config, size_t target_unit_id);
 
+  Unit &operator=(Unit &&other) noexcept;
+
  private:
   /** Name of unit. */
   std::string name_;
   /** Health of unit. */
   int health_;
-  /** Max health of unit. */
-  int max_health_;
+  /** Base health of unit. */
+  int base_health_;
   /** Current position of unit. */
   util::Vector3<double> position_;
 

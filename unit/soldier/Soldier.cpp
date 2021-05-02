@@ -5,12 +5,12 @@ namespace unit::soldier {
 using namespace unit::soldier::weapon;
 
 Soldier::Soldier()
-    : is_primary_weapon_selected_(false) {
+    : is_primary_weapon_selected_(true) {
 
 }
 
 Soldier::Soldier(Soldier &&other) noexcept
-    : Unit(other),
+    : Unit(std::move(other)),
       primary_weapon_(std::move(other.primary_weapon_)),
       secondary_weapon_(std::move(other.secondary_weapon_)),
       is_primary_weapon_selected_(other.is_primary_weapon_selected_) {
@@ -92,6 +92,7 @@ void Soldier::ToggleWeapon() {
 }
 
 Soldier &Soldier::operator=(Soldier &&other) noexcept {
+  static_cast<Unit &>(*this) = std::move(other);
   std::swap(primary_weapon_, other.primary_weapon_);
   std::swap(secondary_weapon_, other.secondary_weapon_);
   std::swap(is_primary_weapon_selected_, other.is_primary_weapon_selected_);

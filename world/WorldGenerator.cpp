@@ -197,6 +197,8 @@ std::vector<std::unique_ptr<unit::Unit>> WorldGenerator::GenerateEnemyUnits(doub
     name << "Enemy soldier " << index + 1;
     soldier.WithName(name.str());
 
+    soldier.WithBaseHealth(game_config_.SoldierBaseHealth());
+
     static const size_t kSoldierWeaponClassCount = 4;
 
     size_t primary_weapon_class
@@ -227,7 +229,10 @@ std::vector<std::unique_ptr<unit::Unit>> WorldGenerator::GenerateEnemyUnits(doub
     }
 
     soldier.WithArmor(soldier_armor_factory->CreateArmor());
-    units.push_back(std::make_unique<unit::soldier::Soldier>(soldier.Build()));
+
+    unit::soldier::Soldier soldier_result = soldier.Build();
+    soldier_result.SetHealth(soldier_result.MaxHealth());
+    units.push_back(std::make_unique<unit::soldier::Soldier>(std::move(soldier_result)));
   }
 
   for (size_t index = 0; index < drone_count; ++index) {
@@ -237,6 +242,8 @@ std::vector<std::unique_ptr<unit::Unit>> WorldGenerator::GenerateEnemyUnits(doub
     name << "Enemy drone " << index + 1;
     drone.WithName(name.str());
 
+    drone.WithBaseHealth(game_config_.DroneBaseHealth());
+
     static const size_t kDroneWeaponClassCount = 1;
 
     size_t weapon_class = std::uniform_int_distribution<size_t>(0, kDroneWeaponClassCount - 1)(random_);
@@ -245,7 +252,10 @@ std::vector<std::unique_ptr<unit::Unit>> WorldGenerator::GenerateEnemyUnits(doub
     }
 
     drone.WithArmor(drone_armor_factory->CreateArmor());
-    units.push_back(std::make_unique<unit::drone::Drone>(std::move(drone.Build())));
+
+    unit::drone::Drone drone_result = drone.Build();
+    drone_result.SetHealth(drone_result.MaxHealth());
+    units.push_back(std::make_unique<unit::drone::Drone>(std::move(drone_result)));
   }
 
   return units;

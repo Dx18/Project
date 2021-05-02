@@ -32,7 +32,7 @@ util::Vector2<size_t> WorldMap::TilePositionClamped(const util::Vector2<double> 
   }
   size_t column = 0;
   if (position.x > 0.0) {
-    row = std::min(static_cast<size_t>(std::floor(position.x)), size_.x - 1);
+    column = std::min(static_cast<size_t>(std::floor(position.x)), size_.x - 1);
   }
 
   return {column, row};
