@@ -19,7 +19,7 @@ WorldVisibilityMap::WorldVisibilityMap(const config::GameConfig &game_config, co
 
   for (size_t row = 0; row < map_size_.y; ++row) {
     for (size_t column = 0; column < map_size_.x; ++column) {
-      positions_[row * map_size_.x + column] = CalculatePositionInfo({column, row});
+      positions_[row * map_size_.x + column] = CalculatePositionInfo(game_config, map, {column, row});
     }
   }
 }
@@ -162,7 +162,7 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
     }
   }
 
-  double distance = std::sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+  double distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
   return PositionInfo(position, visibility, distance);
 }
 

@@ -135,4 +135,8 @@ double GameConfig::UnitMoveSpeed() const {
   return unit_move_speed_;
 }
 
+double GameConfig::HalfWallVisibilityEffect() const {
+  return half_wall_visibility_effect_;
+}
+
 }
