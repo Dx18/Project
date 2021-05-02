@@ -14,8 +14,14 @@ World WorldGenerator::GenerateWorld(std::vector<std::unique_ptr<unit::Unit>> &&p
   for (size_t i = 0; i < player_units.size(); ++i) {
     player_units[i]->SetPosition(util::Vector3<double>{0.5, static_cast<double>(i) + 0.5, 0.0});
   }
+
+  util::Vector2<size_t> map_size = map.Size();
   for (size_t i = 0; i < enemy_units.size(); ++i) {
-    enemy_units[i]->SetPosition(util::Vector3<double>{1.5, static_cast<double>(i) + 0.5, 0.0});
+    enemy_units[i]->SetPosition(util::Vector3<double>{
+        static_cast<double>(map_size.x) - 0.5,
+        static_cast<double>(map_size.y) - 0.5 - static_cast<double>(i),
+        0.0
+    });
   }
 
   return World(map, std::move(player_units), std::move(enemy_units));

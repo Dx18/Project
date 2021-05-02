@@ -1,6 +1,6 @@
 #pragma once
 
- #include <utility>
+#include <utility>
 
 #include "world/World.h"
 #include "game/IScreen.h"
@@ -369,22 +369,62 @@ BattleScreen<Context>::EnemyMoveState::Update(BattleScreenData &data, std::chron
     return nullptr;
   }
 
+  std::vector<util::Vector2<size_t>> player_unit_positions;
+  for (size_t i = 0; i < data.world->Entities().PlayerUnits().size(); ++i) {
+    util::Vector3<double> player_unit_position
+        = data.world->Entities().GetUnit(data.world->Entities().PlayerUnitID(i)).Position();
+    player_unit_positions.push_back(
+        data.world->Map().TilePositionClamped({player_unit_position.x, player_unit_position.y}));
+  }
+
+  world::map::WorldVisibilityMap player_visibility_map(data.game_config, data.world->Map(), player_unit_positions);
+
   size_t unit_index = rand() % data.world->Entities().EnemyUnits().size();
   size_t unit_id = data.world->Entities().EnemyUnitID(unit_index);
   unit::Unit &unit = data.world->Entities().GetUnit(unit_id);
 
   world::map::WorldMovementMap movement_map = unit.CreateMovementMap(*data.world, data.game_config);
-  std::vector<world::map::WorldMovementMap::PositionInfo> positions = movement_map.AvailablePositions();
-  util::Vector2<size_t> tile_position = positions[rand() % positions.size()].position;
-  util::Vector3<double> position = {
-      static_cast<double>(tile_position.x) + 0.5,
-      static_cast<double>(tile_position.y) + 0.5,
-      0.0
-  };
+  std::vector<world::map::WorldMovementMap::PositionInfo> available_positions = movement_map.AvailablePositions();
+  std::random_shuffle(available_positions.begin(), available_positions.end());
 
-  auto script = unit.CreateMovementScript(unit_id, *data.world, data.game_config, position);
-  if (script) {
-    data.world->AddScript(std::move(script));
+  util::Vector2<size_t> best_position = available_positions.front().position;
+
+  for (const world::map::WorldMovementMap::PositionInfo &position_info : available_positions) {
+    util::Vector2<size_t> current_position = position_info.position;
+
+    auto current_position_info = *player_visibility_map.GetPositionInfo(current_position);
+    auto best_position_info = *player_visibility_map.GetPositionInfo(best_position);
+    if (current_position_info.visibility < best_position_info.visibility
+        || (current_position_info.visibility == best_position_info.visibility
+            && current_position_info.distance < best_position_info.distance)
+        || (current_position_info.visibility == best_position_info.visibility
+            && current_position_info.distance == best_position_info.distance
+            && rand() % 2 == 0)) {
+      best_position = current_position;
+    }
+  }
+
+  util::Vector3<double> unit_position = unit.Position();
+  world::map::WorldVisibilityMap unit_visibility_map(data.game_config, data.world->Map(),
+                                                     data.world->Map().TilePositionClamped({unit_position.x,
+                                                                                            unit_position.y}));
+  std::vector<size_t> visible_player_units;
+  size_t player_unit_index = 0;
+  for (const util::Vector2<size_t> &player_unit_position : player_unit_positions) {
+    if (unit_visibility_map.GetPositionInfo(player_unit_position)->visibility > 0.0) {
+      visible_player_units.push_back(data.world->Entities().PlayerUnitID(player_unit_index));
+    }
+    ++player_unit_index;
+  }
+
+  if (rand() % std::max(static_cast<size_t>(1), 2 * visible_player_units.size()) < visible_player_units.size()) {
+    data.world->AddScript(unit.CreateAttackScript(
+        *data.world, data.game_config, visible_player_units[rand() % visible_player_units.size()]
+    ));
+  } else {
+    data.world->AddScript(unit.CreateMovementScript(
+        unit_id, *data.world, data.game_config, {best_position.x + 0.5, best_position.y + 0.5, 0.0}
+    ));
   }
 
   return std::make_unique<ScriptWaitState>(std::make_unique<PlayerMoveState>(0));
