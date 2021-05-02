@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "frontend/IFrontendEvents.h"
+#include "frontend/EventVisitor.h"
 
 #include "IScreen.h"
 
@@ -82,6 +83,31 @@ Game<Context>::Game(Context &context, IScreenPtr initial_screen)
 
 template<typename Context>
 void Game<Context>::Run() {
+  /** Local implementation of frontend event visitor. */
+  class FrontendEventVisitor : public frontend::EventVisitor {
+   public:
+    /**
+     * Creates visitor.
+     * @param screen Reference to top screen.
+     * @param actions Reference to array of resulting actions.
+     */
+    FrontendEventVisitor(IScreen<Context> &screen, std::vector<std::optional<Action>> &actions)
+        : screen_(screen), actions_(actions) {
+
+    }
+
+    void VisitInputEvent(frontend::InputEvent &event) override {
+      actions_.push_back(screen_.OnInput(event));
+    }
+
+   private:
+    /** Reference to top screen. */
+    IScreen<Context> &screen_;
+    /** Reference to array of resulting actions. */
+    std::vector<std::optional<Action>> &actions_;
+
+  };
+
   using std::chrono::high_resolution_clock;
   using std::chrono::microseconds;
   using std::chrono::duration_cast;
@@ -105,10 +131,9 @@ void Game<Context>::Run() {
 
     frontend::IFrontendEvents &frontend_events = context_.Events();
 
+    FrontendEventVisitor frontend_event_visitor(screen, actions);
     while (std::unique_ptr<frontend::IEvent> event = frontend_events.PollEvent()) {
-      if (auto input_event = dynamic_cast<const frontend::InputEvent *>(event.get())) {
-        actions.push_back(screen.OnInput(*input_event));
-      }
+      event->Accept(frontend_event_visitor);
     }
 
     microseconds delta = duration_cast<microseconds>(current_time - previous_time);

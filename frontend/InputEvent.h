@@ -12,6 +12,8 @@ struct InputEvent : IEvent {
   /** Creates input event from given input. */
   explicit InputEvent(Input _input);
 
+  void Accept(EventVisitor &visitor) override;
+
 };
 
 }
