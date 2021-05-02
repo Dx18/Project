@@ -39,6 +39,9 @@ GameConfig::GameConfig(const ConfigSectionStructure &section)
   min_drone_travel_distance_limit_ = std::stoi(section.values.at("min_drone_travel_distance_limit"));
   base_drone_travel_distance_limit_ = std::stoi(section.values.at("base_drone_travel_distance_limit"));
   unit_move_speed_ = std::stod(section.values.at("unit_move_speed"));
+  projectile_move_speed_ = std::stod(section.values.at("projectile_move_speed"));
+
+  defence_effect_ = std::stod(section.values.at("defence_effect"));
 
   half_wall_visibility_effect_ = std::stod(section.values.at("half_wall_visibility_effect"));
 }
@@ -133,6 +136,14 @@ int GameConfig::BaseDroneTravelDistanceLimit() const {
 
 double GameConfig::UnitMoveSpeed() const {
   return unit_move_speed_;
+}
+
+double GameConfig::ProjectileMoveSpeed() const {
+  return projectile_move_speed_;
+}
+
+double GameConfig::DefenceEffect() const {
+  return defence_effect_;
 }
 
 double GameConfig::HalfWallVisibilityEffect() const {

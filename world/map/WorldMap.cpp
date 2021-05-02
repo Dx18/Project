@@ -25,6 +25,19 @@ void WorldMap::Set(const util::Vector2<size_t> &position, Tile tile) {
   data_[GetTileIndex(position)] = tiles_.GetTileID(tile);
 }
 
+util::Vector2<size_t> WorldMap::TilePositionClamped(const util::Vector2<double> &position) const {
+  size_t row = 0;
+  if (position.y > 0.0) {
+    row = std::min(static_cast<size_t>(std::floor(position.y)), size_.y - 1);
+  }
+  size_t column = 0;
+  if (position.x > 0.0) {
+    row = std::min(static_cast<size_t>(std::floor(position.x)), size_.x - 1);
+  }
+
+  return {column, row};
+}
+
 void WorldMap::CheckIfContainsPoint(const util::Vector2<size_t> &point) const {
   util::Rectangle<size_t> current_rectangle = Rectangle();
   if (!current_rectangle.ContainsPoint(point)) {

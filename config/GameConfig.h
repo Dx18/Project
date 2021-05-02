@@ -85,6 +85,11 @@ class GameConfig {
   [[nodiscard]] int BaseDroneTravelDistanceLimit() const;
   /** Unit movement speed (tiles per second). */
   [[nodiscard]] double UnitMoveSpeed() const;
+  /** Projectile movement speed (tiles per second). */
+  [[nodiscard]] double ProjectileMoveSpeed() const;
+
+  /** Effect of armor defence. */
+  [[nodiscard]] double DefenceEffect() const;
 
   /** Effect on visibility of half-sized obstacle. */
   [[nodiscard]] double HalfWallVisibilityEffect() const;
@@ -140,6 +145,11 @@ class GameConfig {
   int base_drone_travel_distance_limit_;
   /** Unit movement speed (tiles per second). */
   double unit_move_speed_;
+  /** Projectile movement speed (tiles per second). */
+  double projectile_move_speed_;
+
+  /** Effect of armor defence. */
+  double defence_effect_;
 
   /** Effect on visibility of half-sized obstacle. */
   double half_wall_visibility_effect_;

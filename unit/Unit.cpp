@@ -2,6 +2,9 @@
 
 #include "world/script/IWorldScript.h"
 #include "world/script/UnitMovingScript.h"
+#include "world/script/ProjectileScript.h"
+
+#include "world/World.h"
 
 namespace unit {
 
@@ -39,52 +42,37 @@ void Unit::SetPosition(util::Vector3<double> position) {
   position_ = position;
 }
 
-world::map::WorldMovementMap Unit::CreateMovementMap(const world::map::WorldMap &map,
+world::map::WorldMovementMap Unit::CreateMovementMap(const world::World &world,
                                                      const config::GameConfig &game_config) const {
-  using namespace world::map;
+  return world::map::WorldMovementMap(
+      world.Map(),
+      world.Map().TilePositionClamped({position_.x, position_.y}),
+      MaxTravelDistance(game_config)
+  );
+}
 
-  util::Vector2<size_t> map_size = map.Size();
-  auto tile_position = [map_size](const util::Vector3<double> &position) {
-    return util::Vector2<size_t>{
-        static_cast<size_t>(util::math::clamp(
-            std::floor(position.x), 0.0, static_cast<double>(map_size.x - 1)
-        )),
-        static_cast<size_t>(util::math::clamp(
-            std::floor(position.y), 0.0, static_cast<double>(map_size.y - 1)
-        )),
-    };
-  };
-
-  return WorldMovementMap(map, tile_position(position_), MaxTravelDistance(game_config));
+world::map::WorldVisibilityMap
+Unit::CreateVisibilityMap(const world::World &world, const config::GameConfig &game_config) const {
+  return world::map::WorldVisibilityMap(
+      game_config, world.Map(),
+      world.Map().TilePositionClamped({position_.x, position_.y})
+  );
 }
 
 std::unique_ptr<world::script::IWorldScript>
-Unit::CreateMovementScript(size_t unit_id, const world::map::WorldMap &map, const config::GameConfig &game_config,
+Unit::CreateMovementScript(size_t unit_id, const world::World &world, const config::GameConfig &game_config,
                            util::Vector3<double> position) {
-  using namespace world::map;
-  using namespace world::script;
+  world::map::WorldMovementMap movement_map = CreateMovementMap(world, game_config);
 
-  world::map::WorldMovementMap movement_map = CreateMovementMap(map, game_config);
-
-  util::Vector2<size_t> map_size = map.Size();
-  auto tile_position = [map_size](const util::Vector3<double> &position) {
-    return util::Vector2<size_t>{
-        static_cast<size_t>(util::math::clamp(
-            std::floor(position.x), 0.0, static_cast<double>(map_size.x - 1)
-        )),
-        static_cast<size_t>(util::math::clamp(
-            std::floor(position.y), 0.0, static_cast<double>(map_size.y - 1)
-        )),
-    };
-  };
-
-  std::optional<std::vector<WorldMovementMap::PositionInfo>> path = movement_map.Path(tile_position(position));
+  std::optional<std::vector<world::map::WorldMovementMap::PositionInfo>> path = movement_map.Path(
+      world.Map().TilePositionClamped({position.x, position.y})
+  );
   if (!path.has_value()) {
     return nullptr;
   }
 
   std::vector<util::Vector3<double>> final_path;
-  for (const WorldMovementMap::PositionInfo &path_position : *path) {
+  for (const world::map::WorldMovementMap::PositionInfo &path_position : *path) {
     final_path.push_back({
                              static_cast<double>(path_position.position.x) + 0.5,
                              static_cast<double>(path_position.position.y) + 0.5,
@@ -92,7 +80,36 @@ Unit::CreateMovementScript(size_t unit_id, const world::map::WorldMap &map, cons
                          });
   }
 
-  return std::make_unique<UnitMovingScript>(unit_id, final_path, game_config.UnitMoveSpeed());
+  return std::make_unique<world::script::UnitMovingScript>(unit_id, final_path, game_config.UnitMoveSpeed());
+}
+
+std::unique_ptr<world::script::IWorldScript>
+Unit::CreateAttackScript(world::World &world, const config::GameConfig &game_config, size_t target_unit_id) {
+  if (!HasActiveWeapon()) {
+    return nullptr;
+  }
+
+  world::map::WorldVisibilityMap visibility_map = CreateVisibilityMap(world, game_config);
+
+  const unit::Unit &target = world.Entities().GetUnit(target_unit_id);
+  util::Vector3<double> target_position = target.Position();
+  std::optional<world::map::WorldVisibilityMap::PositionInfo> position
+      = visibility_map.GetPositionInfo(world.Map().TilePositionClamped({target_position.x, target_position.y}));
+  if (position->visibility > 0.0) {
+    size_t projectile_id = world.Entities().CreateProjectile(world::entities::Projectile(
+        position_, target_position, game_config.ProjectileMoveSpeed()
+    ));
+    return std::make_unique<world::script::ProjectileScript>(
+        projectile_id,
+        world::script::ProjectileScript::ProjectileTarget{
+            target_unit_id,
+            std::max(1, static_cast<int>(ActiveWeapon().BaseDamage()
+                / (game_config.DefenceEffect() * target.ActiveArmor().Defence())))
+        }
+    );
+  }
+
+  return nullptr;
 }
 
 }

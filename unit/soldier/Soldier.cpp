@@ -21,6 +21,40 @@ int Soldier::MaxHealth() const {
   return BaseHealth() + (armor_ ? armor_->Defence() : 0);
 }
 
+int Soldier::MaxTravelDistance(const config::GameConfig &game_config) const {
+  int mass = 0;
+  if (primary_weapon_) {
+    mass += primary_weapon_->Mass();
+  }
+  if (secondary_weapon_) {
+    mass += secondary_weapon_->Mass();
+  }
+  if (armor_) {
+    mass += armor_->Mass();
+  }
+  return util::math::clamp(
+      game_config.BaseSoldierTravelDistanceLimit() - mass,
+      game_config.MinSoldierTravelDistanceLimit(),
+      game_config.MaxSoldierTravelDistanceLimit()
+  );
+}
+
+bool Soldier::HasActiveWeapon() const {
+  return is_primary_weapon_selected_ ? primary_weapon_ != nullptr : secondary_weapon_ != nullptr;
+}
+
+const IWeapon &Soldier::ActiveWeapon() const {
+  return is_primary_weapon_selected_ ? *primary_weapon_ : *secondary_weapon_;
+}
+
+bool Soldier::HasActiveArmor() const {
+  return armor_ != nullptr;
+}
+
+const IArmor &Soldier::ActiveArmor() const {
+  return *armor_;
+}
+
 bool Soldier::HasPrimaryWeapon() const {
   return primary_weapon_ != nullptr;
 }
@@ -74,24 +108,6 @@ const ISoldierArmor *Soldier::Armor() const {
 
 void Soldier::SetArmor(std::unique_ptr<ISoldierArmor> armor) {
   armor_ = std::move(armor);
-}
-
-int Soldier::MaxTravelDistance(const config::GameConfig &game_config) const {
-  int mass = 0;
-  if (primary_weapon_) {
-    mass += primary_weapon_->Mass();
-  }
-  if (secondary_weapon_) {
-    mass += secondary_weapon_->Mass();
-  }
-  if (armor_) {
-    mass += armor_->Mass();
-  }
-  return util::math::clamp(
-      game_config.BaseSoldierTravelDistanceLimit() - mass,
-      game_config.MinSoldierTravelDistanceLimit(),
-      game_config.MaxSoldierTravelDistanceLimit()
-  );
 }
 
 }

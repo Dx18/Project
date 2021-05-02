@@ -21,6 +21,10 @@ class Drone : public Unit {
 
   [[nodiscard]] int MaxHealth() const override;
   [[nodiscard]] int MaxTravelDistance(const config::GameConfig &game_config) const override;
+  [[nodiscard]] bool HasActiveWeapon() const override;
+  [[nodiscard]] const IWeapon &ActiveWeapon() const override;
+  [[nodiscard]] bool HasActiveArmor() const override;
+  [[nodiscard]] const IArmor &ActiveArmor() const override;
 
   /** Returns true if drone has weapon. */
   [[nodiscard]] bool HasWeapon() const;

@@ -21,6 +21,10 @@ class Soldier : public Unit {
 
   [[nodiscard]] int MaxHealth() const override;
   [[nodiscard]] int MaxTravelDistance(const config::GameConfig &game_config) const override;
+  [[nodiscard]] bool HasActiveWeapon() const override;
+  [[nodiscard]] const IWeapon &ActiveWeapon() const override;
+  [[nodiscard]] bool HasActiveArmor() const override;
+  [[nodiscard]] const IArmor &ActiveArmor() const override;
 
   /** Returns true if soldier has primary weapon. */
   [[nodiscard]] bool HasPrimaryWeapon() const;

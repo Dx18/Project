@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <sstream>
+#include <cmath>
 
 #include "util/Vector.h"
 #include "util/Rectangle.h"
@@ -35,6 +36,12 @@ class WorldMap {
    * @param tile Tile to set.
    */
   void Set(const util::Vector2<size_t> &position, Tile tile);
+
+  /**
+   * Returns position of tile where given position is. Result is clamped to world bounds.
+   * @param position Position.
+   */
+  [[nodiscard]] util::Vector2<size_t> TilePositionClamped(const util::Vector2<double> &position) const;
 
   /**
    * Checks if world map contains given point. Throws `std::runtime_error` if check is failed.

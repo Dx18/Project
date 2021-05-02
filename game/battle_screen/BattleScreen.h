@@ -200,7 +200,7 @@ void BattleScreen<Context>::DestinationSelectionState::Init(const config::GameCo
   ui.world_view->SetSelectedUnit(unit_id);
 
   const unit::Unit &unit = world->Entities().GetUnit(unit_id);
-  world::map::WorldMovementMap movement_map = unit.CreateMovementMap(world->Map(), game_config);
+  world::map::WorldMovementMap movement_map = unit.CreateMovementMap(*world, game_config);
 
   std::vector<world::map::WorldMovementMap::PositionInfo> positions = movement_map.AvailablePositions();
   std::vector<util::Vector2<size_t>> navigation_tiles;
@@ -239,7 +239,7 @@ BattleScreen<Context>::DestinationSelectionState::OnInput(const config::GameConf
           0.0
       };
 
-      auto script = unit.CreateMovementScript(unit_id, world->Map(), game_config, position);
+      auto script = unit.CreateMovementScript(unit_id, *world, game_config, position);
 
       if (script) {
         ui.world_view->SetNavigationTiles({});
@@ -326,7 +326,7 @@ BattleScreen<Context>::EnemyMoveState::Update(const config::GameConfig &game_con
   size_t unit_id = world->Entities().EnemyUnitID(unit_index);
   unit::Unit &unit = world->Entities().GetUnit(unit_id);
 
-  world::map::WorldMovementMap movement_map = unit.CreateMovementMap(world->Map(), game_config);
+  world::map::WorldMovementMap movement_map = unit.CreateMovementMap(*world, game_config);
   std::vector<world::map::WorldMovementMap::PositionInfo> positions = movement_map.AvailablePositions();
   util::Vector2<size_t> tile_position = positions[rand() % positions.size()].position;
   util::Vector3<double> position = {
@@ -335,7 +335,7 @@ BattleScreen<Context>::EnemyMoveState::Update(const config::GameConfig &game_con
       0.0
   };
 
-  auto script = unit.CreateMovementScript(unit_id, world->Map(), game_config, position);
+  auto script = unit.CreateMovementScript(unit_id, *world, game_config, position);
   if (script) {
     world->AddScript(std::move(script));
   }
