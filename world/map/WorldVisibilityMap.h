@@ -16,12 +16,12 @@ class WorldVisibilityMap {
   struct PositionInfo {
     /** Position. */
     util::Vector2<size_t> position;
-    /** Visibility of tile in range [0.0; 1.0]. */
+    /** Total visibility of position in range [0.0; `n`], where `n` is number of positions of view. */
     double visibility;
-    /** Distance to tile. */
+    /** Min distance to tile. */
     double distance;
 
-    /** Creates default zero-initialized position info. */
+    /** Creates default position info. */
     PositionInfo();
     /**
      * Creates position info.
@@ -43,6 +43,15 @@ class WorldVisibilityMap {
                      const util::Vector2<size_t> &position);
 
   /**
+   * Creates and calculates visibility map using different sourcas.
+   * @param game_config Const reference to game config.
+   * @param map World map.
+   * @param positions Positions of view.
+   */
+  WorldVisibilityMap(const config::GameConfig &game_config, const world::map::WorldMap &map,
+                     const std::vector<util::Vector2<size_t>> &positions);
+
+  /**
    * Returns info about given position.
    * @param position Position.
    */
@@ -51,8 +60,8 @@ class WorldVisibilityMap {
  private:
   /** Size of map. */
   util::Vector2<size_t> map_size_;
-  /** Position of view. */
-  util::Vector2<size_t> position_;
+  /** Positions of view. */
+  std::vector<util::Vector2<size_t>> source_positions_;
   /** Result of calculation. */
   std::vector<PositionInfo> positions_;
 
@@ -60,10 +69,11 @@ class WorldVisibilityMap {
    * Calculates position info for given position.
    * @param game_config Const reference to game config.
    * @param map World map.
+   * @param source_position_index Index of source position.
    * @param position Position to calculate.
    */
-  PositionInfo CalculatePositionInfo(const config::GameConfig &game_config, const world::map::WorldMap &map,
-                                     const util::Vector2<size_t> position);
+  void CalculatePositionInfo(const config::GameConfig &game_config, const world::map::WorldMap &map,
+                             size_t source_position_index, const util::Vector2<size_t> &position);
 
 };
 

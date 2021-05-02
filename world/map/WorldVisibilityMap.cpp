@@ -3,7 +3,7 @@
 namespace world::map {
 
 WorldVisibilityMap::PositionInfo::PositionInfo()
-    : position({0, 0}), visibility(0.0), distance(0.0) {
+    : position({0, 0}), visibility(0.0), distance(std::numeric_limits<double>::infinity()) {
 
 }
 
@@ -14,13 +14,30 @@ WorldVisibilityMap::PositionInfo::PositionInfo(util::Vector2<size_t> _position, 
 
 WorldVisibilityMap::WorldVisibilityMap(const config::GameConfig &game_config, const WorldMap &map,
                                        const util::Vector2<size_t> &position)
-    : map_size_(map.Size()), position_(position), positions_(map_size_.x * map_size_.y) {
-  map.CheckIfContainsPoint(position);
+    : WorldVisibilityMap(game_config, map, std::vector<util::Vector2<size_t>>{position}) {
 
+}
+
+WorldVisibilityMap::WorldVisibilityMap(const config::GameConfig &game_config, const WorldMap &map,
+                                       const std::vector<util::Vector2<size_t>> &positions)
+    : map_size_(map.Size()), source_positions_(positions), positions_(map_size_.x * map_size_.y) {
   for (size_t row = 0; row < map_size_.y; ++row) {
     for (size_t column = 0; column < map_size_.x; ++column) {
-      positions_[row * map_size_.x + column] = CalculatePositionInfo(game_config, map, {column, row});
+      positions_[row * map_size_.x + column].position = {column, row};
     }
+  }
+
+  size_t source_position_index = 0;
+  for (const util::Vector2<size_t> &position : positions) {
+    map.CheckIfContainsPoint(position);
+
+    for (size_t row = 0; row < map_size_.y; ++row) {
+      for (size_t column = 0; column < map_size_.x; ++column) {
+        CalculatePositionInfo(game_config, map, source_position_index, {column, row});
+      }
+    }
+
+    ++source_position_index;
   }
 }
 
@@ -31,18 +48,19 @@ std::optional<WorldVisibilityMap::PositionInfo> WorldVisibilityMap::GetPositionI
   return positions_[position.y * map_size_.x + position.x];
 }
 
-WorldVisibilityMap::PositionInfo
-WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config, const world::map::WorldMap &map,
-                                          util::Vector2<size_t> position) {
+void WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config, const world::map::WorldMap &map,
+                                               size_t source_position_index, const util::Vector2<size_t> &position) {
+  util::Vector2<size_t> source_position = source_positions_[source_position_index];
+
   util::Vector2<double> direction = {
-      static_cast<double>(position.x) - static_cast<double>(position_.x),
-      static_cast<double>(position.y) - static_cast<double>(position_.y)
+      static_cast<double>(position.x) - static_cast<double>(source_position.x),
+      static_cast<double>(position.y) - static_cast<double>(source_position.y)
   };
 
-  util::Vector2<double> current_position = {position_.x + 0.5, position_.y + 0.5};
+  util::Vector2<double> current_position = {source_position.x + 0.5, source_position.y + 0.5};
   util::Vector2<ssize_t> current_tile_position = {
-      static_cast<ssize_t>(position_.x),
-      static_cast<ssize_t>(position_.y)
+      static_cast<ssize_t>(source_position.x),
+      static_cast<ssize_t>(source_position.y)
   };
 
   double visibility = 1.0;
@@ -178,7 +196,10 @@ WorldVisibilityMap::CalculatePositionInfo(const config::GameConfig &game_config,
   }
 
   double distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-  return PositionInfo(position, visibility, distance);
+
+  PositionInfo &position_info = positions_[position.y * map_size_.x + position.x];
+  position_info.visibility += visibility;
+  position_info.distance = std::min(position_info.distance, distance);
 }
 
 }
