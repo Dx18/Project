@@ -39,6 +39,12 @@ class GameConfig {
    */
   [[nodiscard]] int ArmorMass(ArmorType type) const;
 
+  /** Returns effect of advanced tech level. Base value is multiplied or divided by the effect to get final value. */
+  [[nodiscard]] double AdvancedTechLevelEffect() const;
+
+  /** Default number of soldiers/drones in squad. */
+  [[nodiscard]] int SquadSize() const;
+
  private:
   /** Array with weapon max ammo. */
   std::array<std::optional<int>, kWeaponInfo.size()> weapon_max_ammo_;
@@ -48,6 +54,10 @@ class GameConfig {
   std::array<int, kArmorInfo.size()> armor_defence_;
   /** Array with armor mass. */
   std::array<int, kArmorInfo.size()> armor_mass_;
+  /** Effect of advanced tech level. Base value is multiplied or divided by the effect to get final value. */
+  double advanced_tech_level_effect_;
+  /** Default number of soldiers/drones in squad. */
+  int squad_size_;
 
 };
 

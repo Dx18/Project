@@ -8,8 +8,10 @@ enum ArmorType {
   kSoldierStandardArmor = 0,
   /** Soldier composite armor. */
   kSoldierCompositeArmor = 1,
-  /** Soldier standard armor. */
-  kDroneStandardArmor = 2
+  /** Drone standard armor. */
+  kDroneStandardArmor = 2,
+  /** Drone composite armor. */
+  kDroneCompositeArmor = 3
 };
 
 }

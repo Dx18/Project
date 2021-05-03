@@ -1,21 +1,23 @@
 #pragma once
 
 #include "unit/BasicFirearmWeapon.h"
-#include "config/GameConfig.h"
+#include "headquarters_model/tech/Tech.h"
 
 #include "../ISoldierWeapon.h"
 #include "../ISoldierSniperRifle.h"
 
 namespace unit::soldier::weapon::firearm {
 
+using namespace headquarters_model::tech;
+
 /** Soldier firearm sniper rifle. */
 class SoldierFirearmSniperRifle : public BasicFirearmWeapon, public ISoldierSniperRifle {
  public:
   /**
    * Creates soldier firearm sniper rifle.
-   * @param game_config Game process config.
+   * @param tech Current tech state.
    */
-  explicit SoldierFirearmSniperRifle(const config::GameConfig &game_config);
+  explicit SoldierFirearmSniperRifle(const Tech &tech);
 
 };
 
