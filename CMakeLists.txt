@@ -11,6 +11,8 @@ include_directories(${CMAKE_SOURCE_DIR})
 # Common sources
 set(SOURCES
         unit/Unit.cpp
+        unit/IArmor.cpp
+        unit/IWeapon.cpp
         unit/BasicArmor.cpp
         unit/BasicFirearmWeapon.cpp
         unit/BasicLaserWeapon.cpp
@@ -74,19 +76,37 @@ set(SOURCES
         frontend/terminal/TerminalResources.cpp
 
         widget/terminal/TerminalContext.cpp
+        widget/terminal/WorldRenderer.cpp
         widget/terminal/TextWidget.cpp
         widget/terminal/SelectionListWidget.cpp
         widget/terminal/SelectionBoxWidget.cpp
         widget/terminal/GridContainerWidget.cpp
         widget/terminal/game/SoldierEquipmentWidget.cpp
         widget/terminal/game/DroneEquipmentWidget.cpp
+        widget/terminal/game/WorldViewWidget.cpp
 
         object_database/UnitInfo.cpp
         object_database/WeaponClassInfo.cpp
         object_database/WeaponTechInfo.cpp
         object_database/ArmorTechInfo.cpp
         object_database/WeaponInfo.cpp
-        object_database/ArmorInfo.cpp)
+        object_database/ArmorInfo.cpp
+
+        world/map/Wall.cpp
+        world/map/FloorMaterial.cpp
+        world/map/Tile.cpp
+        world/map/InstantiatedTiles.cpp
+        world/map/WorldMap.cpp
+        world/map/WorldMovementMap.cpp
+        world/map/WorldVisibilityMap.cpp
+        world/entities/Projectile.cpp
+        world/entities/WorldEntities.cpp
+        world/script/IWorldScript.cpp
+        world/script/ScriptSequence.cpp
+        world/script/UnitMovingScript.cpp
+        world/script/ProjectileScript.cpp
+        world/World.cpp
+        world/WorldGenerator.cpp)
 
 # Sources for main executable
 set(MAIN_SOURCES main.cpp ${SOURCES})

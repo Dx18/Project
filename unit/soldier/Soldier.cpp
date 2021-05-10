@@ -5,12 +5,12 @@ namespace unit::soldier {
 using namespace unit::soldier::weapon;
 
 Soldier::Soldier()
-    : is_primary_weapon_selected_(false) {
+    : is_primary_weapon_selected_(true) {
 
 }
 
 Soldier::Soldier(Soldier &&other) noexcept
-    : Unit(other),
+    : Unit(std::move(other)),
       primary_weapon_(std::move(other.primary_weapon_)),
       secondary_weapon_(std::move(other.secondary_weapon_)),
       is_primary_weapon_selected_(other.is_primary_weapon_selected_) {
@@ -19,6 +19,40 @@ Soldier::Soldier(Soldier &&other) noexcept
 
 int Soldier::MaxHealth() const {
   return BaseHealth() + (armor_ ? armor_->Defence() : 0);
+}
+
+int Soldier::MaxTravelDistance(const config::GameConfig &game_config) const {
+  int mass = 0;
+  if (primary_weapon_) {
+    mass += primary_weapon_->Mass();
+  }
+  if (secondary_weapon_) {
+    mass += secondary_weapon_->Mass();
+  }
+  if (armor_) {
+    mass += armor_->Mass();
+  }
+  return util::math::clamp(
+      game_config.BaseSoldierTravelDistanceLimit() - mass,
+      game_config.MinSoldierTravelDistanceLimit(),
+      game_config.MaxSoldierTravelDistanceLimit()
+  );
+}
+
+bool Soldier::HasActiveWeapon() const {
+  return is_primary_weapon_selected_ ? primary_weapon_ != nullptr : secondary_weapon_ != nullptr;
+}
+
+const IWeapon &Soldier::ActiveWeapon() const {
+  return is_primary_weapon_selected_ ? *primary_weapon_ : *secondary_weapon_;
+}
+
+bool Soldier::HasActiveArmor() const {
+  return armor_ != nullptr;
+}
+
+const IArmor &Soldier::ActiveArmor() const {
+  return *armor_;
 }
 
 bool Soldier::HasPrimaryWeapon() const {
@@ -58,6 +92,7 @@ void Soldier::ToggleWeapon() {
 }
 
 Soldier &Soldier::operator=(Soldier &&other) noexcept {
+  static_cast<Unit &>(*this) = std::move(other);
   std::swap(primary_weapon_, other.primary_weapon_);
   std::swap(secondary_weapon_, other.secondary_weapon_);
   std::swap(is_primary_weapon_selected_, other.is_primary_weapon_selected_);

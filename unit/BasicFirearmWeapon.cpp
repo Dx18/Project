@@ -2,8 +2,8 @@
 
 namespace unit {
 
-BasicFirearmWeapon::BasicFirearmWeapon(int ammo, int max_ammo, int mass)
-    : ammo_(ammo), max_ammo_(max_ammo), mass_(mass) {
+BasicFirearmWeapon::BasicFirearmWeapon(int ammo, int max_ammo, int mass, int base_damage)
+    : ammo_(ammo), max_ammo_(max_ammo), mass_(mass), base_damage_(base_damage) {
 
 }
 
@@ -25,6 +25,10 @@ bool BasicFirearmWeapon::CanBeReloaded() const {
 
 void BasicFirearmWeapon::Reload() {
   ammo_ = max_ammo_;
+}
+
+int BasicFirearmWeapon::BaseDamage() const {
+  return base_damage_;
 }
 
 }

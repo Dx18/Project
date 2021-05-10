@@ -5,7 +5,8 @@ namespace unit::soldier::weapon::laser {
 using namespace object_database;
 
 SoldierLaserMachineGun::SoldierLaserMachineGun(const Tech &tech)
-    : BasicLaserWeapon(tech.WeaponMass(WeaponType::kSoldierLaserMachineGun)) {
+    : BasicLaserWeapon(tech.WeaponMass(WeaponType::kSoldierLaserMachineGun),
+                       tech.WeaponBaseDamage(WeaponType::kSoldierLaserMachineGun)) {
 
 }
 
